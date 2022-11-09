@@ -49,7 +49,7 @@ function getCurrentBranchDatetime($branch='master' ): string
     if($time != 0 ){
         return date("Y-m-d H:i:s", $time);
     }else{
-        return  "time=0";
+        return  date("Y-m-d H:i:s", time());
     }
 }
 
