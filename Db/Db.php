@@ -44,6 +44,7 @@ class Db extends \PDO {
             $this->query('SET NAMES utf8');
             $this->query('SET CHARACTER SET utf8');
         } catch(PDOException $e) {
+            exit($e->getMessage());
             exit("ERROR GENERAL 1092");
         }
 
