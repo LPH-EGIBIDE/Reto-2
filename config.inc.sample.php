@@ -1,5 +1,5 @@
 <?php
-
+require_once __DIR__ . '/Autoloader.php';
 const WEB_APP_VERSION = "0.0.1-dev";
 
 
@@ -8,6 +8,7 @@ const DB_USER = "docker";
 const DB_PASSWORD = "8b0un0unmind0n";
 const DB_DATABASE = "lph_app2";
 
+const APP_ROOT = __DIR__ . '/';
 
 function getBuildInfo(): array
 {
@@ -19,13 +20,13 @@ function getBuildInfo(): array
         'branch' => $branch,
         'commit' => $commit,
         'commitDate' => $commitDate,
-        'buildName' => "WTFAQ v".WEB_APP_VERSION.".$commit-$branch ($commitDate)",
+        'buildName' => "WTFAQ v".WEB_APP_VERSION."-$branch-$commit ($commitDate)",
     ];
 }
 
 function getCurrentBranch(): string
 {
-    $data = file_get_contents('.git/HEAD');
+    $data = file_get_contents(APP_ROOT.'.git/HEAD');
     $ar  = explode( "/", $data );
     $ar = array_reverse($ar);
     return  trim ("" . @$ar[0]) ;
@@ -33,7 +34,7 @@ function getCurrentBranch(): string
 
 function getCurrentBranchDatetime($branch='master' ): string
 {
-    $fname = sprintf( '.git/refs/heads/%s', $branch );
+    $fname = sprintf( APP_ROOT.'.git/refs/heads/%s', $branch );
     $time = filemtime($fname);
     if($time != 0 ){
         return date("Y-m-d H:i:s", $time);
@@ -44,13 +45,9 @@ function getCurrentBranchDatetime($branch='master' ): string
 
 function getCurrentCommitHash(): string
 {
-    $path = '.git/';
+    $path = APP_ROOT.'.git/';
 
-    if (! file_exists($path)) {
-        return "";
-    }
+    $head = trim(substr(file_get_contents($path . "HEAD"), 4));
 
-    $head = trim(substr(file_get_contents($path . 'HEAD'), 6));
-
-    return trim(file_get_contents($path . $head));
+    return trim(substr(file_get_contents($path . $head), 0, 7));
 }
