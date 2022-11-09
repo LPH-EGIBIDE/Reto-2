@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="e0353a0e-942b-441b-a4a9-dad297b0a4de" name="Docker lph" url="http://wtfaq.lph.local/">
+        <fileTransfer mountedRoot="$USER_HOME$/Documents/Docker wordpress/htdocs/wtfaq.lph.local" accessType="MOUNT" port="0" />
+      </webServer>
+    </option>
+  </component>
+</project>
