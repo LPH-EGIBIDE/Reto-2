@@ -1,12 +1,15 @@
 <?php
-require_once __DIR__ . '/Autoloader.php';
-const WEB_APP_VERSION = "0.0.1-dev";
 
+require_once 'Autoloader.php';
+
+use Db\Db;
+
+const WEB_APP_VERSION = "0.0.1-dev";
 
 const DB_HOST = "db";
 const DB_USER = "docker";
-const DB_PASSWORD = "";
 const DB_DATABASE = "lph_app2";
+const DB_PASSWORD = "";
 
 const APP_ROOT = __DIR__ . '/';
 // !!!!!!!!!!!!!!! PONER EN FALSE EN PRODUCCION !!!!!!!!!!!!!!!!!!!!!
