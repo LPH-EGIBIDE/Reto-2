@@ -1,0 +1,28 @@
+<?php
+require_once "../../../config.inc.php";
+
+use Entities\UserEntity;
+
+session_start();
+
+ header('Content-Type: application/json');
+
+if (isset($_SESSION["mfa_pending"])) {
+    $user = $_SESSION["mfa_pending"];
+    if ($user instanceof UserEntity) {
+        $mfaCode = $_POST["mfaCode"] ?? "";
+        if (empty($mfaCode)) {
+            echo json_encode(["status" => "error", "message" => "El código no puede estar vacío"]);
+        } else {
+            if ($user->checkTotpCode($mfaCode)) {
+                unset($_SESSION["mfa_pending"]);
+                $_SESSION["user"] = $user;
+                echo json_encode(["status" => "success", "user" => $user->getUsername(), "message" => "Bienvenido de nuevo " . $user->getUsername()]);
+            } else {
+                echo json_encode(["status" => "error", "message" => "Código incorrecto"]);
+            }
+        }
+    }
+} else {
+    echo json_encode(["status" => "error", "message" => "No hay sesión iniciada o no se requiere autenticación de dos factores"]);
+}
