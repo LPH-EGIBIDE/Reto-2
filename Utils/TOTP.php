@@ -4,7 +4,7 @@ namespace Utils;
 
 abstract class TOTP
 {
-    private static string $base32Alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
+    private static string $base32Chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
     private static function base32Decode(string $string):  string
     {
         $string = strtoupper($string);
@@ -15,7 +15,7 @@ abstract class TOTP
         $bufferLength = 0;
         foreach ($string as $char) {
             $buffer = $buffer << 5;
-            $buffer = $buffer | (int) (strpos(self::$base32Alphabet, $char));
+            $buffer = $buffer | (int) (strpos(self::$base32Chars, $char));
             $bufferLength += 5;
             if ($bufferLength >= 8) {
                 $bufferLength -= 8;
@@ -44,11 +44,8 @@ abstract class TOTP
 
     public static function verifyTOTP(string $secret, int $code, int $timeSlice = 30): bool
     {
-        $timeSlice = floor(time() / $timeSlice);
-        for ($i = -1; $i <= 1; $i++) {
-            if (self::getTOTP($secret, $timeSlice + $i) === $code) {
-                return true;
-            }
+        if (self::getTOTP($secret) === $code) {
+            return true;
         }
         return false;
     }
@@ -56,10 +53,10 @@ abstract class TOTP
 
     public static function generatePrivateKey(): string
     {
-        $alphabet = str_split(self::$base32Alphabet);
+        $alphabet = str_split(self::$base32Chars);
         $key = '';
         for ($i = 0; $i < 16; $i++) $key .= $alphabet[mt_rand(0,31)];
-        return implode(" ", str_split($key, 4));
+        return $key;
     }
 
 }

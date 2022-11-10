@@ -6,13 +6,15 @@ use Exceptions\DataNotFoundException;
 use Repositories\UserRepository;
 
 session_start();
+header('Content-Type: application/json');
 
-if(isset($_SESSION["user"])){
+if(isset($_SESSION["user"]) || isset($_SESSION["mfa_pending"])) {
     $user = $_SESSION["user"];
     if($user instanceof UserEntity){
         echo json_encode(["status" => "success", "user" => $user->getUsername(), "message" => "User is already logged in"]);
     }
 } else {
+
     $username = $_POST["username"] ?? "";
     $password = $_POST["password"] ?? "";
 
@@ -22,12 +24,11 @@ if(isset($_SESSION["user"])){
         }
         $user = UserRepository::getUserByUsername($username);
         if($user->checkPassword($password)){
-            $_SESSION["user"] = $user;
-
             if ($user->getMfaType() == 0) {
+                $_SESSION["user"] = $user;
                 echo json_encode(["status" => "success", "user" => $user->getUsername(), "message" => "Bienvenido de nuevo ".$user->getUsername()]);
             } else {
-                $_SESSION["mfa_pending"] = true;
+                $_SESSION["mfa_pending"] = $user;
                 echo json_encode(["status" => "continueLogin", "user" => $user->getUsername()]);
             }
 
