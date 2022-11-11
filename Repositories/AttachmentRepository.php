@@ -81,6 +81,9 @@ abstract class AttachmentRepository{
     }
 
 
+    /**
+     * @throws DataNotFoundException
+     */
     public static function getUserAvatar(UserEntity $userEntity, int $avatarId): AttachmentEntity
     {
         $db = Db::getInstance();

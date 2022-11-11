@@ -38,8 +38,18 @@ if(isset($_SESSION["user"]) || isset($_SESSION["mfa_pending"])) {
         }
     } catch (DataNotFoundException $e) {
         //Prevent user enumeration
-        echo json_encode(["status" => "error", "message" => "Contraseña incorrecta"]);
+        //Show the exception message on json if debug mode is enabled
+        if (DEBUG_MODE) {
+            echo json_encode(["status" => "error", "message" => $e->getMessage(), "line" => $e->getLine(), "file" => $e->getFile()]);
+        } else {
+            echo json_encode(["status" => "error", "message" => "Contraseña incorrecta"]);
+        }
     } catch (Exception $e) {
+        if (DEBUG_MODE) {
+            echo json_encode(["status" => "error", "message" => $e->getMessage(), "line" => $e->getLine(), "file" => $e->getFile()]);
+        } else {
+            echo json_encode(["status" => "error", "message" => "Contraseña incorrecta"]);
+        }
         echo json_encode(["status" => "error", "message" => $e->getMessage()]);
     }
 
