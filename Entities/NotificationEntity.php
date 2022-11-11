@@ -2,21 +2,22 @@
 
 namespace Entities;
 
+
 class NotificationEntity
 {
     private int $id;
     private string $text;
-    private int $dismissed;
+    private bool $dismissed;
     private string $href;
     private int $type;
-    private int $userId;
+    private UserEntity $user;
 
-    public function __construct(string $text, int $dismissed, string $href, int $type, int $userId) {
+    public function __construct(string $text, bool $dismissed, string $href, int $type, UserEntity $user) {
         $this->text = $text;
         $this->dismissed = $dismissed;
         $this->href = $href;
         $this->type = $type;
-        $this->userId = $userId;
+        $this->user = $user;
     }
 
     // Getters and setters
@@ -55,7 +56,7 @@ class NotificationEntity
     /**
      * @return int
      */
-    public function getDismissed(): int
+    public function isDismissed(): int
     {
         return $this->dismissed;
     }
@@ -101,19 +102,19 @@ class NotificationEntity
     }
 
     /**
-     * @return int
+     * @return UserEntity
      */
-    public function getUserId(): int
+    public function getUser(): UserEntity
     {
-        return $this->userId;
+        return $this->user;
     }
 
     /**
-     * @param int $userId
+     * @param UserEntity $user
      */
-    public function setUserId(int $userId): void
+    public function setUser(UserEntity $user): void
     {
-        $this->userId = $userId;
+        $this->user = $user;
     }
 
 }

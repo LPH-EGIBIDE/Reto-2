@@ -2,7 +2,7 @@
 
 namespace Entities;
 
-use Cassandra\Date;
+use DateTime;
 
 class AttachmentEntity
 {
@@ -10,11 +10,11 @@ class AttachmentEntity
     private string $filename;
     private string $filepath;
     private string $contentType;
-    private Date $uploadedAt;
-    private int $uploadedBy;
-    private int $public;
+    private DateTime $uploadedAt;
+    private UserEntity $uploadedBy;
+    private bool $public;
 
-    public function __construct(string $filename, string $filepath, string $contentType, Date $uploadedAt, int $uploadedBy, int $public)
+    public function __construct(string $filename, string $filepath, string $contentType, DateTime $uploadedAt, UserEntity $uploadedBy, int $public)
     {
         $this->filename = $filename;
         $this->filepath = $filepath;
@@ -90,33 +90,34 @@ class AttachmentEntity
     }
 
     /**
-     * @return Date
+     * @return DateTime
      */
-    public function getUploadedAt(): Date
+    public function getUploadedAt(): DateTime
     {
         return $this->uploadedAt;
     }
 
     /**
-     * @param Date $uploadedAt
+     * @param DateTime $uploadedAt
      */
-    public function setUploadedAt(Date $uploadedAt): void
+    public function setUploadedAt(DateTime $uploadedAt): void
     {
         $this->uploadedAt = $uploadedAt;
     }
 
+
     /**
-     * @return int
+     * @return UserEntity
      */
-    public function getUploadedBy(): int
+    public function getUploadedBy(): UserEntity
     {
         return $this->uploadedBy;
     }
 
     /**
-     * @param int $uploadedBy
+     * @param UserEntity $uploadedBy
      */
-    public function setUploadedBy(int $uploadedBy): void
+    public function setUploadedBy(UserEntity $uploadedBy): void
     {
         $this->uploadedBy = $uploadedBy;
     }
@@ -124,7 +125,7 @@ class AttachmentEntity
     /**
      * @return int
      */
-    public function getPublic(): int
+    public function isPublic(): int
     {
         return $this->public;
     }

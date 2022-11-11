@@ -2,17 +2,20 @@
 
 namespace Entities;
 
+use DateTime;
+
 class PostEntity
 {
     private int $id;
     private string $title;
     private string $description;
     private int $views;
-    private int $topic;
-    private int $author;
-    private int $active;
+    private PostTopicEntity $topic;
+    private UserEntity $author;
+    private bool $active;
+    private DateTime $date;
 
-    public function __construct(string $title, string $description, int $views, int $topic, int $author, int $active)
+    public function __construct(string $title, string $description, int $views, PostTopicEntity $topic, UserEntity $author, bool $active, DateTime $date)
     {
         $this->title = $title;
         $this->description = $description;
@@ -20,6 +23,7 @@ class PostEntity
         $this->topic = $topic;
         $this->author = $author;
         $this->active = $active;
+        $this->date = $date;
     }
 
     // Getters and setters
@@ -88,52 +92,75 @@ class PostEntity
     }
 
     /**
-     * @return int
+     * @return PostTopicEntity
      */
-    public function getTopic(): int
+    public function getTopic(): PostTopicEntity
     {
         return $this->topic;
     }
 
     /**
-     * @param int $topic
+     * @param PostTopicEntity $topic
      */
-    public function setTopic(int $topic): void
+    public function setTopic(PostTopicEntity $topic): void
     {
         $this->topic = $topic;
     }
 
+
     /**
-     * @return int
+     * @return UserEntity
      */
-    public function getAuthor(): int
+    public function getAuthor(): UserEntity
     {
         return $this->author;
     }
 
     /**
-     * @param int $author
+     * @param UserEntity $author
      */
-    public function setAuthor(int $author): void
+    public function setAuthor(UserEntity $author): void
     {
         $this->author = $author;
     }
 
     /**
-     * @return int
+     * @return bool
      */
-    public function getActive(): int
+    public function isActive(): bool
     {
         return $this->active;
     }
 
     /**
-     * @param int $active
+     * @param bool $active
      */
-    public function setActive(int $active): void
+    public function setActive(bool $active): void
     {
         $this->active = $active;
     }
+
+    /**
+     * @return DateTime
+     */
+    public function getDate(): \DateTime
+    {
+        return $this->date;
+    }
+
+    /**
+     * @param DateTime $date
+     */
+    public function setDate(\DateTime $date): void
+    {
+        $this->date = $date;
+    }
+
+
+
+
+
+
 
 
 }

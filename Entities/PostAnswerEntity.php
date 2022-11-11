@@ -5,17 +5,19 @@ namespace Entities;
 class PostAnswerEntity
 {
     private int $id;
-    private int $author;
-    private int $post;
+    private UserEntity $author;
+    private PostEntity $post;
     private string $message;
     private int $upvotes;
+    private array $attachments;
 
-    public function __construct(int $author, int $post, string $message, int $upvotes)
+    public function __construct(UserEntity $author, PostEntity $post, string $message, int $upvotes, array $attachments = [])
     {
         $this->author = $author;
         $this->post = $post;
         $this->message = $message;
         $this->upvotes = $upvotes;
+        $this->attachments = $attachments;
     }
 
     // Getters and setters
@@ -36,36 +38,39 @@ class PostAnswerEntity
     }
 
     /**
-     * @return int
+     * @return UserEntity
      */
-    public function getAuthor(): int
+    public function getAuthor(): UserEntity
     {
         return $this->author;
     }
 
     /**
-     * @param int $author
+     * @param UserEntity $author
      */
-    public function setAuthor(int $author): void
+    public function setAuthor(UserEntity $author): void
     {
         $this->author = $author;
     }
 
     /**
-     * @return int
+     * @return PostEntity
      */
-    public function getPost(): int
+    public function getPost(): PostEntity
     {
         return $this->post;
     }
 
     /**
-     * @param int $post
+     * @param PostEntity $post
      */
-    public function setPost(int $post): void
+    public function setPost(PostEntity $post): void
     {
         $this->post = $post;
     }
+
+
+
 
     /**
      * @return string
@@ -97,6 +102,31 @@ class PostAnswerEntity
     public function setUpvotes(int $upvotes): void
     {
         $this->upvotes = $upvotes;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAttachments(): array
+    {
+        return $this->attachments;
+    }
+
+    /**
+     * @param array $attachments
+     */
+    public function setAttachments(array $attachments): void
+    {
+        $this->attachments = $attachments;
+    }
+
+    /**
+     * @param AttachmentEntity $attachment
+     * @return void
+     */
+    public function addAttachment(AttachmentEntity $attachment): void
+    {
+        $this->attachments[] = $attachment;
     }
 
 

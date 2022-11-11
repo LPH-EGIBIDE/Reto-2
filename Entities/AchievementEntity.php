@@ -8,9 +8,9 @@ class AchievementEntity
     private string $title;
     private string $description;
     private int $pointsAwarded;
-    private int $photo;
+    private AttachmentEntity $photo;
 
-    public function __construct(string $title, string $description, int $pointsAwarded, int $photo)
+    public function __construct(string $title, string $description, int $pointsAwarded, AttachmentEntity $photo)
     {
         $this->title = $title;
         $this->description = $description;
@@ -84,19 +84,21 @@ class AchievementEntity
     }
 
     /**
-     * @return int
+     * @return AttachmentEntity
      */
-    public function getPhoto(): int
+    public function getPhoto(): AttachmentEntity
     {
         return $this->photo;
     }
 
     /**
-     * @param int $photo
+     * @param AttachmentEntity $photo
      */
-    public function setPhoto(int $photo): void
+    public function setPhoto(AttachmentEntity $photo): void
     {
         $this->photo = $photo;
     }
+
+
 
 }
