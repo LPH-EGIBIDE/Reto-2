@@ -11,10 +11,10 @@ class AttachmentEntity
     private string $filepath;
     private string $contentType;
     private DateTime $uploadedAt;
-    private UserEntity $uploadedBy;
+    private ?UserEntity $uploadedBy;
     private bool $public;
 
-    public function __construct(string $filename, string $filepath, string $contentType, DateTime $uploadedAt, UserEntity $uploadedBy, int $public)
+    public function __construct(string $filename, string $filepath, string $contentType, DateTime $uploadedAt, ?UserEntity $uploadedBy, int $public)
     {
         $this->filename = $filename;
         $this->filepath = $filepath;

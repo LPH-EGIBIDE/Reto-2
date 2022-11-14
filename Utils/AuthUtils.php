@@ -15,6 +15,7 @@ abstract class AuthUtils
             try {
                 $user = UserRepository::getUserById($user->getId());
                 $_SESSION["user"] = $user;
+                return true;
             } catch (DataNotFoundException $e) {
                 unset($_SESSION["user"]);
                 return false;

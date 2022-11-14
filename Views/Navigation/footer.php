@@ -5,5 +5,5 @@ $user = $_SESSION["user"] ?? "";
 ?>
 
 <footer>
-    <p> <?= $version ?> - <?= $user ?></p>
+    <p> <?= $version ?> - <?= $user->getUsername() ?></p>
 </footer>

@@ -14,7 +14,7 @@ if (isset($_SESSION["mfa_pending"])) {
         if (empty($mfaCode)) {
             echo json_encode(["status" => "error", "message" => "El código no puede estar vacío"]);
         } else {
-            if ($user->checkTotpCode($mfaCode)) {
+            if ($user->checkTotpCode(intval($mfaCode))) {
                 unset($_SESSION["mfa_pending"]);
                 $_SESSION["user"] = $user;
                 echo json_encode(["status" => "success", "user" => $user->getUsername(), "message" => "Bienvenido de nuevo " . $user->getUsername()]);

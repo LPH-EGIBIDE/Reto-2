@@ -27,9 +27,7 @@ abstract class UserRepository
         }
 
         $userEntity = new UserEntity($result->username, $result->email, $result->password, $result->type, $result->profile_description, $result->active, $result->email_verified, $result->points, $result->mfa_type, $result->mfa_data);
-        if ($result->avatar_id !== -1) {
-            $userEntity->setAvatar(AttachmentRepository::getUserAvatar($userEntity, $result->avatar_id));
-        }
+        $userEntity->setAvatar(AttachmentRepository::getUserAvatar($userEntity, $result->profile_pic));
         $userEntity->setId($result->id);
         return $userEntity;
     }
@@ -53,9 +51,7 @@ abstract class UserRepository
         }
         $userEntity = new UserEntity($result->username, $result->email, $result->password, $result->type, $result->profile_description, $result->active, $result->email_verified, $result->points, $result->mfa_type, $result->mfa_data);
         $userEntity->setId($result->id);
-        if ($result->profile_pic != -1) {
-            $userEntity->setAvatar(AttachmentRepository::getUserAvatar($userEntity, $result->profile_pic));
-        }
+        $userEntity->setAvatar(AttachmentRepository::getUserAvatar($userEntity, $result->profile_pic));
         return $userEntity;
     }
 

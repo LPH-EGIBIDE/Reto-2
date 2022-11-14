@@ -7,12 +7,14 @@ use Repositories\UserRepository;
 
 session_start();
 header('Content-Type: application/json');
-
-if(isset($_SESSION["user"]) || isset($_SESSION["mfa_pending"])) {
+if (isset($_SESSION["mfa_pending"])){
+    $user = $_SESSION["mfa_pending"];
+    if($user instanceof UserEntity)
+        echo json_encode(["status" => "continueLogin", "user" => $user->getUsername()]);
+} elseif (isset($_SESSION["user"])) {
     $user = $_SESSION["user"];
-    if($user instanceof UserEntity){
+    if($user instanceof UserEntity)
         echo json_encode(["status" => "success", "user" => $user->getUsername(), "message" => "User is already logged in"]);
-    }
 } else {
 
     $username = $_POST["username"] ?? "";

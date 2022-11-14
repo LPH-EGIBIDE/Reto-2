@@ -2,6 +2,7 @@
 
 namespace Repositories;
 
+use DateTime;
 use Entities\AttachmentEntity;
 use Entities\UserEntity;
 use Db\Db;
@@ -12,17 +13,24 @@ abstract class AttachmentRepository{
     /**
      * @throws DataNotFoundException
      */
-    public static function getAttachmentById(int $id): AttachmentEntity
+    public static function getAttachmentById(int $id = -1): AttachmentEntity
     {
         $db = Db::getInstance();
-        $stmt = $db->prepare("SELECT * FROM attachments WHERE id = :id");
+        $stmt = $db->prepare("SELECT id, filename, filepath, content_type, UNIX_TIMESTAMP(uploaded_at) as uploaded_at, uploaded_by, public FROM attachments WHERE id = :id");
         $stmt->bindParam(":id", $id);
         $stmt->execute();
         $result = $stmt->fetch();
         if ($result === false) {
             throw new DataNotFoundException("Archivo no encontrado");
         }
-        $attachment = new AttachmentEntity($result["filename"], $result["filepath"], $result["content_type"], $result["uploaded_at"], UserRepository::getUserById($result["uploaded_by"]), $result["public"]);
+        try {
+            $attachment = new AttachmentEntity($result["filename"], $result["filepath"], $result["content_type"], new DateTime("@" . $result["uploaded_at"]), $id != -1 ? UserRepository::getUserById($result["uploaded_by"]) : null, $result["public"]);
+        } catch (\Exception $e) {
+            if (DEBUG_MODE){
+                throw new DataNotFoundException("Error loading attachment: " . $e->getMessage());
+            }
+            throw new DataNotFoundException("Archivo no encontrado");
+        }
         $attachment->setId($result["id"]);
         return $attachment;
     }
@@ -87,18 +95,21 @@ abstract class AttachmentRepository{
     public static function getUserAvatar(UserEntity $userEntity, int $avatarId): AttachmentEntity
     {
         $db = Db::getInstance();
-        $stmt = $db->prepare("SELECT * FROM attachments WHERE uploaded_by = :uploaded_by AND id = :id");
-        $stmt->execute(
-            [
-                ":uploaded_by" => $userEntity->getId(),
-                ":id" => $avatarId
-            ]
-        );
+        $stmt = $db->prepare("SELECT id, filename, filepath, content_type, UNIX_TIMESTAMP(uploaded_at) as uploaded_at, uploaded_by, public FROM attachments WHERE id = :id");
+        $stmt->bindParam(":id", $avatarId);
+        $stmt->execute();
         $result = $stmt->fetch();
         if ($result === false) {
-            throw new DataNotFoundException("Avatar no encontrado");
+            throw new DataNotFoundException("Archivo no encontrado");
         }
-        $attachment = new AttachmentEntity($result["filename"], $result["filepath"], $result["content_type"], $result["uploaded_at"], $userEntity, $result["public"]);
+        try {
+            $attachment = new AttachmentEntity($result["filename"], $result["filepath"], $result["content_type"], new DateTime("@" . $result["uploaded_at"]), $avatarId != -1 ? $userEntity : null, $result["public"]);
+        } catch (\Exception $e) {
+            if (DEBUG_MODE){
+                throw new DataNotFoundException("Error loading attachment: " . $e->getMessage());
+            }
+            throw new DataNotFoundException("Archivo no encontrado");
+        }
         $attachment->setId($result["id"]);
         return $attachment;
     }
