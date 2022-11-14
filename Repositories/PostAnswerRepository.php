@@ -87,13 +87,13 @@ abstract class PostAnswerRepository
 
     /**
      * @param PostAnswerEntity $postAnswerEntity
-     * @return void
+     * @return bool
      */
-    public static function createPostAnswer(PostAnswerEntity $postAnswerEntity): void
+    public static function createPostAnswer(PostAnswerEntity $postAnswerEntity): bool
     {
         $db = Db::getInstance();
         $stmt = $db->prepare("INSERT INTO post_answers (author, post, message) VALUES (:author_id, :post_id, :message)");
-        $stmt->execute([
+        return $stmt->execute([
             ":author_id" => $postAnswerEntity->getAuthor()->getId(),
             ":post_id" => $postAnswerEntity->getPost()->getId(),
             ":message" => $postAnswerEntity->getMessage()
@@ -103,16 +103,21 @@ abstract class PostAnswerRepository
 
     /**
      * @param PostEntity $postEntity
+     * @param int $offset
+     * @param int $startFrom
      * @return array
      * @throws DataNotFoundException
      */
-    public static function getPostAnswersByPost(PostEntity $postEntity): array
+    public static function getPostAnswersByPost(PostEntity $postEntity, int $offset = 15, int $startFrom = 0): array
     {
         $db = Db::getInstance();
-        $stmt = $db->prepare("SELECT * FROM post_answers WHERE post = :post_id");
-        $stmt->bindParam(":post_id", $postEntity->getId());
+        $stmt = $db->prepare("SELECT * FROM post_answers WHERE post = :post_id LIMIT :offset OFFSET :start_from");
         $stmt->setFetchMode(\PDO::FETCH_OBJ);
-        $stmt->execute();
+        $stmt->execute([
+            ":post_id" => $postEntity->getId(),
+            ":offset" => $offset,
+            ":start_from" => $startFrom
+        ]);
         $result = $stmt->fetchAll();
         if ($result === false) {
             throw new DataNotFoundException("Post answer no encontrado");
@@ -121,7 +126,7 @@ abstract class PostAnswerRepository
         foreach ($result as $postAnswer) {
             $postAnswerEntity = new PostAnswerEntity(
                 UserRepository::getUserById($postAnswer->author),
-                $postEntity->getId(),
+                $postEntity,
                 $postAnswer->message,
                 self::getPostUpvotes($postAnswer->id),
             );
@@ -134,17 +139,21 @@ abstract class PostAnswerRepository
 
     /**
      * @param UserEntity $userEntity
+     * @param int $offset
+     * @param int $startFrom
      * @return array
      * @throws DataNotFoundException
      */
-    public static function getPostAnswersByUser(UserEntity $userEntity): array
+    public static function getPostAnswersByUser(UserEntity $userEntity, int $offset = 15, int $startFrom = 0): array
     {
         $db = Db::getInstance();
-        $stmt = $db->prepare("SELECT * FROM post_answers WHERE author = :author_id");
+        $stmt = $db->prepare("SELECT * FROM post_answers WHERE author = :author_id LIMIT :offset OFFSET :start_from");
         $stmt->setFetchMode(\PDO::FETCH_OBJ);
         $stmt->execute(
             [
-                ":author_id" => $userEntity->getId()
+                ":author_id" => $userEntity->getId(),
+                ":offset" => $offset,
+                ":start_from" => $startFrom
             ]
         );
         $result = $stmt->fetchAll();
@@ -171,7 +180,7 @@ abstract class PostAnswerRepository
      * @return array
      * @throws DataNotFoundException
      */
-    public static function getPostAnswersByUserAndPost(UserEntity $userEntity, PostEntity $postEntity): array
+    public static function getPostAnswersByUserAndPost(UserEntity $userEntity, PostEntity $postEntity, int $offset = 15, int $startFrom = 15): array
     {
         $db = Db::getInstance();
         $stmt = $db->prepare("SELECT * FROM post_answers WHERE author = :author_id AND post = :post_id");
@@ -202,17 +211,21 @@ abstract class PostAnswerRepository
 
     /**
      * @param UserEntity $userEntity
+     * @param int $offset
+     * @param int $startFrom
      * @return array
      * @throws DataNotFoundException
      */
-    static function getUserFavouriteAnswers(UserEntity $userEntity): array
+    static function getUserFavouriteAnswers(UserEntity $userEntity, int $offset = 15, int $startFrom = 0): array
     {
         $db = Db::getInstance();
-        $stmt = $db->prepare("SELECT * FROM post_answers, user_favourite_answers WHERE post_answers.id = user_favourite_answers.answer AND user_favourite_answers.user = :user_id");
+        $stmt = $db->prepare("SELECT * FROM post_answers, user_favourite_answers WHERE post_answers.id = user_favourite_answers.answer AND user_favourite_answers.user = :user_id LIMIT :offset OFFSET :start_from");
         $stmt->setFetchMode(\PDO::FETCH_OBJ);
         $stmt->execute(
             [
-                ":author_id" => $userEntity->getId()
+                ":author_id" => $userEntity->getId(),
+                ":offset" => $offset,
+                ":start_from" => $startFrom
             ]
         );
         $result = $stmt->fetchAll();
@@ -233,11 +246,16 @@ abstract class PostAnswerRepository
         return $postAnswers;
     }
 
-    static function addUserFavouriteAnswer(UserEntity $userEntity, PostAnswerEntity $postAnswerEntity): array
+    /**
+     * @param UserEntity $userEntity
+     * @param PostAnswerEntity $postAnswerEntity
+     * @return bool
+     */
+    static function addUserFavouriteAnswer(UserEntity $userEntity, PostAnswerEntity $postAnswerEntity): bool
 {
         $db = Db::getInstance();
         $stmt = $db->prepare("INSERT INTO user_favourite_answers (user, answer) VALUES (:user_id, :answer_id)");
-        $stmt->execute(
+        return $stmt->execute(
             [
                 ":user_id" => $userEntity->getId(),
                 ":answer_id" => $postAnswerEntity->getId()
@@ -251,11 +269,11 @@ abstract class PostAnswerRepository
      * @param PostAnswerEntity $postAnswerEntity
      * @return void
      */
-    public static function upvotePostAnswer(UserEntity $userEntity, PostAnswerEntity $postAnswerEntity): void
+    public static function upvotePostAnswer(UserEntity $userEntity, PostAnswerEntity $postAnswerEntity): bool
     {
         $db = Db::getInstance();
         $stmt = $db->prepare("INSERT INTO post_upvotes (user, post_answer) VALUES (:user_id, :post_answer_id)");
-        $stmt->execute([
+        return $stmt->execute([
             ":user_id" => $userEntity->getId(),
             ":post_answer_id" => $postAnswerEntity->getId()
         ]);
@@ -266,11 +284,11 @@ abstract class PostAnswerRepository
      * @param PostAnswerEntity $postAnswerEntity
      * @return void
      */
-    public static function downvotePostAnswer(UserEntity $userEntity, PostAnswerEntity $postAnswerEntity): void
+    public static function downvotePostAnswer(UserEntity $userEntity, PostAnswerEntity $postAnswerEntity): bool
     {
         $db = Db::getInstance();
         $stmt = $db->prepare("DELETE FROM post_upvotes WHERE user = :user_id AND post_answer = :post_answer_id");
-        $stmt->execute([
+        return $stmt->execute([
             ":user_id" => $userEntity->getId(),
             ":post_answer_id" => $postAnswerEntity->getId()
         ]);

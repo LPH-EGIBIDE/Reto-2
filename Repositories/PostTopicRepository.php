@@ -73,4 +73,23 @@ abstract class PostTopicRepository
         ]);
     }
 
+    /**
+     * @return array
+     */
+    public static function getAllPostTopics(): array
+    {
+        $db = Db::getInstance();
+        $stmt = $db->prepare("SELECT * FROM post_topics ");
+        $stmt->setFetchMode(\PDO::FETCH_OBJ);
+        $stmt->execute();
+        $result = $stmt->fetchAll();
+        $postTopicEntities = [];
+        foreach ($result as $postTopic) {
+            $postTopicEntity = new PostTopicEntity($postTopic->name, $postTopic->description);
+            $postTopicEntity->setId($postTopic->id);
+            $postTopicEntities[] = $postTopicEntity;
+        }
+        return $postTopicEntities;
+    }
+
 }

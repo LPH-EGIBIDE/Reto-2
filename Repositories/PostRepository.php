@@ -89,12 +89,15 @@ abstract class PostRepository
      * @return PostEntity[]
      * @throws DataNotFoundException
      */
-    public static function getAllPosts(): array
+    public static function getAllPosts(int $offset = 15, $startFrom = 0): array
     {
         $db = Db::getInstance();
-        $stmt = $db->prepare("SELECT * FROM posts");
+        $stmt = $db->prepare("SELECT * FROM posts LIMIT :offset OFFSET :startFrom");
         $stmt->setFetchMode(\PDO::FETCH_OBJ);
-        $stmt->execute();
+        $stmt->execute([
+            ":offset" => $offset,
+            ":startFrom" => $startFrom
+        ]);
         $result = $stmt->fetchAll();
         $posts = [];
         foreach ($result as $post) {
@@ -109,15 +112,17 @@ abstract class PostRepository
      * @return PostEntity[]
      * @throws DataNotFoundException
      */
-    public static function findPosts(PostTopicEntity $postTopicEntity = null, string $title = "", string $description = ""): array
+    public static function findPosts(PostTopicEntity $postTopicEntity = null, string $title = "", string $description = "", int $offset = 15, int $startFrom = 0): array
     {
         $db = Db::getInstance();
-        $stmt = $db->prepare("SELECT * FROM posts WHERE title LIKE :title AND description LIKE :description AND topic LIKE :topic");
+        $stmt = $db->prepare("SELECT * FROM posts WHERE title LIKE :title AND description LIKE :description AND topic LIKE :topic LIMIT :startFrom OFFSET :offset");
         $stmt->setFetchMode(\PDO::FETCH_OBJ);
         $stmt->execute([
             ":title" => "%" . $title . "%",
             ":description" => "%" . $description . "%",
-            ":topic" => $postTopicEntity === null ? "%" : $postTopicEntity->getId()
+            ":topic" => $postTopicEntity === null ? "%" : $postTopicEntity->getId(),
+            ":startFrom" => $startFrom,
+            ":offset" => $offset
         ]);
         $result = $stmt->fetchAll();
         $posts = [];
@@ -134,13 +139,15 @@ abstract class PostRepository
      * @return PostEntity[]
      * @throws DataNotFoundException
      */
-    public static function getPostsByUser(UserEntity $userEntity): array
+    public static function getPostsByUser(UserEntity $userEntity, int $offset = 15, int $startFrom = 0): array
     {
         $db = Db::getInstance();
-        $stmt = $db->prepare("SELECT * FROM posts WHERE author = :author");
+        $stmt = $db->prepare("SELECT * FROM posts WHERE author = :author LIMIT :offset OFFSET :startFrom");
         $stmt->setFetchMode(\PDO::FETCH_OBJ);
         $stmt->execute([
-            ":author" => $userEntity->getId()
+            ":author" => $userEntity->getId(),
+            ":offset" => $offset,
+            ":startFrom" => $startFrom
         ]);
         $result = $stmt->fetchAll();
         $posts = [];
