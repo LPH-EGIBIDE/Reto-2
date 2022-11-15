@@ -172,11 +172,4 @@ class PostEntity
         ];
     }
 
-
-
-
-
-
-
-
 }

@@ -48,7 +48,7 @@ function insertPost(string $title, string $description, int $topic, UserEntity $
 /**
  * @throws PostException
  */
-function showPost(int $id): void {
+function showPostById(int $id): void {
     try {
         $post = PostRepository::getPostById($id);
     }
