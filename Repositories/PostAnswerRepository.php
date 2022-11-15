@@ -149,11 +149,11 @@ abstract class PostAnswerRepository
         $db = Db::getInstance();
         $stmt = $db->prepare("SELECT * FROM post_answers WHERE author = :author_id LIMIT :offset OFFSET :start_from");
         $stmt->setFetchMode(\PDO::FETCH_OBJ);
+        $stmt->bindValue(":offset", $offset, \PDO::PARAM_INT);
+        $stmt->bindValue(":start_from", $startFrom, \PDO::PARAM_INT);
         $stmt->execute(
             [
-                ":author_id" => $userEntity->getId(),
-                ":offset" => $offset,
-                ":start_from" => $startFrom
+                ":author_id" => $userEntity->getId()
             ]
         );
         $result = $stmt->fetchAll();
@@ -177,6 +177,8 @@ abstract class PostAnswerRepository
     /**
      * @param UserEntity $userEntity
      * @param PostEntity $postEntity
+     * @param int $offset
+     * @param int $startFrom
      * @return array
      * @throws DataNotFoundException
      */
@@ -221,11 +223,11 @@ abstract class PostAnswerRepository
         $db = Db::getInstance();
         $stmt = $db->prepare("SELECT * FROM post_answers, user_favourite_answers WHERE post_answers.id = user_favourite_answers.answer AND user_favourite_answers.user = :user_id LIMIT :offset OFFSET :start_from");
         $stmt->setFetchMode(\PDO::FETCH_OBJ);
+        $stmt->bindValue(":offset", $offset, \PDO::PARAM_INT);
+        $stmt->bindValue(":start_from", $startFrom, \PDO::PARAM_INT);
         $stmt->execute(
             [
-                ":author_id" => $userEntity->getId(),
-                ":offset" => $offset,
-                ":start_from" => $startFrom
+                ":author_id" => $userEntity->getId()
             ]
         );
         $result = $stmt->fetchAll();
@@ -292,6 +294,45 @@ abstract class PostAnswerRepository
             ":user_id" => $userEntity->getId(),
             ":post_answer_id" => $postAnswerEntity->getId()
         ]);
+    }
+
+    /**
+     * @param PostAnswerEntity $postAnswerEntity
+     * @param AttachmentEntity $attachmentEntity
+     * @return bool
+     */
+    public static function addAttachment(PostAnswerEntity $postAnswerEntity, AttachmentEntity $attachmentEntity): bool
+    {
+        $db = Db::getInstance();
+        $stmt = $db->prepare("INSERT INTO post_answer_attachments (post_answers_id, attachments_id) VALUES (:post_answer_id, :attachment_id)");
+        return $stmt->execute([
+            ":post_answer_id" => $postAnswerEntity->getId(),
+            ":attachment_id" => $attachmentEntity->getId()
+        ]);
+    }
+
+    /**
+     * @param PostAnswerEntity $postAnswerEntity
+     * @return array
+     * @throws DataNotFoundException
+     */
+    public static function getAttachments(PostAnswerEntity $postAnswerEntity): array
+    {
+        $db = Db::getInstance();
+        $stmt = $db->prepare("SELECT * FROM post_answer_attachments WHERE post_answers_id = :post_answer_id");
+        $stmt->setFetchMode(\PDO::FETCH_OBJ);
+        $stmt->execute([
+            ":post_answer_id" => $postAnswerEntity->getId()
+        ]);
+        $result = $stmt->fetchAll();
+        if ($result === false) {
+            throw new DataNotFoundException("Post answer no encontrado");
+        }
+        $attachments = [];
+        foreach ($result as $attachment) {
+            $attachments[] = AttachmentRepository::getAttachmentById($attachment->attachments_id);
+        }
+        return $attachments;
     }
 
 
