@@ -5,6 +5,7 @@ namespace Repositories;
 use Db\Db;
 use Entities\PostEntity;
 use Entities\PostTopicEntity;
+use Entities\UserEntity;
 use Exceptions\DataNotFoundException;
 
 abstract class PostRepository
@@ -70,14 +71,15 @@ abstract class PostRepository
     public static function createPost(PostEntity $postEntity): void
     {
         $db = Db::getInstance();
-        $stmt = $db->prepare("INSERT INTO posts (title, description, views, topic, author, active, date) VALUES (:title, :description, :views, :topic, :author, :active)");
+        $stmt = $db->prepare("INSERT INTO posts (title, description, views, topic, author, active, date) VALUES (:title, :description, :views, :topic, :author, :active, :date)");
         $stmt->execute([
             ":title" => $postEntity->getTitle(),
             ":description" => $postEntity->getDescription(),
             ":views" => $postEntity->getViews(),
             ":topic" => $postEntity->getTopic()->getId(),
             ":author" => $postEntity->getAuthor()->getId(),
-            ":active" => $postEntity->isActive()
+            ":active" => $postEntity->isActive(),
+            ":date" => $postEntity->getDate()->format("Y-m-d H:i:s")
         ]);
         // Get the current date and time
         $date = new \DateTime();
@@ -92,7 +94,7 @@ abstract class PostRepository
     public static function getAllPosts(int $offset = 15, $startFrom = 0): array
     {
         $db = Db::getInstance();
-        $stmt = $db->prepare("SELECT * FROM posts LIMIT :offset OFFSET :startFrom");
+        $stmt = $db->prepare("SELECT * FROM posts ORDER BY date DESC LIMIT :offset OFFSET :startFrom ORDER BY date DESC");
         $stmt->setFetchMode(\PDO::FETCH_OBJ);
         $stmt->execute([
             ":offset" => $offset,
@@ -115,7 +117,7 @@ abstract class PostRepository
     public static function findPosts(PostTopicEntity $postTopicEntity = null, string $title = "", string $description = "", int $offset = 15, int $startFrom = 0): array
     {
         $db = Db::getInstance();
-        $stmt = $db->prepare("SELECT * FROM posts WHERE title LIKE :title AND description LIKE :description AND topic LIKE :topic LIMIT :startFrom OFFSET :offset");
+        $stmt = $db->prepare("SELECT * FROM posts WHERE title LIKE :title AND description LIKE :description AND topic LIKE :topic ORDER BY date DESC LIMIT :startFrom OFFSET :offset");
         $stmt->setFetchMode(\PDO::FETCH_OBJ);
         $stmt->execute([
             ":title" => "%" . $title . "%",
@@ -142,7 +144,7 @@ abstract class PostRepository
     public static function getPostsByUser(UserEntity $userEntity, int $offset = 15, int $startFrom = 0): array
     {
         $db = Db::getInstance();
-        $stmt = $db->prepare("SELECT * FROM posts WHERE author = :author LIMIT :offset OFFSET :startFrom");
+        $stmt = $db->prepare("SELECT * FROM posts WHERE author = :author ORDER BY date DESC LIMIT :offset OFFSET :startFrom");
         $stmt->setFetchMode(\PDO::FETCH_OBJ);
         $stmt->execute([
             ":author" => $userEntity->getId(),
