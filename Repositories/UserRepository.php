@@ -25,7 +25,9 @@ abstract class UserRepository
         if ($result === false) {
             throw new DataNotFoundException("Usuario no encontrado");
         }
+
         $userEntity = new UserEntity($result->username, $result->email, $result->password, $result->type, $result->profile_description, $result->active, $result->email_verified, $result->points, $result->mfa_type, $result->mfa_data);
+        $userEntity->setAvatar(AttachmentRepository::getUserAvatar($userEntity, $result->profile_pic));
         $userEntity->setId($result->id);
         return $userEntity;
     }
@@ -49,6 +51,7 @@ abstract class UserRepository
         }
         $userEntity = new UserEntity($result->username, $result->email, $result->password, $result->type, $result->profile_description, $result->active, $result->email_verified, $result->points, $result->mfa_type, $result->mfa_data);
         $userEntity->setId($result->id);
+        $userEntity->setAvatar(AttachmentRepository::getUserAvatar($userEntity, $result->profile_pic));
         return $userEntity;
     }
 
@@ -112,6 +115,7 @@ abstract class UserRepository
             ":id" => $userEntity->getId()
         ]);
     }
+
 
 
 

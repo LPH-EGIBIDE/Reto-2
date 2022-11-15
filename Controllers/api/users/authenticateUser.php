@@ -7,12 +7,14 @@ use Repositories\UserRepository;
 
 session_start();
 header('Content-Type: application/json');
-
-if(isset($_SESSION["user"]) || isset($_SESSION["mfa_pending"])) {
+if (isset($_SESSION["mfa_pending"])){
+    $user = $_SESSION["mfa_pending"];
+    if($user instanceof UserEntity)
+        echo json_encode(["status" => "continueLogin", "user" => $user->getUsername()]);
+} elseif (isset($_SESSION["user"])) {
     $user = $_SESSION["user"];
-    if($user instanceof UserEntity){
+    if($user instanceof UserEntity)
         echo json_encode(["status" => "success", "user" => $user->getUsername(), "message" => "User is already logged in"]);
-    }
 } else {
 
     $username = $_POST["username"] ?? "";
@@ -38,8 +40,18 @@ if(isset($_SESSION["user"]) || isset($_SESSION["mfa_pending"])) {
         }
     } catch (DataNotFoundException $e) {
         //Prevent user enumeration
-        echo json_encode(["status" => "error", "message" => "Contraseña incorrecta"]);
+        //Show the exception message on json if debug mode is enabled
+        if (DEBUG_MODE) {
+            echo json_encode(["status" => "error", "message" => $e->getMessage(), "line" => $e->getLine(), "file" => $e->getFile()]);
+        } else {
+            echo json_encode(["status" => "error", "message" => "Contraseña incorrecta"]);
+        }
     } catch (Exception $e) {
+        if (DEBUG_MODE) {
+            echo json_encode(["status" => "error", "message" => $e->getMessage(), "line" => $e->getLine(), "file" => $e->getFile()]);
+        } else {
+            echo json_encode(["status" => "error", "message" => "Contraseña incorrecta"]);
+        }
         echo json_encode(["status" => "error", "message" => $e->getMessage()]);
     }
 

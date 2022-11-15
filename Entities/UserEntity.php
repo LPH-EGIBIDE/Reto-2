@@ -10,20 +10,21 @@ private string $username;
 private string $email;
 private string $password;
 private int $type;
-//private AttachmentEntity $avatar;
 private string $profileDescription;
 private bool $active;
 private bool $emailVerified;
 private int $points;
 private int $mfaType;
 private string $mfaData;
+private ?AttachmentEntity $avatar;
 
-public function __construct( string $username, string $email, string $password, int $type, string $profileDescription, bool $active, bool $emailVerified, int $points, int $mfaType, string $mfaData)
+public function __construct( string $username, string $email, string $password, int $type, string $profileDescription, bool $active, bool $emailVerified, int $points, int $mfaType, string $mfaData, AttachmentEntity $avatar = null)
 {
 $this->username = $username;
 $this->email = $email;
 $this->setPassword($password);
 $this->type = $type;
+$this->avatar = $avatar;
 $this->profileDescription = $profileDescription;
 $this->active = $active;
 $this->emailVerified = $emailVerified;
@@ -94,6 +95,22 @@ $this->mfaData = $mfaData;
     public function setType(int $type): void
     {
         $this->type = $type;
+    }
+
+    /**
+     * @return AttachmentEntity
+     */
+    public function getAvatar(): AttachmentEntity
+    {
+        return $this->avatar;
+    }
+
+    /**
+     * @param AttachmentEntity $avatar
+     */
+    public function setAvatar(AttachmentEntity $avatar): void
+    {
+        $this->avatar = $avatar;
     }
 
     /**
@@ -236,6 +253,10 @@ $this->mfaData = $mfaData;
 
     //MFA stuff
 
+    /**
+     * @param string $code
+     * @return bool
+     */
     public function checkMfaCode(string $code): bool
     {
         if ($this->mfaType === 1) {
@@ -247,14 +268,35 @@ $this->mfaData = $mfaData;
     }
 
 
+    /**
+     * @param int $code
+     * @return bool
+     */
     public function checkTotpCode(int $code): bool
     {
         return TOTP::verifyTOTP($this->mfaData, $code);
     }
 
+    /**
+     * @param string $code
+     * @return bool
+     */
     public function checkEmailCode(string $code): bool
     {
         return $code === $this->mfaData;
+    }
+
+    public function toArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'username' => $this->username,
+            'email' => $this->email,
+            'avatar' => "//". $_SERVER["SERVER_NAME"]   ."/api/attachments/id/{$this->avatar->getId()}",
+            'profileDescription' => $this->profileDescription,
+            'active' => $this->active,
+            'points' => $this->points
+        ];
     }
 
 
