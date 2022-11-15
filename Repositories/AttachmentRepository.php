@@ -24,7 +24,7 @@ abstract class AttachmentRepository{
             throw new DataNotFoundException("Archivo no encontrado");
         }
         try {
-            $attachment = new AttachmentEntity($result["filename"], $result["filepath"], $result["content_type"], new DateTime("@" . $result["uploaded_at"]), $id != -1 ? UserRepository::getUserById($result["uploaded_by"]) : null, $result["public"]);
+            $attachment = new AttachmentEntity($result["filename"], $result["filepath"], $result["content_type"], new DateTime("@" . $result["uploaded_at"]), !empty($result["uploaded_by"]) ? UserRepository::getUserById($result["uploaded_by"]) : null, $result["public"]);
         } catch (\Exception $e) {
             if (DEBUG_MODE){
                 throw new DataNotFoundException("Error loading attachment: " . $e->getMessage());

@@ -63,4 +63,15 @@ class PostTopicEntity
         $this->description = $description;
     }
 
+    /**
+     * @return array
+     */
+    public function toArray(): array {
+        return [
+            "id" => $this->id,
+            "name" => $this->name,
+            "description" => $this->description
+        ];
+    }
+
 }

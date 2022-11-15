@@ -156,6 +156,22 @@ class PostEntity
         $this->date = $date;
     }
 
+    /**
+     * @return array
+     */
+    public function toArray(): array {
+        return [
+            "id" => $this->id,
+            "title" => $this->title,
+            "description" => $this->description,
+            "views" => $this->views,
+            "topic" => $this->topic->toArray(),
+            "author" => $this->author->toArray(),
+            "active" => $this->active,
+            "date" => $this->date->format("Y-m-d H:i:s")
+        ];
+    }
+
 
 
 

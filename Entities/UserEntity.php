@@ -253,6 +253,10 @@ $this->mfaData = $mfaData;
 
     //MFA stuff
 
+    /**
+     * @param string $code
+     * @return bool
+     */
     public function checkMfaCode(string $code): bool
     {
         if ($this->mfaType === 1) {
@@ -264,14 +268,35 @@ $this->mfaData = $mfaData;
     }
 
 
+    /**
+     * @param int $code
+     * @return bool
+     */
     public function checkTotpCode(int $code): bool
     {
         return TOTP::verifyTOTP($this->mfaData, $code);
     }
 
+    /**
+     * @param string $code
+     * @return bool
+     */
     public function checkEmailCode(string $code): bool
     {
         return $code === $this->mfaData;
+    }
+
+    public function toArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'username' => $this->username,
+            'email' => $this->email,
+            'avatar' => "//". $_SERVER["SERVER_NAME"]   ."/api/attachments/id/{$this->avatar->getId()}",
+            'profileDescription' => $this->profileDescription,
+            'active' => $this->active,
+            'points' => $this->points
+        ];
     }
 
 

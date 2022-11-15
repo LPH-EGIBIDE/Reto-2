@@ -117,4 +117,14 @@ class NotificationEntity
         $this->user = $user;
     }
 
+    public function toArray(): array {
+        return [
+            'id' => $this->id,
+            'text' => $this->text,
+            'dismissed' => $this->dismissed,
+            'href' => $this->href,
+            'type' => $this->type
+        ];
+    }
+
 }
