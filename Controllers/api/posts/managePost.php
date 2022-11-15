@@ -57,5 +57,5 @@ function showPostById(int $id): void {
     }
     $post->setViews($post->getViews() + 1);
     PostRepository::updatePost($post);
-    echo json_encode($post);
+    echo json_encode($post->toArray());
 }

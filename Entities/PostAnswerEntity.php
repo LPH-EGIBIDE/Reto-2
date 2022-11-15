@@ -129,5 +129,16 @@ class PostAnswerEntity
         $this->attachments[] = $attachment;
     }
 
+    public function toArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'author' => $this->author->toArray(),
+            'message' => $this->message,
+            'upvotes' => $this->upvotes,
+            'attachments' => $this->attachments
+        ];
+    }
+
 
 }

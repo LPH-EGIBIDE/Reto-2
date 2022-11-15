@@ -3,6 +3,7 @@
 namespace Repositories;
 
 use Db\Db;
+use Entities\AttachmentEntity;
 use Entities\PostAnswerEntity;
 use Entities\PostEntity;
 use Entities\UserEntity;
@@ -113,11 +114,10 @@ abstract class PostAnswerRepository
         $db = Db::getInstance();
         $stmt = $db->prepare("SELECT * FROM post_answers WHERE post = :post_id LIMIT :offset OFFSET :start_from");
         $stmt->setFetchMode(\PDO::FETCH_OBJ);
-        $stmt->execute([
-            ":post_id" => $postEntity->getId(),
-            ":offset" => $offset,
-            ":start_from" => $startFrom
-        ]);
+        $stmt->bindValue(":post_id", $postEntity->getId(), \PDO::PARAM_INT);
+        $stmt->bindValue(":offset", $offset, \PDO::PARAM_INT);
+        $stmt->bindValue(":start_from", $startFrom, \PDO::PARAM_INT);
+        $stmt->execute();
         $result = $stmt->fetchAll();
         if ($result === false) {
             throw new DataNotFoundException("Post answer no encontrado");
