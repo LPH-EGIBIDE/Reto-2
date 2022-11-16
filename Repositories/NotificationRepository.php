@@ -23,7 +23,7 @@ abstract class NotificationRepository
         if ($result === false) {
             throw new DataNotFoundException("Notificación no encontrada");
         }
-        $notificationEntity = new NotificationEntity($result->text, $result->dismissed, $result->href, $result->type, UserRepository::getUserById($result->user_id));
+        $notificationEntity = new NotificationEntity($result->text, $result->dismissed, $result->href, $result->type, UserRepository::getUserById($result->user));
         $notificationEntity->setId($result->id);
         return $notificationEntity;
     }
@@ -32,10 +32,11 @@ abstract class NotificationRepository
      * @param UserEntity $userEntity
      * @return NotificationEntity[]
      */
-    public static function getNotificationsByUser(UserEntity $userEntity): array
+    public static function getNotificationsByUser(UserEntity $userEntity, bool $all): array
     {
         $db = Db::getInstance();
-        $stmt = $db->prepare("SELECT * FROM notifications WHERE id = :id");
+        $sqlAll = $all ? "OR dismissed = 1 " : "";
+        $stmt = $db->prepare("SELECT * FROM notifications WHERE user = :id AND dismissed = 0 $sqlAll");
         $stmt->setFetchMode(\PDO::FETCH_OBJ);
         $stmt->execute([
             ":id" => $userEntity->getId()
