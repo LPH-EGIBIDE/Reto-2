@@ -25,9 +25,14 @@ try {
     foreach ($posts as $post) {
         $data['posts'][] = $post->toArray();
     }
+    echo json_encode($data);
 } catch (DataNotFoundException $e) {
-    echo json_encode(["status" => "error", "message" => "No hay posts", "line" => $e->getLine(), "file" => $e->getFile()]);
+    if (DEBUG_MODE) {
+        echo json_encode(["status" => "error", "message" => "No hay posts", "line" => $e->getLine(), "file" => $e->getFile()]);
+    } else {
+        echo json_encode(["status" => "error", "message" => "No hay posts"]);
+    }
+
     $data['posts'] = [];
 }
 
-echo json_encode($data);

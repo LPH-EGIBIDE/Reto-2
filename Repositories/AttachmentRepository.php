@@ -37,21 +37,22 @@ abstract class AttachmentRepository{
 
     /**
      * @param AttachmentEntity $attachmentEntity
-     * @return bool
+     * @return int
      */
-    public static function insertAttachment(AttachmentEntity $attachmentEntity): bool
+    public static function insertAttachment(AttachmentEntity $attachmentEntity): int
     {
         $db = Db::getInstance();
         $stmt = $db->prepare("INSERT INTO attachments (filename, filepath, content_type, uploaded_at, uploaded_by, public) VALUES (:filename, :filepath, :content_type, :uploaded_at, :uploaded_by, :public)");
 
-        return $stmt->execute([
+        $stmt->execute([
             ":filename" => $attachmentEntity->getFilename(),
             ":filepath" => $attachmentEntity->getFilepath(),
             ":content_type" => $attachmentEntity->getContentType(),
-            ":uploaded_at" => $attachmentEntity->getUploadedAt(),
+            ":uploaded_at" => $attachmentEntity->getUploadedAt()->format("Y-m-d H:i:s"),
             ":uploaded_by" => $attachmentEntity->getUploadedBy()->getId(),
             ":public" => $attachmentEntity->isPublic()
         ]);
+        return $db->lastInsertId();
     }
 
     /**
@@ -68,7 +69,7 @@ abstract class AttachmentRepository{
             ":filename" => $attachmentEntity->getFilename(),
             ":filepath" => $attachmentEntity->getFilepath(),
             ":content_type" => $attachmentEntity->getContentType(),
-            ":uploaded_at" => $attachmentEntity->getUploadedAt(),
+            ":uploaded_at" => $attachmentEntity->getUploadedAt()->format("Y-m-d H:i:s"),
             ":uploaded_by" => $attachmentEntity->getUploadedBy()->getId(),
             ":public" => $attachmentEntity->isPublic()
         ]);
