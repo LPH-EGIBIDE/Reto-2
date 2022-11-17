@@ -143,7 +143,7 @@ abstract class AttachmentRepository{
         $stmt = $db->prepare("SELECT * FROM attachments, post_answer_attachments WHERE post_answers_id = id AND post_answers_id = :post_answers_id");
         $stmt->execute(
             [
-                ":post_answer_id" => $postAnswerId
+                ":post_answers_id" => $postAnswerId
             ]
         );
         $result = $stmt->fetchAll();

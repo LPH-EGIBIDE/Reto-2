@@ -221,15 +221,12 @@ abstract class PostAnswerRepository
     static function getUserFavouriteAnswers(UserEntity $userEntity, int $offset = 15, int $startFrom = 0): array
     {
         $db = Db::getInstance();
-        $stmt = $db->prepare("SELECT * FROM post_answers, user_favourite_answers WHERE post_answers.id = user_favourite_answers.answer AND user_favourite_answers.user = :user_id LIMIT :offset OFFSET :start_from");
+        $stmt = $db->prepare("SELECT * FROM post_answers, user_favourite_answers WHERE post_answers.id = user_favourite_answers.answer AND user_favourite_answers.user = :author_id LIMIT :offset OFFSET :start_from");
         $stmt->setFetchMode(\PDO::FETCH_OBJ);
         $stmt->bindValue(":offset", $offset, \PDO::PARAM_INT);
         $stmt->bindValue(":start_from", $startFrom, \PDO::PARAM_INT);
-        $stmt->execute(
-            [
-                ":author_id" => $userEntity->getId()
-            ]
-        );
+        $stmt->bindValue(":author_id", $userEntity->getId(), \PDO::PARAM_INT);
+        $stmt->execute();
         $result = $stmt->fetchAll();
         if ($result === false) {
             throw new DataNotFoundException("Post answer no encontrado");
@@ -254,9 +251,18 @@ abstract class PostAnswerRepository
      * @return bool
      */
     static function addUserFavouriteAnswer(UserEntity $userEntity, PostAnswerEntity $postAnswerEntity): bool
-{
+    {
         $db = Db::getInstance();
         $stmt = $db->prepare("INSERT INTO user_favourite_answers (user, answer) VALUES (:user_id, :answer_id)");
+        $stmt->bindValue(":user_id", $userEntity->getId(), \PDO::PARAM_INT);
+        $stmt->bindValue(":answer_id", $postAnswerEntity->getId(), \PDO::PARAM_INT);
+        return $stmt->execute();
+    }
+
+    static function removeUserFavouriteAnswer(UserEntity $userEntity, PostAnswerEntity $postAnswerEntity): bool
+    {
+        $db = Db::getInstance();
+        $stmt = $db->prepare("DELETE FROM user_favourite_answers WHERE :user_id = user AND :answer_id = answer");
         return $stmt->execute(
             [
                 ":user_id" => $userEntity->getId(),
