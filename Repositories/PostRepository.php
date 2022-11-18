@@ -117,19 +117,19 @@ abstract class PostRepository
      * @return PostEntity[]
      * @throws DataNotFoundException
      */
-    public static function findPosts(PostTopicEntity $postTopicEntity = null, string $title = "", string $description = "", int $offset = 15, int $startFrom = 0): array
-    {
+    public static function filterPosts(int $offset, int $startFrom, string $title = "", int $topic = null, int $author = null, string $sort = "DATE", string $sortOrder = "DESC"): array {
         $db = Db::getInstance();
-        $stmt = $db->prepare("SELECT * FROM posts WHERE title LIKE :title AND description LIKE :description AND topic LIKE :topic ORDER BY date DESC LIMIT :startFrom OFFSET :offset");
+        $stmt = $db->prepare("SELECT * FROM posts WHERE TITLE LIKE :title AND DESCRIPTION LIKE :title AND TOPIC LIKE :topic AND AUTHOR LIKE :author ORDER BY :sort DESC LIMIT :offset OFFSET :startFrom");
         $stmt->setFetchMode(\PDO::FETCH_OBJ);
-        $stmt->bindValue(":offset", $offset, \PDO::PARAM_INT);
-        $stmt->bindValue(":startFrom", $startFrom, \PDO::PARAM_INT);
+        $stmt->bindValue(":title", $title, \PDO::PARAM_INT);
+        $stmt->bindValue(":topic", $topic, \PDO::PARAM_INT);
         $stmt->execute([
-            ":title" => "%" . $title . "%",
-            ":description" => "%" . $description . "%",
-            ":topic" => $postTopicEntity === null ? "%" : $postTopicEntity->getId()
+            ":title" => $title
         ]);
         $result = $stmt->fetchAll();
+        if (count($result) === 0) {
+            throw new DataNotFoundException("No se ha encontrado ningún post");
+        }
         $posts = [];
         foreach ($result as $post) {
             $postEntity = new PostEntity($post->title, $post->description, $post->views, PostTopicRepository::getPostTopicById($post->topic), UserRepository::getUserById($post->author), $post->active, DateTime::createFromFormat("Y-m-d H:i:s", $post->date));
@@ -137,7 +137,6 @@ abstract class PostRepository
             $posts[] = $postEntity;
         }
         return $posts;
-
     }
 
     /**
