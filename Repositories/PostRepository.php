@@ -117,15 +117,31 @@ abstract class PostRepository
      * @return PostEntity[]
      * @throws DataNotFoundException
      */
-    public static function filterPosts(int $offset, int $startFrom, string $title = "", int $topic = null, int $author = null, string $sort = "DATE", string $sortOrder = "DESC"): array {
+    public static function filterPosts(int $offset, int $startFrom, string $title = "", int $topic = null, string $sort = "DATE", string $sortOrder = "DESC"): array {
         $db = Db::getInstance();
-        $stmt = $db->prepare("SELECT * FROM posts WHERE TITLE LIKE :title AND DESCRIPTION LIKE :title AND TOPIC LIKE :topic AND AUTHOR LIKE :author ORDER BY :sort DESC LIMIT :offset OFFSET :startFrom");
+        // set pdo to throw exceptions
+        $db->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+        //display errors
+        error_reporting(E_ALL);
+        ini_set('display_errors', 1);
+
+        $sortBy = [
+            "DATE" => "date",
+            "VIEWS" => "views"
+        ];
+        $sortOrders = [
+            "ASC" => "ASC",
+            "DESC" => "DESC"
+        ];
+        $sort = $sortBy[$sort] ?? "date";
+        $sortOrder = $sortOrders[$sortOrder] ?? "DESC";
+        $preparedTopic = is_numeric($topic) ? $topic : '%';
+        $stmt = $db->prepare("SELECT * FROM posts WHERE TITLE LIKE CONCAT('%', :title, '%') AND DESCRIPTION LIKE CONCAT('%', :title, '%') AND TOPIC LIKE '$preparedTopic'  ORDER BY $sort $sortOrder LIMIT :offset OFFSET :startFrom");
         $stmt->setFetchMode(\PDO::FETCH_OBJ);
-        $stmt->bindValue(":title", $title, \PDO::PARAM_INT);
-        $stmt->bindValue(":topic", $topic, \PDO::PARAM_INT);
-        $stmt->execute([
-            ":title" => $title
-        ]);
+        $stmt->bindValue(":offset", $offset, \PDO::PARAM_INT);
+        $stmt->bindValue(":startFrom", $startFrom, \PDO::PARAM_INT);
+        $stmt->bindValue(":title", $title);
+        $stmt->execute();
         $result = $stmt->fetchAll();
         if (count($result) === 0) {
             throw new DataNotFoundException("No se ha encontrado ningún post");
@@ -134,7 +150,7 @@ abstract class PostRepository
         foreach ($result as $post) {
             $postEntity = new PostEntity($post->title, $post->description, $post->views, PostTopicRepository::getPostTopicById($post->topic), UserRepository::getUserById($post->author), $post->active, DateTime::createFromFormat("Y-m-d H:i:s", $post->date));
             $postEntity->setId($post->id);
-            $posts[] = $postEntity;
+            $posts[] = $postEntity->toArray();
         }
         return $posts;
     }
