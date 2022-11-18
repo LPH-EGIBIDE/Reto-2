@@ -2,6 +2,7 @@
 require_once "../../../config.inc.php";
 
 use Entities\UserEntity;
+use Utils\EmailUtils;
 
 session_start();
 
@@ -14,13 +15,21 @@ if (isset($_SESSION["mfa_pending"])) {
         if (empty($mfaCode)) {
             echo json_encode(["status" => "error", "message" => "El código no puede estar vacío"]);
         } else {
-            if ($user->checkTotpCode(intval($mfaCode))) {
+            if ($user->checkMfaCode($mfaCode)) {
                 unset($_SESSION["mfa_pending"]);
                 $_SESSION["user"] = $user;
                 echo json_encode(["status" => "success", "user" => $user->getUsername(), "message" => "Bienvenido de nuevo " . $user->getUsername()]);
+                // Instance a new Emailutils and send a login email
+                $emailUtils = new EmailUtils(EMAIL_API_KEY);
+                try {
+                    $emailUtils->sendLoginEmail($user);
+                } catch (\Exceptions\PostException $e) {
+                    die(json_encode(["status" => "error", "message" => $e->getMessage()]));
+                }
             } else {
                 echo json_encode(["status" => "error", "message" => "Código incorrecto"]);
             }
+
         }
     }
 } else {

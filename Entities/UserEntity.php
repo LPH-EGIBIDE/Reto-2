@@ -260,9 +260,9 @@ $this->mfaData = $mfaData;
     public function checkMfaCode(string $code): bool
     {
         if ($this->mfaType === 1) {
-            return $this->checkTotpCode($code);
+            return $this->checkTotpCode(intval($code));
         } elseif ($this->mfaType === 2) {
-            return $this->checkEmailCode($code);
+            return $this->checkEmailCode(intval($code));
         }
         return false;
     }

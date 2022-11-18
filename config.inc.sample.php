@@ -10,6 +10,7 @@ const DB_HOST = "db";
 const DB_USER = "docker";
 const DB_DATABASE = "lph_app2";
 const DB_PASSWORD = "";
+const EMAIL_API_KEY = "";
 
 const APP_ROOT = __DIR__ . '/';
 // !!!!!!!!!!!!!!! PONER EN FALSE EN PRODUCCION !!!!!!!!!!!!!!!!!!!!!
