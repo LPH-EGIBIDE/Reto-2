@@ -3,19 +3,21 @@ require_once "../../../config.inc.php";
 
 use Entities\UserEntity;
 use Exceptions\DataNotFoundException;
+use Exceptions\PostException;
 use Repositories\UserRepository;
+use Utils\EmailUtils;
 
 session_start();
 header('Content-Type: application/json');
-if (isset($_SESSION["mfa_pending"])){
-    $user = $_SESSION["mfa_pending"];
-    if($user instanceof UserEntity)
-        echo json_encode(["status" => "continueLogin", "user" => $user->getUsername()]);
-} elseif (isset($_SESSION["user"])) {
+if (isset($_SESSION["user"])) {
     $user = $_SESSION["user"];
     if($user instanceof UserEntity)
         echo json_encode(["status" => "success", "user" => $user->getUsername(), "message" => "User is already logged in"]);
 } else {
+    //Check if the user is pending to verify the mfa code and unset the session mfa_pending
+    if (isset($_SESSION["mfa_pending"])) {
+        unset($_SESSION["mfa_pending"]);
+    }
 
     $username = $_POST["username"] ?? "";
     $password = $_POST["password"] ?? "";
@@ -26,19 +28,40 @@ if (isset($_SESSION["mfa_pending"])){
         }
         $user = UserRepository::getUserByUsername($username);
         if($user->checkPassword($password)){
-            if ($user->getMfaType() == 0) {
-                $_SESSION["user"] = $user;
-                echo json_encode(["status" => "success", "user" => $user->getUsername(), "message" => "Bienvenido de nuevo ".$user->getUsername()]);
-            } else {
-                $_SESSION["mfa_pending"] = $user;
-                echo json_encode(["status" => "continueLogin", "user" => $user->getUsername()]);
+            switch ($user->getMfaType()){
+                case 0:
+                    $_SESSION["user"] = $user;
+                    echo json_encode(["status" => "success", "user" => $user->getUsername(), "message" => "Bienvenido de nuevo ".$user->getUsername()]);
+                    // Instance a new Emailutils and send a login email
+                    $emailUtils = new EmailUtils(EMAIL_API_KEY);
+                    $emailUtils->sendLoginEmail($user);
+                    break;
+                case 1:
+                    // TOTP MFA
+                    $_SESSION["mfa_pending"] = $user;
+                    echo json_encode(["status" => "continueLogin", "user" => $user->getUsername()]);
+                    break;
+                case 2:
+                    // Email verification
+                    //Generate a 6 digit code and send it to the user email
+                    $code = rand(100000, 999999);
+                    $user->setMfaData($code);
+                    UserRepository::updateUser($user);
+
+                    // Instance a new Emailutils and send a login email
+                    $emailUtils = new EmailUtils(EMAIL_API_KEY);
+                    $emailUtils->sendMfaEmail($user);
+                    $_SESSION["mfa_pending"] = $user;
+                    echo json_encode(["status" => "continueLogin", "user" => $user->getUsername()]);
+                    break;
             }
+
 
 
         } else {
             echo json_encode(["status" => "error", "message" => "Contraseña incorrecta"]);
         }
-    } catch (DataNotFoundException $e) {
+    } catch (DataNotFoundException | PostException $e) {
         //Prevent user enumeration
         //Show the exception message on json if debug mode is enabled
         if (DEBUG_MODE) {
@@ -49,10 +72,8 @@ if (isset($_SESSION["mfa_pending"])){
     } catch (Exception $e) {
         if (DEBUG_MODE) {
             echo json_encode(["status" => "error", "message" => $e->getMessage(), "line" => $e->getLine(), "file" => $e->getFile()]);
-        } else {
-            echo json_encode(["status" => "error", "message" => "Contraseña incorrecta"]);
-        }
-        echo json_encode(["status" => "error", "message" => $e->getMessage()]);
+        } else
+            echo json_encode(["status" => "error", "message" => $e->getMessage()]);
     }
 
 }

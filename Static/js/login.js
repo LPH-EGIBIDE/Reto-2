@@ -43,6 +43,8 @@ function performLogin(formElement){
 		username: username,
 		password: password
 	}
+	//Seteamos el elemento loginBtn a un spinner con fontawesome
+	document.getElementById("loginBtn").innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
 
 	//Creamos una petición POST a la API con contenido urlencoded
 	fetch("/api/users/authenticateUser", {
@@ -70,6 +72,8 @@ function performLogin(formElement){
 				showToast("Error desconocido", "error", () => {});
 				break;
 		}
+		//Seteamos el elemento loginBtn a Iniciar Sesión
+		document.getElementById("loginBtn").innerHTML = 'Iniciar Sesión';
 	});
 
 }

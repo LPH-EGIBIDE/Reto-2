@@ -31,7 +31,7 @@
             <input type="text" name="username" placeholder="Nombre de usuario" required>
             <input type="password" name="password" placeholder="Contraseña" required>
             <a href="#" id="olvidar">Olvidaste la contraseña?</a>
-            <button type="submit">Iniciar sesión</button>
+            <button type="submit" id="loginBtn">Iniciar sesión</button>
             <button class="ghost" id="signUp2">Registrarse</button>
         </form>
 
@@ -54,5 +54,6 @@
 </div>
 <script src="/assets/js/login.js"></script>
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<link href="https://cdn.jsdelivr.net/gh/hung1001/font-awesome-pro-v6@44659d9/css/all.min.css" rel="stylesheet" type="text/css" />
 </body>
 </html>
