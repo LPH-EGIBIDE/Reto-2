@@ -39,7 +39,7 @@ if (isset($_SESSION["user"])) {
                 case 1:
                     // TOTP MFA
                     $_SESSION["mfa_pending"] = $user;
-                    echo json_encode(["status" => "continueLogin", "user" => $user->getUsername()]);
+                    echo json_encode(["status" => "continueLogin", "user" => $user->getUsername(), "message" => "Introduce el codigo de verificacion de tu aplicacion de autenticacion"]);
                     break;
                 case 2:
                     // Email verification
@@ -52,7 +52,7 @@ if (isset($_SESSION["user"])) {
                     $emailUtils = new EmailUtils(EMAIL_API_KEY);
                     $emailUtils->sendMfaEmail($user);
                     $_SESSION["mfa_pending"] = $user;
-                    echo json_encode(["status" => "continueLogin", "user" => $user->getUsername()]);
+                    echo json_encode(["status" => "continueLogin", "user" => $user->getUsername(), "message" => "Introduce el codigo de verificacion que te hemos enviado a tu email"]);
                     break;
             }
 

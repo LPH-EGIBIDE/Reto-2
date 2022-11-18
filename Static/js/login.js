@@ -33,6 +33,11 @@ document.getElementById("loginForm").addEventListener("submit", function(e){
 	performLogin(e.target);
 });
 
+document.getElementById("signupForm").addEventListener("submit", function(e){
+	e.preventDefault();
+	performRegister(e.target);
+});
+
 
 function performLogin(formElement){
 	//Recogemos los datos del formulario por el campo name
@@ -63,7 +68,7 @@ function performLogin(formElement){
 				});
 				break;
 			case "continueLogin":
-				handleMfa();
+				handleMfa(data.message);
 				break;
 			case "error":
 				showToast(data.message, "error", () => {});
@@ -78,12 +83,54 @@ function performLogin(formElement){
 
 }
 
+function performRegister(formElement){
+	//Recogemos los datos del formulario por el campo name
+	let username = formElement.username.value;
+	let password = formElement.password.value;
+	let email = formElement.email.value;
+	//Creamos un objeto con los datos
+	let data = {
+		username: username,
+		password: password,
+		email: email
+	}
+	//Seteamos el elemento loginBtn a un spinner con fontawesome
+	document.getElementById("regBtn").innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
 
+	//Creamos una petición POST a la API con contenido urlencoded
+	fetch("/api/users/registerUser", {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/x-www-form-urlencoded"
+		},
+		body: new URLSearchParams(data)
+	})
+		.then(response => response.json())
+		.then(data => {
+			switch (data.status) {
+				case "success":
+					showToast(data.message, "success", () => {
+						window.location.href = "/login";
+					});
+					break;
+				case "error":
+					showToast(data.message, "error", () => {});
+					break;
+				default:
+					showToast("Error desconocido", "error", () => {});
+					break;
+			}
+			//Seteamos el elemento signUp2 a Registrarse
+			document.getElementById("regBtn").innerHTML = 'Registrarse';
+		});
 
-function handleMfa(){
+}
+
+function handleMfa(message){
 	//Show a sweetalert with a form to enter the MFA code
 	Swal.fire({
-		title: "Introduce el código de verificación",
+		title: "Verificación en dos pasos",
+		text: message,
 		input: "text",
 		inputAttributes: {
 			autocapitalize: "off"

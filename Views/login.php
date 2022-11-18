@@ -17,7 +17,7 @@
             <input type="text" name="username" placeholder="Nombre de usuario" required>
             <input type="email" name="email" placeholder="Email" required>
             <input type="password" name="password" placeholder="Contraseña" required>
-            <button type="submit">Registrarse</button>
+            <button type="submit" id="regBtn">Registrarse</button>
             <button class="ghost" id="signIn2">Conectar</button>
         </form>
 

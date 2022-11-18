@@ -116,9 +116,28 @@ abstract class UserRepository
         ]);
     }
 
-
-
-
+    /**
+     * @param string $email
+     * @return UserEntity
+     * @throws DataNotFoundException
+     */
+    public static function getUserByEmail(string $email): UserEntity
+    {
+        $db = Db::getInstance();
+        $stmt = $db->prepare("SELECT * FROM users WHERE email = :email");
+        //Fetch as object
+        $stmt->setFetchMode(\PDO::FETCH_OBJ);
+        $stmt->bindParam(":email", $email);
+        $stmt->execute();
+        $result = $stmt->fetch();
+        if ($result === false) {
+            throw new DataNotFoundException("Usuario no encontrado");
+        }
+        $userEntity = new UserEntity($result->username, $result->email, $result->password, $result->type, $result->profile_description, $result->active, $result->email_verified, $result->points, $result->mfa_type, $result->mfa_data);
+        $userEntity->setId($result->id);
+        $userEntity->setAvatar(AttachmentRepository::getUserAvatar($userEntity, $result->profile_pic));
+        return $userEntity;
+    }
 
 
 }

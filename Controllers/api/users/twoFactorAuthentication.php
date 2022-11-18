@@ -2,6 +2,7 @@
 require_once "../../../config.inc.php";
 
 use Entities\UserEntity;
+use Repositories\UserRepository;
 use Utils\EmailUtils;
 
 session_start();
@@ -18,6 +19,11 @@ if (isset($_SESSION["mfa_pending"])) {
             if ($user->checkMfaCode($mfaCode)) {
                 unset($_SESSION["mfa_pending"]);
                 $_SESSION["user"] = $user;
+                if (!$user->isEmailVerified()){
+                    $user->setEmailVerified(true);
+                    $user->setMfaType(0);
+                    UserRepository::updateUser($user);
+                }
                 echo json_encode(["status" => "success", "user" => $user->getUsername(), "message" => "Bienvenido de nuevo " . $user->getUsername()]);
                 // Instance a new Emailutils and send a login email
                 $emailUtils = new EmailUtils(EMAIL_API_KEY);
