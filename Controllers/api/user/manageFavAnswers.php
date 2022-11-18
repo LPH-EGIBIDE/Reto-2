@@ -19,18 +19,29 @@ function getFavouriteAnswers (UserEntity $user): array {
     foreach ($favouriteAnswers as $favouriteAnswer) {
         $data[] = $favouriteAnswer->toArray();
     }
-    var_dump($data);
     return $data;
 }
 
 function addFavouriteAnswers (UserEntity $user, int $id): void {
-    $answer = PostAnswerRepository::getPostAnswerById($id);
-    PostAnswerRepository::addUserFavouriteAnswer($user, $answer);
+    try {
+        $answer = PostAnswerRepository::getPostAnswerById($id);
+        if(!PostAnswerRepository::addUserFavouriteAnswer($user, $answer))
+            throw new DataNotFoundException("Respuesta ya añadida a favoritos");
+    }
+    catch (DataNotFoundException $e) {
+        throw new DataNotFoundException($e->getMessage());
+    }
 }
 
 function removeFavouriteAnswers (UserEntity $user, int $id): void {
-    $answer = PostAnswerRepository::getPostAnswerById($id);
-    PostAnswerRepository::removeUserFavouriteAnswer($user, $answer);
+    try {
+        $answer = PostAnswerRepository::getPostAnswerById($id);
+        if(!PostAnswerRepository::removeUserFavouriteAnswer($user, $answer))
+            throw new DataNotFoundException("Respuesta no encontrada en favoritos");
+    }
+    catch (DataNotFoundException $e) {
+        throw new DataNotFoundException($e->getMessage());
+    }
 }
 
 // Get method from _POST['method'] or default to 'get'

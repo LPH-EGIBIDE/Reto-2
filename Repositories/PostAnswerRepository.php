@@ -8,11 +8,10 @@ use Entities\PostAnswerEntity;
 use Entities\PostEntity;
 use Entities\UserEntity;
 use Exceptions\DataNotFoundException;
+use PDOStatement;
 
 abstract class PostAnswerRepository
 {
-
-
     /**
      * @param int $id
      * @return PostAnswerEntity
@@ -27,7 +26,7 @@ abstract class PostAnswerRepository
         $stmt->execute();
         $result = $stmt->fetch();
         if ($result === false) {
-            throw new DataNotFoundException("Post answer no encontrado");
+            throw new DataNotFoundException("Respuesta no encontrada");
         }
         $postAnswerEntity = new PostAnswerEntity(
             UserRepository::getUserById($result->author),
@@ -54,7 +53,7 @@ abstract class PostAnswerRepository
         $stmt->execute();
         $result = $stmt->fetch();
         if ($result === false) {
-            throw new DataNotFoundException("Post answer no encontrado");
+            throw new DataNotFoundException("Respuesta no encontrada");
         }
         return $result->upvotes;
     }
@@ -120,7 +119,7 @@ abstract class PostAnswerRepository
         $stmt->execute();
         $result = $stmt->fetchAll();
         if ($result === false) {
-            throw new DataNotFoundException("Post answer no encontrado");
+            throw new DataNotFoundException("Respuesta no encontrada");
         }
         $postAnswers = [];
         foreach ($result as $postAnswer) {
@@ -158,7 +157,7 @@ abstract class PostAnswerRepository
         );
         $result = $stmt->fetchAll();
         if ($result === false) {
-            throw new DataNotFoundException("Post answer no encontrado");
+            throw new DataNotFoundException("Respuesta no encontrada");
         }
         $postAnswers = [];
         foreach ($result as $postAnswer) {
@@ -195,7 +194,7 @@ abstract class PostAnswerRepository
         );
         $result = $stmt->fetchAll();
         if ($result === false) {
-            throw new DataNotFoundException("Post answer no encontrado");
+            throw new DataNotFoundException("Respuesta no encontrada");
         }
         $postAnswers = [];
         foreach ($result as $postAnswer) {
@@ -229,7 +228,7 @@ abstract class PostAnswerRepository
         $stmt->execute();
         $result = $stmt->fetchAll();
         if ($result === false) {
-            throw new DataNotFoundException("Post answer no encontrado");
+            throw new DataNotFoundException("Respuesta no encontrada");
         }
         $postAnswers = [];
         foreach ($result as $postAnswer) {
@@ -263,12 +262,18 @@ abstract class PostAnswerRepository
     {
         $db = Db::getInstance();
         $stmt = $db->prepare("DELETE FROM user_favourite_answers WHERE :user_id = user AND :answer_id = answer");
-        return $stmt->execute(
+        $stmt->bindValue(":user_id", $userEntity->getId(), \PDO::PARAM_INT);
+        $stmt->bindValue(":answer_id", $postAnswerEntity->getId(), \PDO::PARAM_INT);
+        $result = $stmt->execute(
             [
                 ":user_id" => $userEntity->getId(),
                 ":answer_id" => $postAnswerEntity->getId()
             ]
         );
+        if ($stmt->rowCount() === 0) {
+            throw new DataNotFoundException("Esta respuesta no está marcada como favorita");
+        }
+        return $result;
     }
 
 
@@ -332,7 +337,7 @@ abstract class PostAnswerRepository
         ]);
         $result = $stmt->fetchAll();
         if ($result === false) {
-            throw new DataNotFoundException("Post answer no encontrado");
+            throw new DataNotFoundException("Respuesta no encontrada");
         }
         $attachments = [];
         foreach ($result as $attachment) {
@@ -340,9 +345,5 @@ abstract class PostAnswerRepository
         }
         return $attachments;
     }
-
-
-
-
 
 }
