@@ -65,7 +65,10 @@ class EmailUtils
         }
     }
 
+
     /**
+     * @param UserEntity $user
+     * @return void
      * @throws PostException
      */
     public function sendLoginEmail(UserEntity $user)
@@ -73,12 +76,26 @@ class EmailUtils
         $this->sendEmail($user->getEmail(), "Inicio de sesion", "Se ha iniciado sesion en tu cuenta de WTFAQ desde una nueva ubicacion con la direccion IP ${_SERVER["REMOTE_ADDR"]}. Si no has sido tu, cambia tu contraseña lo antes posible.");
     }
 
+
     /**
+     * @param UserEntity $user
+     * @return void
      * @throws PostException
      */
     public function sendMfaEmail(UserEntity $user)
     {
         $this->sendEmail($user->getEmail(), "Codigo de verificacion", "Tu código de verificacion es: " . $user->getMfaData());
+    }
+
+
+    /**
+     * @param UserEntity $user
+     * @return void
+     * @throws PostException
+     */
+    public function sendRegisterEmail(UserEntity $user)
+    {
+        $this->sendEmail($user->getEmail(), "Registro de cuenta", "Se ha registrado una cuenta en WTFAQ con tu correo electronico. Ya puedes iniciar sesion en la web.");
     }
 
 
