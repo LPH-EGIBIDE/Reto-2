@@ -139,5 +139,38 @@ abstract class UserRepository
         return $userEntity;
     }
 
+    /**
+     * @param string $token
+     * @return UserEntity
+     * @throws DataNotFoundException
+     */
+    public static function getUserByPasswordResetToken(string $token): UserEntity
+    {
+        $db = Db::getInstance();
+        $stmt = $db->prepare("SELECT * FROM users WHERE password_reset_token = :token");
+        //Fetch as object
+        $stmt->setFetchMode(\PDO::FETCH_OBJ);
+        $stmt->bindParam(":token", $token);
+        $stmt->execute();
+        $result = $stmt->fetch();
+        if ($result === false) {
+            throw new DataNotFoundException("Usuario no encontrado");
+        }
+        $userEntity = new UserEntity($result->username, $result->email, $result->password, $result->type, $result->profile_description, $result->active, $result->email_verified, $result->points, $result->mfa_type, $result->mfa_data);
+        $userEntity->setId($result->id);
+        $userEntity->setAvatar(AttachmentRepository::getUserAvatar($userEntity, $result->profile_pic));
+        return $userEntity;
+    }
+
+    public static function setPasswordResetToken(UserEntity $userEntity, string $token): bool
+    {
+        $db = Db::getInstance();
+        $stmt = $db->prepare("UPDATE users SET password_reset_token = :token WHERE id = :id");
+        return $stmt->execute([
+            ":id" => $userEntity->getId(),
+            ":token" => $token
+        ]);
+    }
+
 
 }

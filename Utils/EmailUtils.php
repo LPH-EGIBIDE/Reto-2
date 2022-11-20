@@ -71,7 +71,7 @@ class EmailUtils
      * @return void
      * @throws PostException
      */
-    public function sendLoginEmail(UserEntity $user)
+    public function sendLoginEmail(UserEntity $user): void
     {
         $this->sendEmail($user->getEmail(), "Inicio de sesion", "Se ha iniciado sesion en tu cuenta de WTFAQ desde una nueva ubicacion con la direccion IP ${_SERVER["REMOTE_ADDR"]}. Si no has sido tu, cambia tu contraseña lo antes posible.");
     }
@@ -82,7 +82,7 @@ class EmailUtils
      * @return void
      * @throws PostException
      */
-    public function sendMfaEmail(UserEntity $user)
+    public function sendMfaEmail(UserEntity $user): void
     {
         $this->sendEmail($user->getEmail(), "Codigo de verificacion", "Tu código de verificacion es: " . $user->getMfaData());
     }
@@ -93,9 +93,19 @@ class EmailUtils
      * @return void
      * @throws PostException
      */
-    public function sendRegisterEmail(UserEntity $user)
+    public function sendRegisterEmail(UserEntity $user): void
     {
         $this->sendEmail($user->getEmail(), "Registro de cuenta", "Se ha registrado una cuenta en WTFAQ con tu correo electronico. Ya puedes iniciar sesion en la web.");
+    }
+
+    /**
+     * @param UserEntity $user
+     * @param string $token
+     * @throws PostException
+     */
+    public function sendResetPasswordEmail(UserEntity $user, string $token): void
+    {
+        $this->sendEmail($user->getEmail(), "Restablecer contraseña", "Se ha solicitado un restablecimiento de contraseña para tu cuenta de WTFAQ. Si no has sido tu, ignora este email. Si has sido tu, sigue el siguiente enlace: https://wtfaq.lph.local/login?token=${token}");
     }
 
 

@@ -18,6 +18,7 @@ private int $mfaType;
 private string $mfaData;
 private ?AttachmentEntity $avatar;
 
+
 public function __construct( string $username, string $email, string $password, int $type, string $profileDescription, bool $active, bool $emailVerified, int $points, int $mfaType, string $mfaData, AttachmentEntity $avatar = null)
 {
 $this->username = $username;

@@ -30,7 +30,7 @@
 
             <input type="text" name="username" placeholder="Nombre de usuario" required>
             <input type="password" name="password" placeholder="Contraseña" required>
-            <a href="#" id="olvidar">Olvidaste la contraseña?</a>
+            <a href="#" onclick="resetPasswordEmailModal()" id="olvidar">Olvidaste la contraseña?</a>
             <button type="submit" id="loginBtn">Iniciar sesión</button>
             <button class="ghost" id="signUp2">Registrarse</button>
         </form>

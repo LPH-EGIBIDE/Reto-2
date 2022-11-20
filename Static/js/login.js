@@ -126,6 +126,89 @@ function performRegister(formElement){
 
 }
 
+function resetPasswordEmailModal(){
+	//Creamos un modal de SweetAlert2 para pedir el email y hacemos una petición POST a la API
+	Swal.fire({
+		title: 'Recuperar contraseña',
+		input: 'email',
+		inputLabel: 'Introduce tu email',
+		inputPlaceholder: 'Introduce tu email',
+		showCancelButton: true,
+		confirmButtonText: 'Enviar',
+		showLoaderOnConfirm: true,
+		preConfirm: (email) => {
+			return fetch(`/api/users/resetPassword`, {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/x-www-form-urlencoded"
+				},
+				body: new URLSearchParams({
+					email: email
+				})
+			})
+				.then(response => response.json())
+				.then(data => {
+					if (data.status === "error") {
+						throw new Error(data.message)
+					}
+					return data.message;
+				})
+		},
+		allowOutsideClick: () => !Swal.isLoading()
+	}).then((result) => {
+		//Show a toast with the result with the returned message from the API
+		showToast(result.value, "success", () => {});
+	}).catch((error) => {
+		//Show a toast with the error message
+		showToast(error.message, "error", () => {});
+	});
+}
+
+function resetPasswordModal(token){
+	//Creamos un modal de SweetAlert2 para pedir una nueva contraseña y hacemos una petición POST a la API con el token
+	//Check that the password is at least 8 characters long
+	Swal.fire({
+		title: 'Nueva contraseña',
+		input: 'password',
+		inputLabel: 'Introduce tu nueva contraseña',
+		inputPlaceholder: 'Introduce tu nueva contraseña',
+
+		showCancelButton: true,
+		confirmButtonText: 'Cambiar',
+		showLoaderOnConfirm: true,
+		preConfirm: (password) => {
+			return fetch(`/api/users/resetPassword`, {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/x-www-form-urlencoded"
+				},
+				body: new URLSearchParams({
+					password: password,
+					token: token
+				})
+			})
+				.then(response => response.json())
+				.then(data => {
+					if (data.status === "error") {
+						throw new Error(data.message)
+					}
+					return data.message;
+				})
+		},
+		allowOutsideClick: () => !Swal.isLoading()
+	}).then((result) => {
+		//Show a toast with the result with the returned message from the API
+		showToast(result.value, "success", () => {});
+	}).catch((error) => {
+		//Show a toast with the error message
+		showToast(error.message, "error", () => {
+			resetPasswordModal(token);
+		});
+	});
+}
+
+//
+
 function handleMfa(message){
 	//Show a sweetalert with a form to enter the MFA code
 	Swal.fire({
@@ -188,4 +271,12 @@ function showToast(message, type, callback){
 		icon: type,
 		title: message
 	}).then(callback)
+}
+
+//Comprobar si en la URL hay un token para resetear la contraseña al cargar la página
+
+window.onload = function(){
+	if (window.location.search.includes("token")) {
+		resetPasswordModal(window.location.search.split("=")[1]);
+	}
 }
