@@ -15,7 +15,7 @@ if (DEBUG_MODE){
 
     <ul class="fotoI">
         <li><img src="/assets/img/lph-logo.png" ></li>
-        <li><p> <?= $version ?>  </p></li>
+        <li class="version"><p> <?= $version ?>  </p></li>
     </ul>
 
     <ul class="listaD">
