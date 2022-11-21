@@ -15,7 +15,7 @@ body {
 .container{
     display: grid;
     grid-template-columns: repeat(3, auto);
-    grid-template-rows: 25% 7% auto 7%;
+    grid-template-rows: 25% 7% auto 8%;
     grid-template-areas:
     "head head head"
     "nav nav nav"
@@ -48,7 +48,7 @@ body {
 .navegador{
     grid-area: nav;
     position: sticky;
-    top: 0px;
+    top: 0;
     font-weight: 500;
     
     list-style: none;
@@ -79,7 +79,7 @@ body {
     height: 100%;
 }
 ul{
-    margin: 3px 3px 0px 3px;
+    margin: 3px 3px 0 3px;
     padding-right: 30px;
     padding-left: 30px;
     padding-top: 3px;
@@ -102,12 +102,12 @@ li:hover{
     display:none;
     position:absolute;
     background-color: #D06320;
-    margin-top: 0px;
+    margin-top: 0;
     padding: 0;
     z-index: 2;
-    left: 0px;
+    left: 0;
     border-radius: 0 0 4% 4%;
-    margin-left: 0px;
+    margin-left: 0;
 }  
 .navD  li > ul li{
     padding:0;
@@ -151,13 +151,13 @@ border-color: #fff transparent transparent transparent;
     display:none;
     position:absolute;
     background-color: #D06320;
-    margin-top: 0px;
+    margin-top: 0;
     padding: 0;
     z-index: 2;
-    right: 0px;
+    right: 0;
 } 
 .navD  li > div p{
-    margin: 0px;
+    margin: 0;
     display:block;
     color: black;
 } 
@@ -179,8 +179,7 @@ border-color: #fff transparent transparent transparent;
     border-radius: 0 0 4% 4%;
 }
 .contenidoNoti{
-    margin: 0 auto;
-    margin-top: 20px;
+    margin: 20px auto 0;
     width: 80%;
     height: 80%;
     display: flex;
@@ -262,10 +261,7 @@ h3,h5{
     grid-area: main;
 
     width: 80%;
-    margin: 0 auto;
-
-    margin-top: 40px;
-    margin-bottom: 40px;
+    margin: 40px auto;
 }
 .main .relleno{
     height: 90%;
@@ -306,7 +302,7 @@ h3,h5{
 }
 .conPreguntaTitu{
     grid-area: tituloPre;
-    margin: 0px;
+    margin: 0;
 }
 .conTextoPre{
     grid-area: textoPre;

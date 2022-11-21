@@ -16,9 +16,6 @@ if (!AuthUtils::checkAuth())
 $user = $_SESSION["user"];
 
 
-
-
-
 header('Content-Type: application/json');
 
 // Get the action type

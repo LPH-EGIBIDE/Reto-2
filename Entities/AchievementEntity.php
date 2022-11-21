@@ -9,13 +9,16 @@ class AchievementEntity
     private string $description;
     private int $pointsAwarded;
     private AttachmentEntity $photo;
+    private array $requirements;
 
-    public function __construct(string $title, string $description, int $pointsAwarded, AttachmentEntity $photo)
+    public function __construct(string $title, string $description, int $pointsAwarded, array $requirements, AttachmentEntity $photo = null)
     {
         $this->title = $title;
         $this->description = $description;
         $this->pointsAwarded = $pointsAwarded;
         $this->photo = $photo;
+        $this->requirements = $requirements;
+
     }
 
     // Getters and setters
@@ -99,6 +102,22 @@ class AchievementEntity
         $this->photo = $photo;
     }
 
+    /**
+     * @return array
+     */
+    public function getRequirements(): array
+    {
+        return $this->requirements;
+    }
+
+    /**
+     * @param array $requirements
+     * @return void
+     */
+    public function setRequirements(array $requirements): void
+    {
+        $this->requirements = $requirements;
+    }
 
 
 }

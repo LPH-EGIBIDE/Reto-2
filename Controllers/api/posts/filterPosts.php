@@ -8,7 +8,7 @@ use Utils\AuthUtils;
 
 
 session_start();
-
+header('Content-Type: application/json');
 if (!AuthUtils::checkAuth())
     die(json_encode(["status" => "error", "message" => "No hay sesión iniciada"]));
 
