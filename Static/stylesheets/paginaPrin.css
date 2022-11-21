@@ -32,6 +32,7 @@ body {
     background-position:  100%;
 	background-repeat: no-repeat;
 	background-attachment: inherit;
+    background-size: cover;
 
     display: flex;
     flex-direction: column;
