@@ -14,7 +14,7 @@ if (DEBUG_MODE){
 <footer class="pie">
 
     <ul class="fotoI">
-        <li><img src="/assets/img/logo.png" ></li>
+        <li><img src="/assets/img/lph-logo.png" ></li>
         <li><p> <?= $version ?>  </p></li>
     </ul>
 
