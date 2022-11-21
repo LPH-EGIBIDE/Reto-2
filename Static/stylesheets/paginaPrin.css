@@ -15,7 +15,7 @@ body {
 .container{
     display: grid;
     grid-template-columns: repeat(3, auto);
-    grid-template-rows: 25% 7% 61% 7%;
+    grid-template-rows: 25% 7% auto 7%;
     grid-template-areas:
     "head head head"
     "nav nav nav"
