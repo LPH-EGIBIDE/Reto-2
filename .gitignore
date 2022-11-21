@@ -5,6 +5,7 @@
 ## Custom rules for the app
 /config.inc.php
 
+.idea/
 
 ### macOS ###
 # General
