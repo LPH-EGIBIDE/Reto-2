@@ -1,0 +1,455 @@
+@import url('https://fonts.googleapis.com/css2?family=Cantarell:ital@1&family=Fira+Sans&family=Oxygen&family=Roboto&family=Ubuntu&display=swap');
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font: 14px / 1.4 sans-serif;
+    font-family: 'Roboto',-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Dorid Sans',
+    'Helvetica Neue', sans-serif;
+}
+body {
+	background-color: #D5D5D5;
+	height: 100vh;
+}
+.container{
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+    grid-template-rows: repeat(4, auto);
+    grid-template-areas:
+    "head head head"
+    "nav nav nav"
+    "main main main"
+    "foot foot foot";
+    
+    height: 100%;
+}
+/*Cabecera*/
+.cabecera{
+    grid-area: head;
+
+    background-image: url("/assets/img/login_bg.jpg");
+    background-position:  100%;
+	background-repeat: no-repeat;
+	background-attachment: inherit;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    padding: 20px;
+}
+.navegador, footer{
+    background-color: #D06320;
+}
+/*Navegdor*/
+.navegador{
+    grid-area: nav;
+    position: sticky;
+    top: 0px;
+    font-weight: 500;
+    
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 100%;
+}
+.navegador img{
+    display: none;
+    height: 40px;
+    margin-right: auto;
+}
+.navegador .navI{
+    list-style: none;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+.navegador .navD{
+    list-style: none;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+ul{
+    margin: 3px 3px 0px 3px;
+    padding-right: 30px;
+    padding-left: 30px;
+    padding-top: 3px;
+}
+li{
+    position: relative;
+    padding: 10px;
+    color:#fff;
+}
+li a{
+    text-decoration: none;
+    color:#fff;
+}
+li:hover{
+    background-color:#FE8F4B;
+    font-weight: bold;
+}
+/*Desplegable usuario*/
+.navD li > ul{
+    display:none;
+    position:absolute;
+    background-color: #D06320;
+    margin-top: 0px;
+    padding: 0;
+    z-index: 2;
+    left: 0px;
+    border-radius: 0 0 4% 4%;
+    margin-left: 0px;
+}  
+.navD  li > ul li{
+    padding:0;
+    margin: 2px;;
+    list-style: none;
+}     
+.navD  li:hover > a{
+    color:#fff;
+    width: 120px; 
+}     
+.navD  li > ul li a{
+    width: 150px;
+    margin: 0 0 0 5px;
+    display:block;
+    color: #fff;
+} 
+.navD  li:hover > ul{
+    display:block;
+    width: 150px;
+    top: 38px;
+}  
+.navD  li:hover::after{
+border-color: #fff transparent transparent transparent;
+}     
+.navD .opUsuario span{
+    height: 15px;
+    width: 3px;
+    position: absolute;
+    top: 6px;
+    left: 5px;
+}
+.navD li ul li {
+    
+    background-color: #D06320;
+}
+.navD li ul li:hover {
+    background-color: #FE8F4B;
+}
+/*Desplegable notificaciones*/
+.navD li > div{
+    display:none;
+    position:absolute;
+    background-color: #D06320;
+    margin-top: 0px;
+    padding: 0;
+    z-index: 2;
+    right: 0px;
+} 
+.navD  li > div p{
+    margin: 0px;
+    display:block;
+    color: black;
+} 
+.navD  li:hover > div{
+    display:block;
+    width: 250px;
+    height: 250px;
+    top: 38px;
+} 
+.navD .listaNoti span{
+    height: 15px;
+    width: 3px;
+    position: absolute;
+    top: 6px;
+    left: 5px;
+}
+.navD li div {
+    background-color: #D06320;
+    border-radius: 0 0 4% 4%;
+}
+.contenidoNoti{
+    margin: 0 auto;
+    margin-top: 20px;
+    width: 80%;
+    height: 80%;
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    border-radius: 4%;
+    padding: 6px;
+    overflow-y: scroll;
+  scroll-behavior: smooth;
+}
+h3,h5{
+    color: black;
+    font-weight: bold;
+    margin-top: 4px;
+    margin-left: 3px;
+    margin-bottom: 2px;
+}
+.notificacion{
+ width: 100%;
+ margin-top: 6px;
+ color: black;
+ 
+ display: grid;
+ grid-template-columns: repeat(5,auto);
+ grid-template-rows: repeat(2,auto);
+ grid-template-areas: 
+ "icon mesage mesage mesage mesage"
+ "time time time time delete";
+
+ background-color: white;
+ border-radius: 5px;
+ box-shadow: 1px 1px 7px 1px #000;
+}
+#notifiIcon, .mensaje{
+   border-bottom: grey 0.5px solid;
+}
+#notifiIcon{
+   grid-area: icon;
+
+   display: flex;
+   justify-content: center;
+   align-items: center;
+
+   padding: 0.5em;
+}
+.mensaje{
+    grid-area: mesage;
+    
+    font-size: 12px;
+    padding: 1em;
+}
+.fecha{
+    grid-area: time;
+    display: flex;
+    flex-direction: row;
+    background-color: transparent;
+
+    padding: 0.5em;
+}
+.fecha p{
+    font-size: 12px;
+}
+#basura{
+    grid-area: delete;
+
+    display: flex;
+   justify-content: center;
+   align-items: center;
+
+   padding: 0.5em;
+}
+/*Main*/
+.main {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    grid-area: main;
+
+    width: 80%;
+    margin: 0 auto;
+
+    margin-top: 40px;
+    margin-bottom: 40px;
+}
+.main .relleno{
+    height: 90%;
+    margin: 2em auto;
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+/*Caja pregunta*/
+#cajaPregunta{
+ margin-top: 7px;
+ width: 100%;
+
+ display: grid;
+ grid-template-columns: 25% 75%;
+ grid-template-rows: repeat(3, auto);
+ grid-template-areas: 
+ "tags tituloPre"
+ "textoPre textoPre"
+ "adjuntos archivo";
+
+ background-color: white;
+ border-radius: 10px;
+ box-shadow: 1px 1px 7px 1px #000
+}
+.conTags,.conPreguntaTitu,.conAdjunto,.conTextoPre,.conArchivos,.conAdjunto2,.conArchivosRe{
+    display: flex;
+    align-items: center;
+    padding: 0.5em;
+}
+.conTags p,.conAdjunto p, .conPreguntaTitu .preguntaTitu, .conAdjunto2 p{
+    font-size: 18px;
+}
+.conTags{
+    grid-area: tags;
+}
+.conPreguntaTitu{
+    grid-area: tituloPre;
+    margin: 0px;
+}
+.conTextoPre{
+    grid-area: textoPre;
+}
+.conAdjunto{
+    grid-area: adjuntos;
+}
+.conArchivos{
+    grid-area: archivo;
+}
+.conTags,.conPreguntaTitu,.conTextoPre,.conTextoRes,.conAdjunto2,.conArchivosRe{
+    border-bottom: grey 0.5px solid;
+}
+/*Añadir respuesta*/
+#medio{
+    margin-top: 14px;
+    margin-bottom: 7px;
+    width: 50%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+#tituRes{
+    font-size: large;
+}
+#anadir{
+    
+    background: transparent;
+    border-radius: 6px;
+    padding: 8px 16px;
+    text-align: center;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    transition-duration: 0.4s;
+    cursor: pointer;
+    text-decoration: none;
+    text-transform: uppercase;
+    color: black; 
+    border: 2px solid #FE8F4B;
+}
+#anadir:hover {
+    background-color: #FE8F4B;
+    color: white;
+}
+/*Caja Respuesta*/
+#cajaRespuesta{
+ margin-top: 14px;
+ width: 100%;
+
+ display: grid;
+ grid-template-columns: 25% 75%;
+ grid-template-rows: repeat(3, auto);
+ grid-template-areas: 
+ "conTextoRes conTextoRes"
+ "conAdjunto2 conArchivosRe"
+ "contenedorAbajo contenedorAbajo";
+
+ background-color: white;
+ border-radius: 10px;
+ box-shadow: 1px 1px 7px 1px #000;
+
+}
+.conTextoRes{
+    grid-area: conTextoRes;
+}
+.conTextoRes p{
+    margin: 0 auto;
+    padding: 2em;
+    width: 80%;
+}
+.conAdjunto2{
+    grid-area: conAdjunto2;
+}
+.conArchivosRe{
+    grid-area: conArchivosRe;
+}
+.contenedorAbajo{
+    grid-area: contenedorAbajo;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.conUsuario{
+    display: flex;
+    margin: 2px;
+    padding: 3px;
+    
+}
+.parteDrc{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 2px;
+}
+#star,#up{
+    margin: 2px;
+    padding: 3px;
+}
+/*Footer*/
+footer{
+    grid-area: foot; 
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    position:sticky;
+}
+footer .listaD{
+    list-style: none;
+    display: flex;
+    flex-direction: row;
+}
+footer .fotoI{
+    margin-left: 30px;
+    color: #fff;
+    
+    display: flex;
+    list-style: none;
+    flex-direction: row;
+    align-items: center;
+}
+footer .fotoI img{
+    height: 40px;
+}
+footer .fotoI li:hover{
+    background-color: #D06320;
+}
+/*Moviles*/
+@media screen and  (max-width: 640px) {
+    .container{
+        display: grid;
+        grid-template-columns: repeat(3, auto);
+        grid-template-rows: repeat(3, auto);
+        grid-template-areas:
+        "nav nav nav"
+        "main main main"
+        "foot foot foot";
+        
+    }
+    .cabecera{
+        display: none;
+    }.navegador img{
+        display: block;
+    }
+}
