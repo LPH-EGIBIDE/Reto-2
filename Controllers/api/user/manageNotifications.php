@@ -39,7 +39,7 @@ try {
     switch ($method) {
         case 'get':
             $all = $_POST['all'] ?? false;
-            echo json_encode(getNotifications($user, $all));
+            echo json_encode(["status" => "success", "notifications" => getNotifications($user, $all)]);
             break;
         case 'dismiss':
             $id = $_POST['id'] ?? null;

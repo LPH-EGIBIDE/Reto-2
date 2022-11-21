@@ -119,5 +119,17 @@ class AchievementEntity
         $this->requirements = $requirements;
     }
 
+    public function toArray(): array
+    {
+        return [
+            "id" => $this->id,
+            "title" => $this->title,
+            "description" => $this->description,
+            "pointsAwarded" => $this->pointsAwarded,
+            "photo" => "/api/attachments/id/" . $this->photo->getId(),
+            "requirements" => $this->requirements
+        ];
+    }
+
 
 }

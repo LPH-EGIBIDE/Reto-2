@@ -28,7 +28,7 @@ abstract class AchievementRepository
         if ($result === false) {
             throw new DataNotFoundException("Achievement no encontrado");
         }
-        $achievementEntity = new AchievementEntity($result->title, $result->description, $result->points_awarded, $result->requirements, AttachmentRepository::getAttachmentById($result->photo));
+        $achievementEntity = new AchievementEntity($result->title, $result->description, $result->points_awarded, json_decode($result->requirements, true), AttachmentRepository::getAttachmentById($result->photo));
         $achievementEntity->setId($result->id);
         return $achievementEntity;
     }
@@ -95,7 +95,7 @@ abstract class AchievementRepository
         $result = $stmt->fetchAll();
         $achievements = [];
         foreach ($result as $achievement) {
-            $achievementEntity = new AchievementEntity($achievement->title, $achievement->description, $achievement->points_awarded, $achievement->requirements, AttachmentRepository::getAttachmentById($achievement->photo));
+            $achievementEntity = new AchievementEntity($achievement->title, $achievement->description, $achievement->points_awarded, json_decode($achievement->requirements, true), AttachmentRepository::getAttachmentById($achievement->photo));
             $achievementEntity->setId($achievement->id);
             $achievements[] = $achievementEntity;
         }
