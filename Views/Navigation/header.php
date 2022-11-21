@@ -29,7 +29,7 @@ $user = $_SESSION['user'];
         <li><a href="#">Preguntas</a></li>
         <li><a href="#">Respuestas</a></li>
     </ul>
-    <img src="/assets/img/lph-black.png" alt="logo.png"> 
+    <img src="/assets/img/lph-logo.png" alt="logo.png"> 
     <ul class="navD">
         
         <li class="usuario"><?= $user->getUsername() ?>
@@ -41,19 +41,19 @@ $user = $_SESSION['user'];
         </li>
         <li class="notificaciones">Notificaciones
             <div class="listaNoti">
-                <container class="contenidoNoti">
+                <div class="contenidoNoti">
                   <h5>Alertas</h5>
                   <hr>
-                  <container class="notificacion">
+                  <div class="notificacion">
                     <i class="fa-regular fa-bell" id="notifiIcon"></i>
                     <p class="mensaje">Mensaje</p>
-                    <container class="fecha">
+                    <div class="fecha">
                      <p>Hace: <p class="tiempo"> 1 dia</p></p>
-                    </container>
+                    </div>
                     <i class="fa-solid fa-trash" id="basura"></i>
-                  </container>
+                  </div>
 
-                </container>
+                </div>
             </div>
         </li>
     </ul>
