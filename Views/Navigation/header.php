@@ -20,7 +20,7 @@ $user = $_SESSION['user'];
 <div class="container" id="container">
 
 <header class="cabecera">
-    <img src="/assets/img/logo.png" alt="logo.png">
+    <img src="/assets/img/lph-black.png" alt="logo.png">
     <h4>El saber es poder</h4>
 </header>
 
@@ -29,7 +29,7 @@ $user = $_SESSION['user'];
         <li><a href="#">Preguntas</a></li>
         <li><a href="#">Respuestas</a></li>
     </ul>
-    <img src="/assets/img/lph-black.png" alt="logo.png"> 
+    <img src="/assets/img/lph-logo.png" alt="logo.png"> 
     <ul class="navD">
         
         <li class="usuario"><?= $user->getUsername() ?>
