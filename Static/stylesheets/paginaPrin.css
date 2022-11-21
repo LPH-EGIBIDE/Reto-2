@@ -453,4 +453,7 @@ footer .fotoI li:hover{
     }.navegador img{
         display: block;
     }
+    .pie .fotoI .version{
+        display: none;
+    }
 }
