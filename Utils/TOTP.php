@@ -42,7 +42,7 @@ abstract class TOTP
         return $value % $modulo;
     }
 
-    public static function verifyTOTP(string $secret, int $code, int $timeSlice = 30): bool
+    public static function verifyTOTP(string $secret, int $code): bool
     {
         if (self::getTOTP($secret) === $code) {
             return true;

@@ -5,9 +5,9 @@ namespace Repositories;
 use DateTime;
 use Db\Db;
 use Entities\PostEntity;
-use Entities\PostTopicEntity;
 use Entities\UserEntity;
 use Exceptions\DataNotFoundException;
+use PDO;
 
 abstract class PostRepository
 {
@@ -20,7 +20,7 @@ abstract class PostRepository
         $db = Db::getInstance();
         $stmt = $db->prepare("SELECT * FROM posts WHERE id = :id");
         $stmt->bindParam(":id", $id);
-        $stmt->setFetchMode(\PDO::FETCH_OBJ);
+        $stmt->setFetchMode(PDO::FETCH_OBJ);
         $stmt->execute();
         $result = $stmt->fetch();
         if ($result === false) {
@@ -49,7 +49,7 @@ abstract class PostRepository
             ":id" => $postEntity->getId()
         ]);
         //Get the current date and time
-        $postEntity->setDate(new \DateTime());
+        $postEntity->setDate(new DateTime());
     }
 
     /**
@@ -83,8 +83,10 @@ abstract class PostRepository
             ":date" => $postEntity->getDate()->format("Y-m-d H:i:s")
         ]);
         // Get the current date and time
-        $date = new \DateTime();
+        $date = new DateTime();
         $postEntity->setDate($date);
+        // Get the id of the last inserted row
+        $postEntity->setId($db->lastInsertId());
     }
 
 
@@ -96,9 +98,9 @@ abstract class PostRepository
     {
         $db = Db::getInstance();
         $stmt = $db->prepare("SELECT * FROM posts ORDER BY date DESC LIMIT :offset OFFSET :startFrom");
-        $stmt->setFetchMode(\PDO::FETCH_OBJ);
-        $stmt->bindValue(":offset", $offset, \PDO::PARAM_INT);
-        $stmt->bindValue(":startFrom", $startFrom, \PDO::PARAM_INT);
+        $stmt->setFetchMode(PDO::FETCH_OBJ);
+        $stmt->bindValue(":offset", $offset, PDO::PARAM_INT);
+        $stmt->bindValue(":startFrom", $startFrom, PDO::PARAM_INT);
         $stmt->execute();
         $result = $stmt->fetchAll();
         if (count($result) === 0) {
@@ -120,7 +122,7 @@ abstract class PostRepository
     public static function filterPosts(int $offset, int $startFrom, string $title = "", int $topic = null, string $sort = "DATE", string $sortOrder = "DESC"): array {
         $db = Db::getInstance();
         // set pdo to throw exceptions
-        $db->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+        $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         //display errors
         error_reporting(E_ALL);
         ini_set('display_errors', 1);
@@ -137,9 +139,9 @@ abstract class PostRepository
         $sortOrder = $sortOrders[$sortOrder] ?? "DESC";
         $preparedTopic = is_numeric($topic) ? $topic : '%';
         $stmt = $db->prepare("SELECT * FROM posts WHERE TITLE LIKE CONCAT('%', :title, '%') AND DESCRIPTION LIKE CONCAT('%', :title, '%') AND TOPIC LIKE '$preparedTopic'  ORDER BY $sort $sortOrder LIMIT :offset OFFSET :startFrom");
-        $stmt->setFetchMode(\PDO::FETCH_OBJ);
-        $stmt->bindValue(":offset", $offset, \PDO::PARAM_INT);
-        $stmt->bindValue(":startFrom", $startFrom, \PDO::PARAM_INT);
+        $stmt->setFetchMode(PDO::FETCH_OBJ);
+        $stmt->bindValue(":offset", $offset, PDO::PARAM_INT);
+        $stmt->bindValue(":startFrom", $startFrom, PDO::PARAM_INT);
         $stmt->bindValue(":title", $title);
         $stmt->execute();
         $result = $stmt->fetchAll();
@@ -163,9 +165,9 @@ abstract class PostRepository
     {
         $db = Db::getInstance();
         $stmt = $db->prepare("SELECT * FROM posts WHERE author = :author ORDER BY date DESC LIMIT :offset OFFSET :startFrom");
-        $stmt->setFetchMode(\PDO::FETCH_OBJ);
-        $stmt->bindValue(":offset", $offset, \PDO::PARAM_INT);
-        $stmt->bindValue(":startFrom", $startFrom, \PDO::PARAM_INT);
+        $stmt->setFetchMode(PDO::FETCH_OBJ);
+        $stmt->bindValue(":offset", $offset, PDO::PARAM_INT);
+        $stmt->bindValue(":startFrom", $startFrom, PDO::PARAM_INT);
         $stmt->execute([
             ":author" => $userEntity->getId(),
         ]);
@@ -182,7 +184,7 @@ abstract class PostRepository
     public static function getPostsCount(): int {
         $db = Db::getInstance();
         $stmt = $db->prepare("SELECT COUNT(*) AS count FROM posts");
-        $stmt->setFetchMode(\PDO::FETCH_OBJ);
+        $stmt->setFetchMode(PDO::FETCH_OBJ);
         $stmt->execute();
         $result = $stmt->fetch();
         return $result->count;

@@ -143,7 +143,7 @@ class PostEntity
     /**
      * @return DateTime
      */
-    public function getDate(): \DateTime
+    public function getDate(): DateTime
     {
         return $this->date;
     }
@@ -151,7 +151,7 @@ class PostEntity
     /**
      * @param DateTime $date
      */
-    public function setDate(\DateTime $date): void
+    public function setDate(DateTime $date): void
     {
         $this->date = $date;
     }

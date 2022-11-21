@@ -292,7 +292,6 @@ $this->mfaData = $mfaData;
         return [
             'id' => $this->id,
             'username' => $this->username,
-            'email' => $this->email,
             'avatar' => "//". $_SERVER["SERVER_NAME"]   ."/api/attachments/id/{$this->avatar->getId()}",
             'profileDescription' => $this->profileDescription,
             'active' => $this->active,

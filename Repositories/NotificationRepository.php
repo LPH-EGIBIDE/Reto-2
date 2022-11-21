@@ -6,6 +6,7 @@ use Entities\NotificationEntity;
 use Entities\UserEntity;
 use Db\Db;
 use Exceptions\DataNotFoundException;
+use PDO;
 
 abstract class NotificationRepository
 {
@@ -17,7 +18,7 @@ abstract class NotificationRepository
         $db = Db::getInstance();
         $stmt = $db->prepare("SELECT * FROM notifications WHERE id = :id");
         $stmt->bindParam(":id", $id);
-        $stmt->setFetchMode(\PDO::FETCH_OBJ);
+        $stmt->setFetchMode(PDO::FETCH_OBJ);
         $stmt->execute();
         $result = $stmt->fetch();
         if ($result === false) {
@@ -30,14 +31,15 @@ abstract class NotificationRepository
 
     /**
      * @param UserEntity $userEntity
-     * @return NotificationEntity[]
+     * @param bool $all
+     * @return array
      */
     public static function getNotificationsByUser(UserEntity $userEntity, bool $all): array
     {
         $db = Db::getInstance();
         $sqlAll = $all ? "OR dismissed = 1 " : "";
         $stmt = $db->prepare("SELECT * FROM notifications WHERE user = :id AND dismissed = 0 $sqlAll");
-        $stmt->setFetchMode(\PDO::FETCH_OBJ);
+        $stmt->setFetchMode(PDO::FETCH_OBJ);
         $stmt->execute([
             ":id" => $userEntity->getId()
         ]);

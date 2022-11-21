@@ -43,7 +43,7 @@ if (isset($_SESSION["user"])) {
                     break;
                 case 2:
                     // Email verification
-                    //Generate a 6 digit code and send it to the user email
+                    //Generate a 6-digit code and send it to the user email
                     $code = rand(100000, 999999);
                     $user->setMfaData($code);
                     UserRepository::updateUser($user);

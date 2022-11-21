@@ -5,6 +5,7 @@ namespace Repositories;
 use Entities\UserEntity;
 use Db\Db;
 use Exceptions\DataNotFoundException;
+use PDO;
 
 abstract class UserRepository
 {
@@ -18,7 +19,7 @@ abstract class UserRepository
         $db = Db::getInstance();
         $stmt = $db->prepare("SELECT * FROM users WHERE id = :id");
         //Fetch as object
-        $stmt->setFetchMode(\PDO::FETCH_OBJ);
+        $stmt->setFetchMode(PDO::FETCH_OBJ);
         $stmt->bindParam(":id", $id);
         $stmt->execute();
         $result = $stmt->fetch();
@@ -42,7 +43,7 @@ abstract class UserRepository
         $db = Db::getInstance();
         $stmt = $db->prepare("SELECT * FROM users WHERE username = :username");
         //Fetch as object
-        $stmt->setFetchMode(\PDO::FETCH_OBJ);
+        $stmt->setFetchMode(PDO::FETCH_OBJ);
         $stmt->bindParam(":username", $username);
         $stmt->execute();
         $result = $stmt->fetch();
@@ -126,7 +127,7 @@ abstract class UserRepository
         $db = Db::getInstance();
         $stmt = $db->prepare("SELECT * FROM users WHERE email = :email");
         //Fetch as object
-        $stmt->setFetchMode(\PDO::FETCH_OBJ);
+        $stmt->setFetchMode(PDO::FETCH_OBJ);
         $stmt->bindParam(":email", $email);
         $stmt->execute();
         $result = $stmt->fetch();
@@ -149,7 +150,7 @@ abstract class UserRepository
         $db = Db::getInstance();
         $stmt = $db->prepare("SELECT * FROM users WHERE password_reset_token = :token");
         //Fetch as object
-        $stmt->setFetchMode(\PDO::FETCH_OBJ);
+        $stmt->setFetchMode(PDO::FETCH_OBJ);
         $stmt->bindParam(":token", $token);
         $stmt->execute();
         $result = $stmt->fetch();

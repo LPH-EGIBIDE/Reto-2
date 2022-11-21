@@ -6,6 +6,7 @@ use Entities\AchievementEntity;
 use Db\Db;
 use Entities\UserEntity;
 use Exceptions\DataNotFoundException;
+use PDO;
 
 
 abstract class AchievementRepository
@@ -21,7 +22,7 @@ abstract class AchievementRepository
         $db = Db::getInstance();
         $stmt = $db->prepare("SELECT * FROM achievements WHERE id = :id");
         $stmt->bindParam(":id", $id);
-        $stmt->setFetchMode(\PDO::FETCH_OBJ);
+        $stmt->setFetchMode(PDO::FETCH_OBJ);
         $stmt->execute();
         $result = $stmt->fetch();
         if ($result === false) {
@@ -86,7 +87,7 @@ abstract class AchievementRepository
     {
         $db = Db::getInstance();
         $stmt = $db->prepare("SELECT * FROM achievements");
-        $stmt->setFetchMode(\PDO::FETCH_OBJ);
+        $stmt->setFetchMode(PDO::FETCH_OBJ);
         $stmt->execute();
         $result = $stmt->fetchAll();
         $achievements = [];
@@ -137,7 +138,7 @@ abstract class AchievementRepository
     {
         $db = Db::getInstance();
         $stmt = $db->prepare("SELECT * FROM user_achievements WHERE user = :user_id");
-        $stmt->setFetchMode(\PDO::FETCH_OBJ);
+        $stmt->setFetchMode(PDO::FETCH_OBJ);
         $stmt->execute([
             ":user_id" => $userEntity->getId()
         ]);

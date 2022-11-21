@@ -8,7 +8,7 @@ use Entities\PostAnswerEntity;
 use Entities\PostEntity;
 use Entities\UserEntity;
 use Exceptions\DataNotFoundException;
-use PDOStatement;
+use PDO;
 
 abstract class PostAnswerRepository
 {
@@ -22,7 +22,7 @@ abstract class PostAnswerRepository
         $db = Db::getInstance();
         $stmt = $db->prepare("SELECT * FROM post_answers WHERE id = :id");
         $stmt->bindParam(":id", $id);
-        $stmt->setFetchMode(\PDO::FETCH_OBJ);
+        $stmt->setFetchMode(PDO::FETCH_OBJ);
         $stmt->execute();
         $result = $stmt->fetch();
         if ($result === false) {
@@ -49,7 +49,7 @@ abstract class PostAnswerRepository
         $db = Db::getInstance();
         $stmt = $db->prepare("SELECT COUNT(*) as upvotes FROM post_upvotes WHERE post_answer = :id");
         $stmt->bindParam(":id", $id);
-        $stmt->setFetchMode(\PDO::FETCH_OBJ);
+        $stmt->setFetchMode(PDO::FETCH_OBJ);
         $stmt->execute();
         $result = $stmt->fetch();
         if ($result === false) {
@@ -93,11 +93,15 @@ abstract class PostAnswerRepository
     {
         $db = Db::getInstance();
         $stmt = $db->prepare("INSERT INTO post_answers (author, post, message) VALUES (:author_id, :post_id, :message)");
-        return $stmt->execute([
+        $stmt->execute([
             ":author_id" => $postAnswerEntity->getAuthor()->getId(),
             ":post_id" => $postAnswerEntity->getPost()->getId(),
             ":message" => $postAnswerEntity->getMessage()
         ]);
+
+        // Get the last inserted id
+        $postAnswerEntity->setId($db->lastInsertId());
+        return $postAnswerEntity->getId() !== 0;
     }
 
 
@@ -112,10 +116,10 @@ abstract class PostAnswerRepository
     {
         $db = Db::getInstance();
         $stmt = $db->prepare("SELECT * FROM post_answers WHERE post = :post_id LIMIT :offset OFFSET :start_from");
-        $stmt->setFetchMode(\PDO::FETCH_OBJ);
-        $stmt->bindValue(":post_id", $postEntity->getId(), \PDO::PARAM_INT);
-        $stmt->bindValue(":offset", $offset, \PDO::PARAM_INT);
-        $stmt->bindValue(":start_from", $startFrom, \PDO::PARAM_INT);
+        $stmt->setFetchMode(PDO::FETCH_OBJ);
+        $stmt->bindValue(":post_id", $postEntity->getId(), PDO::PARAM_INT);
+        $stmt->bindValue(":offset", $offset, PDO::PARAM_INT);
+        $stmt->bindValue(":start_from", $startFrom, PDO::PARAM_INT);
         $stmt->execute();
         $result = $stmt->fetchAll();
         if ($result === false) {
@@ -147,9 +151,9 @@ abstract class PostAnswerRepository
     {
         $db = Db::getInstance();
         $stmt = $db->prepare("SELECT * FROM post_answers WHERE author = :author_id LIMIT :offset OFFSET :start_from");
-        $stmt->setFetchMode(\PDO::FETCH_OBJ);
-        $stmt->bindValue(":offset", $offset, \PDO::PARAM_INT);
-        $stmt->bindValue(":start_from", $startFrom, \PDO::PARAM_INT);
+        $stmt->setFetchMode(PDO::FETCH_OBJ);
+        $stmt->bindValue(":offset", $offset, PDO::PARAM_INT);
+        $stmt->bindValue(":start_from", $startFrom, PDO::PARAM_INT);
         $stmt->execute(
             [
                 ":author_id" => $userEntity->getId()
@@ -184,14 +188,13 @@ abstract class PostAnswerRepository
     public static function getPostAnswersByUserAndPost(UserEntity $userEntity, PostEntity $postEntity, int $offset = 15, int $startFrom = 15): array
     {
         $db = Db::getInstance();
-        $stmt = $db->prepare("SELECT * FROM post_answers WHERE author = :author_id AND post = :post_id");
-        $stmt->setFetchMode(\PDO::FETCH_OBJ);
-        $stmt->execute(
-            [
-                ":author_id" => $userEntity->getId(),
-                ":post_id" => $postEntity->getId()
-            ]
-        );
+        $stmt = $db->prepare("SELECT * FROM post_answers WHERE author = :author_id AND post = :post_id LIMIT :offset OFFSET :start_from");
+        $stmt->setFetchMode(PDO::FETCH_OBJ);
+        $stmt->bindValue(":offset", $offset, PDO::PARAM_INT);
+        $stmt->bindValue(":start_from", $startFrom, PDO::PARAM_INT);
+        $stmt->bindValue(":author_id", $userEntity->getId(), PDO::PARAM_INT);
+        $stmt->bindValue(":post_id", $postEntity->getId(), PDO::PARAM_INT);
+        $stmt->execute();
         $result = $stmt->fetchAll();
         if ($result === false) {
             throw new DataNotFoundException("Respuesta no encontrada");
@@ -221,10 +224,10 @@ abstract class PostAnswerRepository
     {
         $db = Db::getInstance();
         $stmt = $db->prepare("SELECT * FROM post_answers, user_favourite_answers WHERE post_answers.id = user_favourite_answers.answer AND user_favourite_answers.user = :author_id LIMIT :offset OFFSET :start_from");
-        $stmt->setFetchMode(\PDO::FETCH_OBJ);
-        $stmt->bindValue(":offset", $offset, \PDO::PARAM_INT);
-        $stmt->bindValue(":start_from", $startFrom, \PDO::PARAM_INT);
-        $stmt->bindValue(":author_id", $userEntity->getId(), \PDO::PARAM_INT);
+        $stmt->setFetchMode(PDO::FETCH_OBJ);
+        $stmt->bindValue(":offset", $offset, PDO::PARAM_INT);
+        $stmt->bindValue(":start_from", $startFrom, PDO::PARAM_INT);
+        $stmt->bindValue(":author_id", $userEntity->getId(), PDO::PARAM_INT);
         $stmt->execute();
         $result = $stmt->fetchAll();
         if ($result === false) {
@@ -253,17 +256,24 @@ abstract class PostAnswerRepository
     {
         $db = Db::getInstance();
         $stmt = $db->prepare("INSERT INTO user_favourite_answers (user, answer) VALUES (:user_id, :answer_id)");
-        $stmt->bindValue(":user_id", $userEntity->getId(), \PDO::PARAM_INT);
-        $stmt->bindValue(":answer_id", $postAnswerEntity->getId(), \PDO::PARAM_INT);
+        $stmt->bindValue(":user_id", $userEntity->getId(), PDO::PARAM_INT);
+        $stmt->bindValue(":answer_id", $postAnswerEntity->getId(), PDO::PARAM_INT);
         return $stmt->execute();
     }
 
+
+    /**
+     * @param UserEntity $userEntity
+     * @param PostAnswerEntity $postAnswerEntity
+     * @return bool
+     * @throws DataNotFoundException
+     */
     static function removeUserFavouriteAnswer(UserEntity $userEntity, PostAnswerEntity $postAnswerEntity): bool
     {
         $db = Db::getInstance();
         $stmt = $db->prepare("DELETE FROM user_favourite_answers WHERE :user_id = user AND :answer_id = answer");
-        $stmt->bindValue(":user_id", $userEntity->getId(), \PDO::PARAM_INT);
-        $stmt->bindValue(":answer_id", $postAnswerEntity->getId(), \PDO::PARAM_INT);
+        $stmt->bindValue(":user_id", $userEntity->getId(), PDO::PARAM_INT);
+        $stmt->bindValue(":answer_id", $postAnswerEntity->getId(), PDO::PARAM_INT);
         $result = $stmt->execute(
             [
                 ":user_id" => $userEntity->getId(),
@@ -280,7 +290,7 @@ abstract class PostAnswerRepository
     /**
      * @param UserEntity $userEntity
      * @param PostAnswerEntity $postAnswerEntity
-     * @return void
+     * @return bool
      */
     public static function upvotePostAnswer(UserEntity $userEntity, PostAnswerEntity $postAnswerEntity): bool
     {
@@ -295,7 +305,7 @@ abstract class PostAnswerRepository
     /**
      * @param UserEntity $userEntity
      * @param PostAnswerEntity $postAnswerEntity
-     * @return void
+     * @return bool
      */
     public static function downvotePostAnswer(UserEntity $userEntity, PostAnswerEntity $postAnswerEntity): bool
     {
@@ -331,7 +341,7 @@ abstract class PostAnswerRepository
     {
         $db = Db::getInstance();
         $stmt = $db->prepare("SELECT * FROM post_answer_attachments WHERE post_answers_id = :post_answer_id");
-        $stmt->setFetchMode(\PDO::FETCH_OBJ);
+        $stmt->setFetchMode(PDO::FETCH_OBJ);
         $stmt->execute([
             ":post_answer_id" => $postAnswerEntity->getId()
         ]);

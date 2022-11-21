@@ -5,6 +5,7 @@ namespace Repositories;
 use Db\Db;
 use Entities\PostTopicEntity;
 use Exceptions\DataNotFoundException;
+use PDO;
 
 abstract class PostTopicRepository
 {
@@ -20,7 +21,7 @@ abstract class PostTopicRepository
         $db = Db::getInstance();
         $stmt = $db->prepare("SELECT * FROM post_topics WHERE id = :id");
         $stmt->bindParam(":id", $id);
-        $stmt->setFetchMode(\PDO::FETCH_OBJ);
+        $stmt->setFetchMode(PDO::FETCH_OBJ);
         $stmt->execute();
         $result = $stmt->fetch();
         if ($result === false) {
@@ -80,7 +81,7 @@ abstract class PostTopicRepository
     {
         $db = Db::getInstance();
         $stmt = $db->prepare("SELECT * FROM post_topics ");
-        $stmt->setFetchMode(\PDO::FETCH_OBJ);
+        $stmt->setFetchMode(PDO::FETCH_OBJ);
         $stmt->execute();
         $result = $stmt->fetchAll();
         $postTopicEntities = [];

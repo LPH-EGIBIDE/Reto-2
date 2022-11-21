@@ -13,6 +13,11 @@ if (!AuthUtils::checkAuth())
 
 $user = $_SESSION['user'];
 
+/**
+ * @param UserEntity $user
+ * @return array
+ * @throws DataNotFoundException
+ */
 function getFavouriteAnswers (UserEntity $user): array {
     $favouriteAnswers = PostAnswerRepository::getUserFavouriteAnswers($user);
     $data = [];
@@ -22,26 +27,28 @@ function getFavouriteAnswers (UserEntity $user): array {
     return $data;
 }
 
+/**
+ * @param UserEntity $user
+ * @param int $id
+ * @return void
+ * @throws DataNotFoundException
+ */
 function addFavouriteAnswers (UserEntity $user, int $id): void {
-    try {
         $answer = PostAnswerRepository::getPostAnswerById($id);
         if(!PostAnswerRepository::addUserFavouriteAnswer($user, $answer))
             throw new DataNotFoundException("Respuesta ya añadida a favoritos");
-    }
-    catch (DataNotFoundException $e) {
-        throw new DataNotFoundException($e->getMessage());
-    }
 }
 
+/**
+ * @param UserEntity $user
+ * @param int $id
+ * @return void
+ * @throws DataNotFoundException
+ */
 function removeFavouriteAnswers (UserEntity $user, int $id): void {
-    try {
         $answer = PostAnswerRepository::getPostAnswerById($id);
         if(!PostAnswerRepository::removeUserFavouriteAnswer($user, $answer))
             throw new DataNotFoundException("Respuesta no encontrada en favoritos");
-    }
-    catch (DataNotFoundException $e) {
-        throw new DataNotFoundException($e->getMessage());
-    }
 }
 
 // Get method from _POST['method'] or default to 'get'

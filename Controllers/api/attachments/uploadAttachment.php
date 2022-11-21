@@ -50,7 +50,20 @@ if (!AuthUtils::checkAuth())
                 echo json_encode(["status" => "error", "message" => "El archivo es demasiado grande"]);
             }
         } else {
-            echo json_encode(["status" => "error", "message" => "Hubo un error al subir el archivo"]);
+            $errors = [
+                1 => "El archivo subido excede la directiva upload_max_filesize en php.ini",
+                2 => "El archivo subido excede la directiva MAX_FILE_SIZE especificada en el formulario HTML",
+                3 => "El archivo subido fue sólo parcialmente cargado",
+                4 => "No se subió ningún archivo",
+                6 => "Falta una carpeta temporal",
+                7 => "No se pudo escribir el archivo en el disco",
+                8 => "Una extensión de PHP detuvo la carga de archivos"
+            ];
+            if (DEBUG_MODE){
+                echo json_encode(["status" => "error", "message" => $errors[$fileError]]);
+            } else{
+                echo json_encode(["status" => "error", "message" => "No se pudo subir el archivo"]);
+            }
         }
     } else {
         echo json_encode(["status" => "error", "message" => "No se ha subido ningún archivo"]);

@@ -4,7 +4,6 @@ require_once "../../../config.inc.php";
 
 use Entities\UserEntity;
 use Exceptions\DataNotFoundException;
-use Exceptions\PostException;
 use Repositories\UserRepository;
 use Utils\EmailUtils;
 

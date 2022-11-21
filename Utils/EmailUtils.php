@@ -105,7 +105,7 @@ class EmailUtils
      */
     public function sendResetPasswordEmail(UserEntity $user, string $token): void
     {
-        $this->sendEmail($user->getEmail(), "Restablecer contraseña", "Se ha solicitado un restablecimiento de contraseña para tu cuenta de WTFAQ. Si no has sido tu, ignora este email. Si has sido tu, sigue el siguiente enlace: https://wtfaq.lph.local/login?token=${token}");
+        $this->sendEmail($user->getEmail(), "Restablecer contraseña", "Se ha solicitado un restablecimiento de contraseña para tu cuenta de WTFAQ. Si no has sido tu, ignora este email. Si has sido tu, sigue el siguiente enlace: https://wtfaq.lph.local/login?token=$token");
     }
 
 

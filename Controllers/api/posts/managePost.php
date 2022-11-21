@@ -1,29 +1,99 @@
 <?php
 
 require_once '../../../config.inc.php';
-
-session_start();
-
-if (!\Utils\AuthUtils::checkAuth())
-    die(json_encode(["status" => "error", "message" => "No hay sesión iniciada"]));
-
-
 use Entities\PostEntity;
 use Entities\UserEntity;
 use Exceptions\DataNotFoundException;
 use Exceptions\PostException;
 use Repositories\PostRepository;
 use Repositories\PostTopicRepository;
+use Utils\AuthUtils;
+session_start();
+
+if (!AuthUtils::checkAuth())
+    die(json_encode(["status" => "error", "message" => "No hay sesión iniciada"]));
+
+$user = $_SESSION["user"];
+
+
+
+
+
+header('Content-Type: application/json');
+
+// Get the action type
+$action = $_POST['action'] ?? 'get';
+
+// Get the post id
+$postId = $_POST['postId'] ?? $_GET['postId'] ?? null;
+
+switch ($action){
+    case 'get':
+        try {
+            $post = PostRepository::getPostById($postId);
+            echo json_encode(["status" => "success", "data" => $post->toArray()]);
+        } catch (DataNotFoundException $e) {
+            if (DEBUG_MODE){
+                echo json_encode(["status" => "error", "message" => $e->getMessage(), "line" => $e->getLine(), "file" => $e->getFile()]);
+            } else {
+                echo json_encode(["status" => "error", "message" => "El post no existe"]);
+            }
+        }
+        break;
+    case 'insert':
+        $title = $_POST['title'] ?? null;
+        $content = $_POST['content'] ?? null;
+        $topic = $_POST['topic'] ?? 1;
+
+        try {
+            $post = insertPost($title, $content, $topic, $user);
+            echo json_encode(["status" => "success", "message" => "Post insertado correctamente", "postId" => $post->getId()]);
+        } catch (PostException $e) {
+            if (DEBUG_MODE){
+                echo json_encode(["status" => "error", "message" => $e->getMessage(), "line" => $e->getLine(), "file" => $e->getFile()]);
+            } else{
+                echo json_encode(["status" => "error", "message" => $e->getMessage()]);
+            }
+
+        }
+        break;
+    case 'update':
+        //TODO: Update post
+        break;
+    case 'delete':
+        try {
+            deletePost(intval($postId));
+            echo json_encode(["status" => "success", "message" => "Post eliminado correctamente"]);
+        } catch (PostException $e) {
+            if (DEBUG_MODE){
+                echo json_encode(["status" => "error", "message" => $e->getMessage(), "line" => $e->getLine(), "file" => $e->getFile()]);
+            } else{
+                echo json_encode(["status" => "error", "message" => $e->getMessage()]);
+            }
+        }
+        break;
+    case 'addTopic':
+        //TODO Add topic to post
+        break;
+    case 'removeTopic':
+        //TODO Remove topic from post
+        break;
+    default:
+        echo json_encode(["status" => "error", "message" => "Método no soportado"]);
+        break;
+}
+
+
 
 /**
  * @param string $title
  * @param string $description
  * @param int $topic
  * @param UserEntity $user
- * @return void
+ * @return PostEntity
  * @throws PostException
  */
-function insertPost(string $title, string $description, int $topic, UserEntity $user): void {
+function insertPost(string $title, string $description, int $topic, UserEntity $user): PostEntity {
     if (empty($title) || empty($description) || empty($topic)) {
         throw new PostException("Los campos no pueden estar vacíos");
     }
@@ -37,25 +107,37 @@ function insertPost(string $title, string $description, int $topic, UserEntity $
         $topic = PostTopicRepository::getPostTopicById($topic);
     }
     catch (DataNotFoundException $e){
-        throw new PostException("El tema seleccionado no existe");
+        if (DEBUG_MODE){
+            throw new PostException($e->getMessage()." ".$e->getFile()." ".$e->getLine());
+        } else {
+            throw new PostException("El tema seleccionado no existe");
+        }
     }
 
     $post = new PostEntity($title, $description,0, $topic, $user,true, new DateTime());
 
     PostRepository::createPost($post);
+    return $post;
 }
 
+
 /**
+ * @param int $postId
+ * @return void
  * @throws PostException
  */
-function showPostById(int $id): void {
+function deletePost(int $postId): void {
     try {
-        $post = PostRepository::getPostById($id);
+        $post = PostRepository::getPostById($postId);
+        if ($post->getAuthor()->getId() != $_SESSION["user"]->getId()){
+            throw new PostException("No tienes permisos para eliminar este post");
+        }
+    } catch (DataNotFoundException $e) {
+        if (DEBUG_MODE){
+            throw new PostException($e->getMessage()." ".$e->getFile()." ".$e->getLine());
+        } else {
+            throw new PostException("El post no existe");
+        }
     }
-    catch (DataNotFoundException $e){
-        throw new PostException("El post no existe");
-    }
-    $post->setViews($post->getViews() + 1);
-    PostRepository::updatePost($post);
-    echo json_encode($post->toArray());
+    PostRepository::deletePost($post);
 }

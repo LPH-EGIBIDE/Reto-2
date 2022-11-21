@@ -2,6 +2,7 @@
 require_once "../../../config.inc.php";
 
 use Entities\UserEntity;
+use Exceptions\PostException;
 use Repositories\UserRepository;
 use Utils\EmailUtils;
 
@@ -29,7 +30,7 @@ if (isset($_SESSION["mfa_pending"])) {
                 $emailUtils = new EmailUtils(EMAIL_API_KEY);
                 try {
                     $emailUtils->sendLoginEmail($user);
-                } catch (\Exceptions\PostException $e) {
+                } catch (PostException $e) {
                     die(json_encode(["status" => "error", "message" => $e->getMessage()]));
                 }
             } else {

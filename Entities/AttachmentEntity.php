@@ -107,9 +107,9 @@ class AttachmentEntity
 
 
     /**
-     * @return UserEntity
+     * @return ?UserEntity
      */
-    public function getUploadedBy(): UserEntity
+    public function getUploadedBy(): ?UserEntity
     {
         return $this->uploadedBy;
     }
@@ -136,5 +136,16 @@ class AttachmentEntity
     public function setPublic(int $public): void
     {
         $this->public = $public;
+    }
+
+    public function toArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'filename' => $this->filename,
+            'uploadedAt' => $this->uploadedAt->format('Y-m-d H:i:s'),
+            'public' => $this->public,
+            'href' => '/api/attachments/id/' . $this->id
+        ];
     }
 }

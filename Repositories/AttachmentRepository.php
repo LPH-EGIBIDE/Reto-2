@@ -6,6 +6,7 @@ use DateTime;
 use Entities\AttachmentEntity;
 use Entities\UserEntity;
 use Db\Db;
+use Exception;
 use Exceptions\DataNotFoundException;
 
 abstract class AttachmentRepository{
@@ -25,7 +26,7 @@ abstract class AttachmentRepository{
         }
         try {
             $attachment = new AttachmentEntity($result["filename"], $result["filepath"], $result["content_type"], new DateTime("@" . $result["uploaded_at"]), !empty($result["uploaded_by"]) ? UserRepository::getUserById($result["uploaded_by"]) : null, $result["public"]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             if (DEBUG_MODE){
                 throw new DataNotFoundException("Error loading attachment: " . $e->getMessage());
             }
@@ -105,7 +106,7 @@ abstract class AttachmentRepository{
         }
         try {
             $attachment = new AttachmentEntity($result["filename"], $result["filepath"], $result["content_type"], new DateTime("@" . $result["uploaded_at"]), $avatarId != -1 ? $userEntity : null, $result["public"]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             if (DEBUG_MODE){
                 throw new DataNotFoundException("Error loading attachment: " . $e->getMessage());
             }
@@ -140,7 +141,7 @@ abstract class AttachmentRepository{
     public static function getAttachmentsForPostAnswer(int $postAnswerId): array
     {
         $db = Db::getInstance();
-        $stmt = $db->prepare("SELECT * FROM attachments, post_answer_attachments WHERE post_answers_id = id AND post_answers_id = :post_answers_id");
+        $stmt = $db->prepare("SELECT attachments.*, attachments_id FROM attachments, post_answer_attachments WHERE post_answer_attachments.post_answers_id = attachments.id AND post_answers_id = :post_answers_id");
         $stmt->execute(
             [
                 ":post_answers_id" => $postAnswerId
@@ -149,8 +150,15 @@ abstract class AttachmentRepository{
         $result = $stmt->fetchAll();
         $attachments = [];
         foreach ($result as $row) {
-            $attachment = new AttachmentEntity($row["filename"], $row["filepath"], $row["content_type"], $row["uploaded_at"], UserRepository::getUserById($row["uploaded_by"]), $row["public"]);
-            $attachment->setId($row["id"]);
+            try {
+                $attachment = new AttachmentEntity($row["filename"], $row["filepath"], $row["content_type"], new DateTime( $row["uploaded_at"]), UserRepository::getUserById($row["uploaded_by"]), $row["public"]);
+            } catch (Exception $e) {
+                if (DEBUG_MODE){
+                    throw new DataNotFoundException("Error loading attachment: " . $e->getMessage());
+                }
+                throw new DataNotFoundException("Archivo no encontrado");
+            }
+            $attachment->setId($row["attachments_id"]);
             $attachments[] = $attachment;
         }
         return $attachments;
