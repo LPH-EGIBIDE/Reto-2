@@ -164,6 +164,8 @@ function addAttachment(PostAnswerEntity $post, int $attachmentId): void
     if ($post->getAuthor()->getId() != $_SESSION['user']->getId())
         throw new PostException("No tienes permisos para adjuntar archivos a esta respuesta");
 
+    if (count($post->getAttachments()) >= 3)
+        throw new PostException("No puedes adjuntar más de 3 archivos a una respuesta");
     foreach ($post->getAttachments() as $attached) {
         if ($attached->getId() == $attachmentId)
             throw new PostException("El archivo ya está adjunto a la respuesta");

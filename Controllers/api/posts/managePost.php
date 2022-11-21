@@ -72,7 +72,7 @@ switch ($action){
             }
         }
         break;
-    case 'addTopic':
+    case 'addAttachment':
         //TODO Add topic to post
         break;
     case 'removeTopic':
@@ -141,3 +141,6 @@ function deletePost(int $postId): void {
     }
     PostRepository::deletePost($post);
 }
+
+
+
