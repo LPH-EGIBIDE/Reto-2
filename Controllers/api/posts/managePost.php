@@ -7,6 +7,7 @@ use Exceptions\DataNotFoundException;
 use Exceptions\PostException;
 use Repositories\PostRepository;
 use Repositories\PostTopicRepository;
+use Utils\AchievementManager;
 use Utils\AuthUtils;
 session_start();
 
@@ -14,9 +15,6 @@ if (!AuthUtils::checkAuth())
     die(json_encode(["status" => "error", "message" => "No hay sesión iniciada"]));
 
 $user = $_SESSION["user"];
-
-
-
 
 
 header('Content-Type: application/json');
@@ -117,6 +115,10 @@ function insertPost(string $title, string $description, int $topic, UserEntity $
     $post = new PostEntity($title, $description,0, $topic, $user,true, new DateTime());
 
     PostRepository::createPost($post);
+
+    $achievementManager = new AchievementManager($user);
+    $achievementManager->checkAchievements();
+
     return $post;
 }
 

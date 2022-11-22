@@ -10,6 +10,7 @@ use Exceptions\PostException;
 use Repositories\AttachmentRepository;
 use Repositories\PostAnswerRepository;
 use Repositories\PostRepository;
+use Utils\AchievementManager;
 use Utils\AuthUtils;
 
 session_start();
@@ -24,13 +25,11 @@ if ($id == null || !is_numeric($id))
     die(json_encode(["status" => "error", "message" => "No se ha especificado el id del post"]));
 
 
-
 try {
-
-
 
     // Get the action type
     $method = $_POST['action'] ?? 'get';
+    $user = $_SESSION['user'];
 
     switch ($method) {
         case 'get':
@@ -91,6 +90,18 @@ try {
                 }
             }
             break;
+        case 'upvote':
+            $post = PostAnswerRepository::getPostAnswerById($id);
+            try {
+                upvote($post, $user);
+            } catch (PostException $e) {
+                if (DEBUG_MODE){
+                    echo json_encode(["status" => "error", "message" => $e->getMessage(), "line" => $e->getLine(), "file" => $e->getFile()]);
+                } else{
+                    echo json_encode(["status" => "error", "message" => $e->getMessage()]);
+                }
+            }
+            break;
         default:
             echo json_encode(["status" => "error", "message" => "Método no soportado"]);
             break;
@@ -128,7 +139,30 @@ function insertAnswer(string $content, PostEntity $post, UserEntity $user): Post
     // Insert the answer
     PostAnswerRepository::createPostAnswer($answer);
 
+    $achievementManager = new AchievementManager($user);
+    $achievementManager->checkAchievements();
+
     return $answer;
+
+}
+
+/**
+ * @param PostAnswerEntity $post
+ * @param UserEntity $userEntity
+ * @return void
+ */
+function upvote(PostAnswerEntity $post, UserEntity $userEntity):void
+{
+    if ($post->getAuthor()->getId() == $userEntity->getId())
+        die(json_encode(["status" => "error", "message" => "No puedes votar tus propias respuestas"]));
+    if (PostAnswerRepository::getUpvote($userEntity, $post)){
+        PostAnswerRepository::downvotePostAnswer($userEntity, $post);
+        echo json_encode(["status" => "success", "message" => "Voto eliminado correctamente"]);
+    } else {
+        PostAnswerRepository::upvotePostAnswer($userEntity, $post);
+        echo json_encode(["status" => "success", "message" => "Voto añadido correctamente"]);
+    }
+
 
 }
 

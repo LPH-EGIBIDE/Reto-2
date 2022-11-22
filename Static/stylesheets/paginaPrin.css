@@ -4,24 +4,24 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font: 14px / 1.4 sans-serif;
     font-family: 'Roboto',-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Dorid Sans',
     'Helvetica Neue', sans-serif;
 }
 body {
-	background-color: #D5D5D5;
-	height: 100vh;
+    font: 14px / 1.4 sans-serif;
+    background-color: #D5D5D5;
+    height: 100vh;
 }
 .container{
     display: grid;
     grid-template-columns: repeat(3, auto);
-    grid-template-rows: 25% 7% auto 7%;
+    grid-template-rows: 25% 7% auto 8%;
     grid-template-areas:
     "head head head"
     "nav nav nav"
     "main main main"
     "foot foot foot";
-    
+
     height: 100%;
 }
 /*Cabecera*/
@@ -30,8 +30,8 @@ body {
 
     background-image: url("/assets/img/login_bg.jpg");
     background-position:  100%;
-	background-repeat: no-repeat;
-	background-attachment: inherit;
+    background-repeat: no-repeat;
+    background-attachment: inherit;
     background-size: cover;
 
     display: flex;
@@ -48,19 +48,29 @@ body {
 .navegador{
     grid-area: nav;
     position: sticky;
-    top: 0px;
+    top: 0;
     font-weight: 500;
-    
+    font-size: 1.05em;
     list-style: none;
     display: flex;
     justify-content: space-between;
     align-items: center;
     height: 100%;
 }
-.navegador img{
+.navegador .altLogo{
     display: none;
     height: 40px;
     margin-right: auto;
+}
+#userLogo{
+    height: 26px;
+    border-radius: 50%;
+}
+.userProfile {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5em;
 }
 .navegador .navI{
     list-style: none;
@@ -79,7 +89,7 @@ body {
     height: 100%;
 }
 ul{
-    margin: 3px 3px 0px 3px;
+    margin: 3px 3px 0 3px;
     padding-right: 30px;
     padding-left: 30px;
     padding-top: 3px;
@@ -87,51 +97,52 @@ ul{
 li{
     position: relative;
     padding: 10px;
-    color:#fff;
+    color: aliceblue;
 }
 li a{
     text-decoration: none;
     color:#fff;
 }
-li:hover{
+.navegador li:hover{
     background-color:#FE8F4B;
     font-weight: bold;
 }
 /*Desplegable usuario*/
-.navD li > ul{
+.opUsuario{
     display:none;
     position:absolute;
-    background-color: #D06320;
-    margin-top: 0px;
+    background-color: #ababab;
+    margin-top: 0;
     padding: 0;
     z-index: 2;
-    left: 0px;
-    border-radius: 0 0 4% 4%;
-    margin-left: 0px;
-}  
-.navD  li > ul li{
+    border-radius: 4% 4% 4% 4%;
+    margin-left: 0;
+}
+.opUsuario li{
     padding:0;
-    margin: 2px;;
+    margin: 0.4em;
     list-style: none;
-}     
-.navD  li:hover > a{
-    color:#fff;
-    width: 120px; 
-}     
-.navD  li > ul li a{
+}
+.opUsuario  li:hover > a{
+    /* color: black; */
+    width: 120px;
+}
+.opUsuario  li a{
     width: 150px;
     margin: 0 0 0 5px;
     display:block;
-    color: #fff;
-} 
+    color: #2c2525;
+    font-size: 1em;
+    font-weight: bold;
+}
 .navD  li:hover > ul{
     display:block;
     width: 150px;
-    top: 38px;
-}  
+    top: 3.1em;
+}
 .navD  li:hover::after{
-border-color: #fff transparent transparent transparent;
-}     
+    border-color: #fff transparent transparent transparent;
+}
 .navD .opUsuario span{
     height: 15px;
     width: 3px;
@@ -140,33 +151,39 @@ border-color: #fff transparent transparent transparent;
     left: 5px;
 }
 .navD li ul li {
-    
-    background-color: #D06320;
+
+    background-color: #e6e6e6;
+
+    padding: 0.5em;
+
+    border-radius: 4% 4% 4% 4%;
 }
 .navD li ul li:hover {
     background-color: #FE8F4B;
 }
 /*Desplegable notificaciones*/
-.navD li > div{
+.navD li > .hoverElement{
     display:none;
     position:absolute;
     background-color: #D06320;
-    margin-top: 0px;
+    margin-top: 0;
     padding: 0;
     z-index: 2;
-    right: 0px;
-} 
-.navD  li > div p{
-    margin: 0px;
+    right: 0;
+}
+.navD  li > .hoverElement p{
+    margin: 0;
     display:block;
     color: black;
-} 
-.navD  li:hover > div{
+}
+.navD  li:hover > .hoverElement{
     display:block;
     width: 250px;
     height: 250px;
-    top: 38px;
-} 
+    top: 2.5em;
+    border: 0.5px solid #d06320;
+    background-color: #ababab;
+}
 .navD .listaNoti span{
     height: 15px;
     width: 3px;
@@ -174,13 +191,13 @@ border-color: #fff transparent transparent transparent;
     top: 6px;
     left: 5px;
 }
-.navD li div {
-    background-color: #D06320;
-    border-radius: 0 0 4% 4%;
+.navD li .hoverElement{
+    background-color: #ababab;
+    border-radius: 4% 4% 4% 4%;
+    /* border: 0.5px solid #b98c3e; */
 }
 .contenidoNoti{
-    margin: 0 auto;
-    margin-top: 20px;
+    margin: 20px auto 0;
     width: 80%;
     height: 80%;
     display: flex;
@@ -189,46 +206,47 @@ border-color: #fff transparent transparent transparent;
     border-radius: 4%;
     padding: 6px;
     overflow-y: scroll;
-  scroll-behavior: smooth;
+    scroll-behavior: smooth;
 }
-h3,h5{
+.navegador h3,h5{
     color: black;
     font-weight: bold;
     margin-top: 4px;
     margin-left: 3px;
     margin-bottom: 2px;
+    text-align: center;
+    background: white;
+    border-radius: 4%;
 }
 .notificacion{
- width: 100%;
- margin-top: 6px;
- color: black;
- 
- display: grid;
- grid-template-columns: repeat(5,auto);
- grid-template-rows: repeat(2,auto);
- grid-template-areas: 
- "icon mesage mesage mesage mesage"
- "time time time time delete";
-
- background-color: white;
- border-radius: 5px;
- box-shadow: 1px 1px 7px 1px #000;
+    width: 100%;
+    margin-top: 6px;
+    color: black;
+    display: grid;
+    grid-template-columns: repeat(5,auto);
+    grid-template-rows: repeat(2,auto);
+    grid-template-areas:
+  "icon mesage mesage mesage mesage"
+  "time time time time delete";
+    background-color: white !important;
+    border-radius: 5px;
+    box-shadow: 1px 1px 7px 1px #000;
 }
-#notifiIcon, .mensaje{
-   border-bottom: grey 0.5px solid;
+.notifiIcon, .mensaje{
+    border-bottom: grey 0.5px solid;
 }
-#notifiIcon{
-   grid-area: icon;
+.notifiIcon{
+    grid-area: icon;
 
-   display: flex;
-   justify-content: center;
-   align-items: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
-   padding: 0.5em;
+    padding: 0.5em;
 }
 .mensaje{
     grid-area: mesage;
-    
+
     font-size: 12px;
     padding: 1em;
 }
@@ -236,21 +254,20 @@ h3,h5{
     grid-area: time;
     display: flex;
     flex-direction: row;
-    background-color: transparent;
-
+    background-color: white !important;
     padding: 0.5em;
 }
 .fecha p{
     font-size: 12px;
 }
-#basura{
+.basura{
     grid-area: delete;
 
     display: flex;
-   justify-content: center;
-   align-items: center;
+    justify-content: center;
+    align-items: center;
 
-   padding: 0.5em;
+    padding: 0.5em;
 }
 /*Main*/
 .main {
@@ -262,10 +279,7 @@ h3,h5{
     grid-area: main;
 
     width: 80%;
-    margin: 0 auto;
-
-    margin-top: 40px;
-    margin-bottom: 40px;
+    margin: 40px auto;
 }
 .main .relleno{
     height: 90%;
@@ -278,20 +292,20 @@ h3,h5{
 }
 /*Caja pregunta*/
 #cajaPregunta{
- margin-top: 7px;
- width: 100%;
+    margin-top: 7px;
+    width: 100%;
 
- display: grid;
- grid-template-columns: 25% 75%;
- grid-template-rows: repeat(3, auto);
- grid-template-areas: 
+    display: grid;
+    grid-template-columns: 25% 75%;
+    grid-template-rows: repeat(3, auto);
+    grid-template-areas:
  "tags tituloPre"
  "textoPre textoPre"
  "adjuntos archivo";
 
- background-color: white;
- border-radius: 10px;
- box-shadow: 1px 1px 7px 1px #000
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 1px 1px 7px 1px #000
 }
 .conTags,.conPreguntaTitu,.conAdjunto,.conTextoPre,.conArchivos,.conAdjunto2,.conArchivosRe{
     display: flex;
@@ -306,7 +320,7 @@ h3,h5{
 }
 .conPreguntaTitu{
     grid-area: tituloPre;
-    margin: 0px;
+    margin: 0;
 }
 .conTextoPre{
     grid-area: textoPre;
@@ -320,7 +334,7 @@ h3,h5{
 .conTags,.conPreguntaTitu,.conTextoPre,.conTextoRes,.conAdjunto2,.conArchivosRe{
     border-bottom: grey 0.5px solid;
 }
-/*Añadir respuesta*/
+/*AÃ±adir respuesta*/
 #medio{
     margin-top: 14px;
     margin-bottom: 7px;
@@ -334,7 +348,7 @@ h3,h5{
     font-size: large;
 }
 #anadir{
-    
+
     background: transparent;
     border-radius: 6px;
     padding: 8px 16px;
@@ -346,7 +360,7 @@ h3,h5{
     cursor: pointer;
     text-decoration: none;
     text-transform: uppercase;
-    color: black; 
+    color: black;
     border: 2px solid #FE8F4B;
 }
 #anadir:hover {
@@ -355,20 +369,20 @@ h3,h5{
 }
 /*Caja Respuesta*/
 #cajaRespuesta{
- margin-top: 14px;
- width: 100%;
+    margin-top: 14px;
+    width: 100%;
 
- display: grid;
- grid-template-columns: 25% 75%;
- grid-template-rows: repeat(3, auto);
- grid-template-areas: 
+    display: grid;
+    grid-template-columns: 25% 75%;
+    grid-template-rows: repeat(3, auto);
+    grid-template-areas:
  "conTextoRes conTextoRes"
  "conAdjunto2 conArchivosRe"
  "contenedorAbajo contenedorAbajo";
 
- background-color: white;
- border-radius: 10px;
- box-shadow: 1px 1px 7px 1px #000;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 1px 1px 7px 1px #000;
 
 }
 .conTextoRes{
@@ -395,7 +409,7 @@ h3,h5{
     display: flex;
     margin: 2px;
     padding: 3px;
-    
+
 }
 .parteDrc{
     display: flex;
@@ -409,7 +423,7 @@ h3,h5{
 }
 /*Footer*/
 footer{
-    grid-area: foot; 
+    grid-area: foot;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -424,7 +438,7 @@ footer .listaD{
 footer .fotoI{
     margin-left: 30px;
     color: #fff;
-    
+
     display: flex;
     list-style: none;
     flex-direction: row;
@@ -433,11 +447,16 @@ footer .fotoI{
 footer .fotoI img{
     height: 40px;
 }
-footer .fotoI li:hover{
+.listaD li:hover{
     background-color: #D06320;
 }
 /*Moviles*/
-@media screen and  (max-width: 640px) {
+@media only screen and  (min-width: 640px) {
+    .opUsuario{
+        left: 0;
+    }
+}
+@media only screen and (max-width: 640px) {
     .container{
         display: grid;
         grid-template-columns: repeat(3, auto);
@@ -446,13 +465,24 @@ footer .fotoI li:hover{
         "nav nav nav"
         "main main main"
         "foot foot foot";
-        
+    }
+    .navegador{
+        font-size: 0.8em;
+    }
+    #notifiText{
+        display: none;
+    }
+    .opUsuario{
+        right: 0;
+    }
+    #username{
+        display: none;
     }
     .cabecera{
         display: none;
-    }.navegador img{
-        display: block;
-    }
+    }.navegador .altLogo{
+         display: block;
+     }
     .pie .fotoI .version{
         display: none;
     }

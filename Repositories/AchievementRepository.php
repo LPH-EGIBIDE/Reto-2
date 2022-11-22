@@ -28,7 +28,7 @@ abstract class AchievementRepository
         if ($result === false) {
             throw new DataNotFoundException("Achievement no encontrado");
         }
-        $achievementEntity = new AchievementEntity($result->title, $result->description, $result->points_awarded, AttachmentRepository::getAttachmentById($result->photo));
+        $achievementEntity = new AchievementEntity($result->title, $result->description, $result->points_awarded, json_decode($result->requirements, true), AttachmentRepository::getAttachmentById($result->photo));
         $achievementEntity->setId($result->id);
         return $achievementEntity;
     }
@@ -40,13 +40,15 @@ abstract class AchievementRepository
     public static function updateAchievement(AchievementEntity $achievementEntity): void
     {
         $db = Db::getInstance();
-        $stmt = $db->prepare("UPDATE achievements SET title = :name, description = :description, points_awarded = :points, photo = :photo WHERE id = :id");
+        $stmt = $db->prepare("UPDATE achievements SET title = :name, description = :description, points_awarded = :points, photo = :photo, requirements = :requirements WHERE id = :id");
         $stmt->execute([
             ":name" => $achievementEntity->getTitle(),
             ":description" => $achievementEntity->getDescription(),
             ":points" => $achievementEntity->getPointsAwarded(),
             ":photo" => $achievementEntity->getPhoto(),
-            ":id" => $achievementEntity->getId()
+            ":id" => $achievementEntity->getId(),
+            ":requirements" => json_encode($achievementEntity->getRequirements())
+
         ]);
     }
 
@@ -70,12 +72,13 @@ abstract class AchievementRepository
     public static function createAchievement(AchievementEntity $achievementEntity): void
     {
         $db = Db::getInstance();
-        $stmt = $db->prepare("INSERT INTO achievements (title, description, points_awarded, photo) VALUES (:name, :description, :points, :photo)");
+        $stmt = $db->prepare("INSERT INTO achievements (title, description, points_awarded, photo, requirements) VALUES (:name, :description, :points, :photo, :requirements)");
         $stmt->execute([
             ":name" => $achievementEntity->getTitle(),
             ":description" => $achievementEntity->getDescription(),
             ":points" => $achievementEntity->getPointsAwarded(),
-            ":photo" => $achievementEntity->getPhoto()
+            ":photo" => $achievementEntity->getPhoto(),
+            ":requirements" => json_encode($achievementEntity->getRequirements())
         ]);
     }
 
@@ -92,7 +95,7 @@ abstract class AchievementRepository
         $result = $stmt->fetchAll();
         $achievements = [];
         foreach ($result as $achievement) {
-            $achievementEntity = new AchievementEntity($achievement->title, $achievement->description, $achievement->points_awarded, AttachmentRepository::getAttachmentById($achievement->photo));
+            $achievementEntity = new AchievementEntity($achievement->title, $achievement->description, $achievement->points_awarded, json_decode($achievement->requirements, true), AttachmentRepository::getAttachmentById($achievement->photo));
             $achievementEntity->setId($achievement->id);
             $achievements[] = $achievementEntity;
         }

@@ -14,7 +14,7 @@ if (DEBUG_MODE){
 <footer class="pie">
 
     <ul class="fotoI">
-        <li><img src="/assets/img/lph-logo.png" ></li>
+        <li><img src="/assets/img/lph-logo.png" alt="Logo" ></li>
         <li class="version"><p> <?= $version ?>  </p></li>
     </ul>
 
@@ -27,8 +27,7 @@ if (DEBUG_MODE){
 </footer>
 
 </div>
-
-</body>
 <script src="//cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
 <link href="https://cdn.jsdelivr.net/gh/hung1001/font-awesome-pro-v6@44659d9/css/all.min.css" rel="stylesheet" type="text/css" />
+</body>
 </html>
