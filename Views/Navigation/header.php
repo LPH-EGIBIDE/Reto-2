@@ -44,15 +44,8 @@ $user = $_SESSION['user'];
                 <div class="contenidoNoti">
                   <h5>Alertas</h5>
                   <hr>
-                  <div class="notificacion">
-                    <i class="fa-regular fa-bell" id="notifiIcon"></i>
-                    <p class="mensaje">Mensaje</p>
-                    <div class="fecha">
-                     <p>Hace: <p class="tiempo"> 1 dia</p></p>
+                    <div id="notificationCenter">
                     </div>
-                    <i class="fa-solid fa-trash" id="basura"></i>
-                  </div>
-
                 </div>
             </div>
         </li>
