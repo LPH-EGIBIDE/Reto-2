@@ -88,18 +88,22 @@ body {
     align-items: center;
     height: 100%;
 }
-ul{
+#notificationContainer a{
+    text-decoration: none;
+    color: black;
+}
+.listas{
     margin: 3px 3px 0 3px;
     padding-right: 30px;
     padding-left: 30px;
     padding-top: 3px;
 }
-li{
+.listas li{
     position: relative;
     padding: 10px;
     color: aliceblue;
 }
-li a{
+.navLink{
     text-decoration: none;
     color:#fff;
 }

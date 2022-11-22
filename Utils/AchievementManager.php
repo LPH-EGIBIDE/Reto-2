@@ -43,6 +43,7 @@ class AchievementManager
     private function checkQuantity(int $quantity, AchievementEntity $achievementEntity): void
     {
         if ($this->hasAchievement($achievementEntity->getId())) {
+            echo "Ya tienes este logro";
             return;
         }
 

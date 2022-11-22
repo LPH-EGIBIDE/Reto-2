@@ -1,49 +1,132 @@
-async function getNotifications() {
+async function fetchNotifications() {
     fetch("/api/user/manageNotifications").then((response) => {
         return response.json();
     }).then((data) => {
         if (data.status === "success") {
             let notifications = data.notifications;
-            let notificationsContainer = document.querySelector("#notificationCenter");
-            notificationsContainer.innerHTML = "";
-            let notificationTypeIcons = {
-                0: "fa-regular fa-bell",
-                1: "fa-regular fa-up",
-                2: "fa-regular fa-throphy-star",
-            }
-            for (let i = 0; i < notifications.length; i++) {
-                let notification = notifications[i];
-                let notificationHtml = notificationTemplate(notification);
-            }
+            saveNotifications(notifications);
+            let notificationContainer = document.querySelector("#notificationContainer");
+            notificationContainer.innerHTML = "";
+            notifications.forEach((notification) => {
+                notificationContainer.innerHTML += notificationTemplate(notification);
+            });
         } else {
-            showToast(data.message, "error");
+            throw new Error("Error fetching notifications");
         }
+    }).catch((error) => {
+        showToast("Cargando notificaciones guardadas localmente", "warning", {});
+        getOfflineNotifications();
     });
 }
 
-function notificationTemplate(notificationData) {
-    //Calculamos la fecha de la notificación
-    let notificationDate = new Date(notificationData.date);
-    let notificationDateFormatted = notificationDate.toLocaleDateString("es-ES", {
-        day: "numeric",
-    }) + " de " + notificationDate.toLocaleDateString("es-ES", {
-        month: "long",
 
-    }) + " de " + notificationDate.toLocaleDateString("es-ES", {
-        year: "numeric",
+function dismissNotification(notificationElement) {
+    let notificationId = notificationElement.parentElement.getAttribute("notification-id");
+    fetch(`/api/user/manageNotifications`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: `method=dismiss&id=${notificationId}`
+
+    }).then((response) => {
+        return response.json();
+    }).then((data) => {
+        if (data.status === "success") {
+            showToast(data.message, "success", {});
+            notificationElement.parentElement.remove();
+        } else {
+            showToast("Error eliminando notificacion", "error", {});
+        }
+    }).catch((error) => {
+        console.log(error);
+        showToast("Error eliminando notificacion", "error", {});
     });
-    let notificationHtml = `
-    <div class="notificacion">
-        <i class="fa-regular ${notificationData.type}"></i>
+}
+
+
+function saveNotifications(notifications) {
+    // Save notifications to indexedDB
+    let db;
+    let request = window.indexedDB.open("notifications", 1);
+    request.onerror = function(event) {
+        console.log("Error opening database");
+    }
+    request.onsuccess = function(event) {
+        db = event.target.result;
+        let objectStore = db.transaction("notifications", "readwrite").objectStore("notifications");
+        objectStore.clear();
+        notifications.forEach((notification) => {
+            objectStore.add(notification);
+        });
+        db.close();
+    }
+    request.onupgradeneeded = function(event) {
+        db = event.target.result;
+        let objectStore = db.createObjectStore("notifications", { keyPath: "id" });
+    }
+}
+
+function getOfflineNotifications() {
+    let db;
+    let request = window.indexedDB.open("notifications", 1);
+    request.onerror = function(event) {
+        console.log("Error opening database");
+    }
+    request.onsuccess = function(event) {
+        db = event.target.result;
+        let objectStore = db.transaction("notifications").objectStore("notifications");
+        objectStore.getAll().onsuccess = function(event) {
+            let notifications = event.target.result;
+            let notificationsHTML = "";
+            notifications.forEach((notification) => {
+                notificationsHTML += notificationTemplate(notification);
+            });
+            document.querySelector("#notificationContainer").innerHTML = notificationsHTML;
+            db.close();
+        }
+    }
+}
+function notificationTemplate(notificationData) {
+    let notificationTypeIcons = {
+        0: "fa-regular fa-bell",
+        1: "fa-regular fa-up",
+        2: "fa-solid fa-trophy-star",
+    }
+    return `
+    <div class="notificacion hoverElement" notification-id="${notificationData.id}">
+        <i class="${notificationTypeIcons[notificationData.type]} notifiIcon" ></i>
         <p class="mensaje"><a href="${notificationData.href}">${notificationData.text}</a></p>
         <div class="fecha">
-            <!--<p>Hace: </p><p class="tiempo"></p>1 dia<p></p>-->
+            <p>Hace: 1 dia</p>
         </div>
-        <i class="fa-solid fa-trash"></i>
+        <i class="fa-solid fa-trash basura" ></i>
     </div>
     `;
-    return notificationHtml;
 }
 
+function showToast(message, type, callback){
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 2000,
+        timerProgressBar: true
+    })
+    Toast.fire({
+        icon: type,
+        title: message
+    }).then(callback)
+}
+
+
+window.addEventListener("load", () => {
+    fetchNotifications();
+    document.querySelector("#notificationContainer").addEventListener("click", (event) => {
+        if (event.target.classList.contains("basura")) {
+            dismissNotification(event.target);
+        }
+    });
+});
 
 

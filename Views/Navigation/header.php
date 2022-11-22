@@ -27,25 +27,25 @@ $title = empty($title) ? "WTFAQ" : $title;
 </header>
 
 <nav class="navegador">
-    <ul class="navI">
-        <li><a href="#">Preguntas</a></li>
-        <li><a href="#">Respuestas</a></li>
+    <ul class="navI listas">
+        <li><a class="navLink" href="#">Preguntas</a></li>
+        <li><a class="navLink" href="#">Respuestas</a></li>
     </ul>
     <div class="logoMobile">
         <img src="/assets/img/lph-logo.png" class="altLogo"  alt="logo.png">
     </div>
 
-    <ul class="navD">
+    <ul class="navD listas">
         
         <li class="usuario">
             <div class="userProfile">
                 <img src="/api/attachments/id/<?= $user->getAvatar()->getId() ?>" id="userLogo" alt="">
                 <span id="username"><?= $user->getUsername() ?></span>
             </div>
-                <ul class="opUsuario">
-                    <li><a href="/user/profile">Mi perfil</a></li>
-                    <li><a href="#">Pregunta favorita</a></li>
-                    <li><a href="/logout">Cerrar sesion</a></li>
+                <ul class="opUsuario listas">
+                    <li><a class="navLink" href="/user/profile">Mi perfil</a></li>
+                    <li><a class="navLink" href="#">Pregunta favorita</a></li>
+                    <li><a class="navLink" href="/logout">Cerrar sesion</a></li>
                 </ul>
         </li>
         <li class="notificaciones">
@@ -54,15 +54,16 @@ $title = empty($title) ? "WTFAQ" : $title;
                 <div class="contenidoNoti hoverElement">
                   <h3>Alertas</h3>
                   <hr>
-                  <div class="notificacion hoverElement">
-                    <i class="fa-regular fa-bell notifiIcon" ></i>
-                    <p class="mensaje">Mensaje</p>
-                    <div class="fecha">
-                        <p>Hace: 1 dia</p>
+                    <div class="hoverelement" id="notificationContainer">
+                        <div class="notificacion hoverElement">
+                            <i class="fa-regular fa-bell notifiIcon" ></i>
+                            <p class="mensaje">Mensaje</p>
+                            <div class="fecha">
+                                <p>Hace: <span class="fechaNotificacion">1 dia</span></p>
+                            </div>
+                            <i class="fa-solid fa-trash basura" ></i>
+                        </div>
                     </div>
-                    <i class="fa-solid fa-trash basura" ></i>
-                  </div>
-
                 </div>
             </div>
         </li>

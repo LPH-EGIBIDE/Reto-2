@@ -1,9 +1,11 @@
 <?php
 require_once "../../../config.inc.php";
 
+use Entities\NotificationEntity;
 use Entities\UserEntity;
 use Exceptions\DataNotFoundException;
 use Exceptions\PostException;
+use Repositories\NotificationRepository;
 use Repositories\UserRepository;
 use Utils\EmailUtils;
 
@@ -35,6 +37,7 @@ if (isset($_SESSION["user"])) {
                     // Instance a new Emailutils and send a login email
                     $emailUtils = new EmailUtils(EMAIL_API_KEY);
                     $emailUtils->sendLoginEmail($user);
+                    NotificationRepository::insertNotification(new NotificationEntity("Inicio de sesión" , false, "#", 0, $user), $user);
                     break;
                 case 1:
                     // TOTP MFA
