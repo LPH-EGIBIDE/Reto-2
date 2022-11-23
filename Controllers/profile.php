@@ -15,7 +15,7 @@ if (!AuthUtils::checkAuth()) {
 }
 
 $user = $_SESSION['user'];
-$userId = intval($_GET['id']) ?? $user->getId() ?? null;
+$userId = count($_GET['id']) > 0 ? intval($_GET['id']): $user->getId() ?? null;
 
 require APP_ROOT.'Views/Navigation/header.php';
 
