@@ -23,7 +23,7 @@ header('Content-Type: application/json');
 $action = $_POST['action'] ?? 'get';
 
 // Get the post id
-$postId = $_POST['postId'] ?? $_GET['postId'] ?? null;
+$postId = $_POST['postId'] ?? $_GET['postId'] ?? -1;
 
 switch ($action){
     case 'get':

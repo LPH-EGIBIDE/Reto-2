@@ -407,4 +407,24 @@ abstract class PostAnswerRepository
         return $result->count;
     }
 
+    /**
+     * @param PostAnswerEntity $postAnswerEntity
+     * @return int
+     * @throws DataNotFoundException
+     */
+    public static function getFavouriteCount(PostAnswerEntity $postAnswerEntity):int
+    {
+        $db = Db::getInstance();
+        $stmt = $db->prepare("SELECT COUNT(*) as count FROM user_favourite_answers WHERE answer = :answer_id");
+        $stmt->setFetchMode(PDO::FETCH_OBJ);
+        $stmt->execute([
+            ":answer_id" => $postAnswerEntity->getId()
+        ]);
+        $result = $stmt->fetch();
+        if ($result === false) {
+            throw new DataNotFoundException("Respuesta no encontrada");
+        }
+        return $result->count;
+    }
+
 }

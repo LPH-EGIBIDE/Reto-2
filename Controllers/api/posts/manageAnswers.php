@@ -2,12 +2,14 @@
 
 require_once '../../../config.inc.php';
 
+use Entities\NotificationEntity;
 use Entities\PostAnswerEntity;
 use Entities\PostEntity;
 use Entities\UserEntity;
 use Exceptions\DataNotFoundException;
 use Exceptions\PostException;
 use Repositories\AttachmentRepository;
+use Repositories\NotificationRepository;
 use Repositories\PostAnswerRepository;
 use Repositories\PostRepository;
 use Utils\AchievementManager;
@@ -40,15 +42,17 @@ try {
             $post->setViews($post->getViews() + 1);
             $data['views'] = $post->getViews();
             PostRepository::updatePost($post);
+
             // Return the data
-            echo json_encode($data);
+            echo json_encode(["status" => "success", "data" => $data]);
             break;
         case 'insert':
             $post = PostRepository::getPostById($id);
             $content = $_POST['content'] ?? '';
-            $user = $_SESSION['user'];
             try {
                 $answer = insertAnswer($content, $post, $user);
+                //Create a notification for the post owner
+                NotificationRepository::insertNotification(new NotificationEntity("Nueva respuesta en tu post", false, "/posts/$id", 0, $post->getAuthor()), $post->getAuthor());
                 echo json_encode(["status" => "success", "message" => "Respuesta insertada correctamente", "answerId" => $answer->getId()]);
             } catch (PostException $e) {
                 if (DEBUG_MODE){
@@ -92,15 +96,7 @@ try {
             break;
         case 'upvote':
             $post = PostAnswerRepository::getPostAnswerById($id);
-            try {
-                upvote($post, $user);
-            } catch (PostException $e) {
-                if (DEBUG_MODE){
-                    echo json_encode(["status" => "error", "message" => $e->getMessage(), "line" => $e->getLine(), "file" => $e->getFile()]);
-                } else{
-                    echo json_encode(["status" => "error", "message" => $e->getMessage()]);
-                }
-            }
+            upvote($post, $user);
             break;
         default:
             echo json_encode(["status" => "error", "message" => "Método no soportado"]);
@@ -221,6 +217,7 @@ function getAnswers(PostEntity $post): array {
         foreach ($answerList as $answer) {
             $answer->setAttachments(PostAnswerRepository::getAttachments($answer));
             $answerSerialized = $answer->toArray();
+            $answerSerialized['favourites'] = PostAnswerRepository::getFavouriteCount($answer);
             $answerSerialized['attachments'] = [];
             foreach ($answer->getAttachments() as $attachment) {
                 $answerSerialized['attachments'][] = $attachment->toArray();
