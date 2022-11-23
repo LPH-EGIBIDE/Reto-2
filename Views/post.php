@@ -1,4 +1,4 @@
-<container class="main">
+<div class="main">
     <div class="relleno">
         <div id="cajaPregunta">
             <div class="conTags">
@@ -47,4 +47,4 @@
     </div>
 
     </div>
-</container>	
+</div>	
