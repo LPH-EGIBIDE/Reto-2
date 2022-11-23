@@ -14,6 +14,15 @@ body {
     height: 100vh;
 }
 
+img.mainLogo{
+    width: 20%;
+}
+
+.logoMobile{
+    display: none;
+}
+
+
 .container{
     display: grid;
     grid-template-columns: repeat(3, auto);
@@ -33,7 +42,7 @@ body {
     align-items: center;
     grid-area: main;
     width: 80%;
-    margin: 40px auto;
+    margin: auto;
 }
 .main .relleno{
     height: 90%;
@@ -43,6 +52,15 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+}
+.centrado{
+    display: flex;
+    justify-content: center;
+}
+
+.unstyledLink {
+    text-decoration: none;
+    color: inherit;
 }
 
 /* Skeletons */
@@ -170,6 +188,12 @@ body {
     .navegador .altLogo{
          display: block;
      }
+    .logoMobile{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
     .pie .fotoI .version{
         display: none;
     }

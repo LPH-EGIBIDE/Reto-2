@@ -1,6 +1,8 @@
 <?php
 require_once __DIR__.'/../config.inc.php';
 
+use Repositories\PostAnswerRepository;
+use Repositories\PostRepository;
 use Repositories\UserRepository;
 use Utils\AuthUtils;
 
@@ -22,6 +24,10 @@ require APP_ROOT.'Views/Navigation/header.php';
 
 try {
     $profileUser = $user->getId() == $userId ? $user : UserRepository::getUserById($userId);
+    $userFavoriteCount = PostAnswerRepository::getFavouriteCountByUser($profileUser);
+    $userUpvoteCount = PostAnswerRepository::getUpvoteCountByUser($profileUser);
+    $userLastPosts = PostRepository::getPostsByUser($profileUser, 1);
+    $userLastPost = isset($userLastPosts[0]) ? $userLastPosts[0]->getTitle() : "No existen posts";
     require APP_ROOT.'Views/miPerfil.php';
 } catch (\Exceptions\DataNotFoundException $e) {
     require APP_ROOT.'Views/404.php';

@@ -394,7 +394,22 @@ abstract class PostAnswerRepository
         ]);
         $result = $stmt->fetch();
         if ($result === false) {
-            throw new DataNotFoundException("Respuesta no encontrada");
+            throw new DataNotFoundException("Error al obtener el número de votos");
+        }
+        return $result->count;
+    }
+
+    public static function getFavouriteCountByUser(UserEntity $user):int
+    {
+        $db = Db::getInstance();
+        $stmt = $db->prepare("SELECT COUNT(*) as count FROM user_favourite_answers WHERE user = :user_id");
+        $stmt->setFetchMode(PDO::FETCH_OBJ);
+        $stmt->execute([
+            ":user_id" => $user->getId()
+        ]);
+        $result = $stmt->fetch();
+        if ($result === false) {
+            throw new DataNotFoundException("Error al obtener el número de favoritos");
         }
         return $result->count;
     }

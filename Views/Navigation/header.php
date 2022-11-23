@@ -23,13 +23,13 @@ $title = empty($title) ? "WTFAQ" : $title;
 <div class="container" id="container">
 
 <header class="cabecera">
-    <img src="/assets/img/lph-black.png" class="altLogo" alt="Logo cabecera">
+    <img src="/assets/img/lph-black.png" class="mainLogo" alt="Logo cabecera">
 </header>
 
 <nav class="navegador">
     <ul class="navI listas">
         <li><a class="navLink" href="#">Preguntas</a></li>
-        <li><a class="navLink" href="#">Respuestas</a></li>
+        <li><a class="navLink" href="#">Tutoriales</a></li>
     </ul>
     <div class="logoMobile">
         <img src="/assets/img/lph-logo.png" class="altLogo"  alt="logo.png">
@@ -44,7 +44,7 @@ $title = empty($title) ? "WTFAQ" : $title;
             </div>
                 <ul class="opUsuario listas">
                     <li><a class="navLink" href="/user/me">Mi perfil</a></li>
-                    <li><a class="navLink" href="#">Pregunta favorita</a></li>
+                    <li><a class="navLink" href="#">Ajustes</a></li>
                     <li><a class="navLink" href="/logout">Cerrar sesion</a></li>
                 </ul>
         </li>

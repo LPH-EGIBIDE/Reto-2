@@ -44,6 +44,7 @@ try {
         default:
             die(json_encode(["status" => "error", "message" => "Método no válido"]));
     }
+    $data['posts'] = [];
     foreach ($posts as $post) {
         $postArr = $post->toArray();
         //Detect if the post is an answer and add the post info

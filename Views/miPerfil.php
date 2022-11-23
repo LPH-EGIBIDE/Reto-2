@@ -2,23 +2,24 @@
     <div class="relleno">
         <div class="cajaPerfil">
             <div class="cajaPerfilUp">
-                <img src="/api/attachments/id/<?= $profileUser->getAvatar()->getId() ?>" alt="img Avatar" id="avatar">
+                <input type="hidden" value="<?= htmlspecialchars($profileUser->getId(), ENT_QUOTES, 'UTF-8'); ?>" id="userId">
+                <img src="/api/attachments/id/<?=  htmlspecialchars($profileUser->getAvatar()->getId(), ENT_QUOTES, 'UTF-8'); ?>" alt="img Avatar" id="avatar">
                 <p class="nombreUsuario"><?=  $profileUser->getUsername(); ?></p>
-                <p class="fechaMiembro">Miembro desde: <span class="fechaMi"> FECHA</span></p>
-                <i class="fa-regular fa-trophy" id="rango"><span class="rank">RANKING</span></i>
+                <p class="ultPregunta">Ultima pregunta: <span class="fechaMi overflow-1"> <?=htmlspecialchars($userLastPost, ENT_QUOTES, 'UTF-8')  ?></span></p>
+                <i class="fa-regular fa-trophy" id="rango"><span class="rank"><?=htmlspecialchars($profileUser->getPoints(), ENT_QUOTES, 'UTF-8')  ?></span></i>
             <div class="stats">
-                <i class="fa-solid fa-star" id="star"><span class="Fav">FAVORITOS</span></i>
-                <i class="fa-solid fa-up" id="up"><span class="upVotw">UPVOTE</span></i>
+                <i class="fa-solid fa-star" id="star"><span class="Fav"><?=htmlspecialchars($userFavoriteCount, ENT_QUOTES, 'UTF-8')  ?></span></i>
+                <i class="fa-solid fa-up" id="up"><span class="upVotw"><?=htmlspecialchars($userUpvoteCount, ENT_QUOTES, 'UTF-8')  ?></span></i>
             </div>
             </div>
             <hr>
             <div class="cajaPerfilDown">
-            <p class="ultimaPregunta">Ultima pregunta: <span class="ultPregunta">PREGUNTA</span></p>
+            <p class="descripcionUsuario"><?= htmlspecialchars($profileUser->getProfileDescription(), ENT_QUOTES, 'UTF-8'); ?></p>
             <div class="navPerfil">
                 <ul class="navOpciones">
-                    <li><a  id="linkPre">Preguntas</a></li>
-                    <li><a  id="linkRes">Respuestas</a></li>
-                    <li><a  id="linkFav">Favoritos</a></li>
+                    <li><a  id="linkPre" class="active" data-tab="posts">Preguntas</a></li>
+                    <li><a  id="linkRes" data-tab="answers">Respuestas</a></li>
+                    <li><a  id="linkFav" data-tab="favourites">Favoritos</a></li>
                 </ul>
             </div>
             </div>
@@ -103,12 +104,12 @@
 
             </div>
         </div>
-        <div  class="contenidoLista hidden">
+        <div id="postsContainer"  class="contenidoLista hidden">
             <div id="contenedorRespuestas">
             </div>
             <div class="contenedorBoton">
                 <div class="separador">
-                    <input type="button" value="Ver mas" id="mas">
+                    <button id="mas" onclick="morePosts()">Ver mas</button>
                 </div>
                 
             </div>

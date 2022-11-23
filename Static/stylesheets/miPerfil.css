@@ -39,8 +39,9 @@
     grid-area: nombreUsu;
     display: flex;
     align-items: center;
+    text-transform: capitalize;
 }
-.fechaMiembro{
+.ultPregunta{
     grid-area: fechaMi;
 
     display: flex;
@@ -60,10 +61,14 @@
     flex-direction: row;
     justify-content: space-around;
     align-items: center;
+    padding: 0.5em
 }
 .cajaPerfilUp span, .cajaPerfilUp p{
     font-size: 20px;
-    margin-left: 3px;
+    padding: 0.5em;
+}
+span.fechaMi {
+    padding: 0 0 0 0.2em;
 }
 
 .cajaPerfilDown{
@@ -78,7 +83,7 @@
 
     width: 100%;
 }
-.ultimaPregunta{
+.descripcionUsuario{
     grid-area: uPre;
     display: flex;
     justify-content: space-evenly;
@@ -153,10 +158,17 @@
     background-color: #D06320;
     display: flex;
     justify-content: end;
+    margin-bottom: 2em;
 }
 .separador{
     margin-right: 20px;
 }
+
+.rellenoPosts{
+    padding: 1em;
+    margin: unset;
+}
+
 #mas{
     background-color: white;
     border-radius: 6px;
@@ -178,11 +190,17 @@
 }
 
 /*Texto*/
-.fechaMiembro, .ultimaPregunta, .tituPregunta{
+.ultPregunta, .descripcionUsuario, .tituPregunta{
     font-weight: bold;
 }
 .tituPregunta{
     font-size: 22px;
+}
+.overflow-1{
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
 }
 .decripPre{
     font-size: 12px;
