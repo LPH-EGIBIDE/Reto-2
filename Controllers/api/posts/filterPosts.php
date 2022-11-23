@@ -12,10 +12,11 @@ header('Content-Type: application/json');
 if (!AuthUtils::checkAuth())
     die(json_encode(["status" => "error", "message" => "No hay sesión iniciada"]));
 
-$offset = $_GET['offset'] ?? 20;
-$startFrom = $_GET['startFrom'] ?? 1;
-$title = $_GET['title'] ?? "";
-$topic = $_GET['topic'] ?? null;
+$offset = intval($_GET['offset']) ?? intval($_POST['offset']) ?? 20;
+$startFrom = intval($_GET['startFrom']) ?? intval($_POST['startFrom']) ??  1;
+$title = $_GET['title'] ?? $_POST['title'] ?? "";
+$topic = intval($_GET['topic']) ?? intval($_POST['topic']) ?? null;
+$user = intval($_GET['user']) ?? intval($_POST['user']) ?? null;
 $sort = $_GET['sort'] ?? "DATE";
 $sortOrder = $_GET['sortOrder'] ?? "DESC";
 

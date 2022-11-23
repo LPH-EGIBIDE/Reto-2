@@ -23,28 +23,89 @@
             </div>
             </div>
         </div>
-
-        <div class="contenidoLista">
+        <div id="skeletonContainer" class="contenidoLista">
             <div class="plantillaRespuestas">
-            <div class="contenedorLista">
-                <div class="contenedorIden">
-                    <img src="fotoPerfilNone.jpg" alt="img Avatar" id="identificadoAva">
+                <div class="contenedorLista">
+                    <div class="contenedorIden">
+                        <div class="c-skeleton__figure c-skeleton__text--bigger identificadoAva"></div>
+                    </div>
+
+                    <div class="contenidoIzq">
+                        <div class="c-skeleton__text c-skeleton__text--title c-skeleton__text--small-height tituPregunta"></div>
+                        <div class="c-skeleton__text c-skeleton__text--bigger "></div>
+                        <div class="c-skeleton__text c-skeleton__text--medium"></div>
+                    </div>
+
                 </div>
-                
-                <div class="contenidoIzq">
-                    <p class="tituPregunta">Titulo pregunta</p>
-                    <p class="decripPre">Descripcion</p>
-                    <ul class="listContent">
-                        <li><p class="autor">Autor</p></li>
-                        <li><p class="topics">Topico</p></li>
-                        <li><i class="fa-regular fa-eye" id="visitas"><span class="numisitas">382</span></i></li>
-                    </ul>
-                </div> 
-                
+                <hr>
             </div>
-           <hr>
+
+            <div class="plantillaRespuestas">
+                <div class="contenedorLista">
+                    <div class="contenedorIden">
+                        <div class="c-skeleton__figure c-skeleton__text--bigger identificadoAva"></div>
+                    </div>
+
+                    <div class="contenidoIzq">
+                        <div class="c-skeleton__text c-skeleton__text--title c-skeleton__text--small-height tituPregunta"></div>
+                        <div class="c-skeleton__text c-skeleton__text--bigger "></div>
+                        <div class="c-skeleton__text c-skeleton__text--medium"></div>
+                    </div>
+
+                </div>
+                <hr>
+            </div><div class="plantillaRespuestas">
+                <div class="contenedorLista">
+                    <div class="contenedorIden">
+                        <div class="c-skeleton__figure c-skeleton__text--bigger identificadoAva"></div>
+                    </div>
+
+                    <div class="contenidoIzq">
+                        <div class="c-skeleton__text c-skeleton__text--title c-skeleton__text--small-height tituPregunta"></div>
+                        <div class="c-skeleton__text c-skeleton__text--bigger "></div>
+                        <div class="c-skeleton__text c-skeleton__text--medium"></div>
+                    </div>
+
+                </div>
+                <hr>
+            </div><div class="plantillaRespuestas">
+                <div class="contenedorLista">
+                    <div class="contenedorIden">
+                        <div class="c-skeleton__figure c-skeleton__text--bigger identificadoAva"></div>
+                    </div>
+
+                    <div class="contenidoIzq">
+                        <div class="c-skeleton__text c-skeleton__text--title c-skeleton__text--small-height tituPregunta"></div>
+                        <div class="c-skeleton__text c-skeleton__text--bigger "></div>
+                        <div class="c-skeleton__text c-skeleton__text--medium"></div>
+                    </div>
+
+                </div>
+                <hr>
+            </div><div class="plantillaRespuestas">
+                <div class="contenedorLista">
+                    <div class="contenedorIden">
+                        <div class="c-skeleton__figure c-skeleton__text--bigger identificadoAva"></div>
+                    </div>
+
+                    <div class="contenidoIzq">
+                        <div class="c-skeleton__text c-skeleton__text--title c-skeleton__text--small-height tituPregunta"></div>
+                        <div class="c-skeleton__text c-skeleton__text--bigger "></div>
+                        <div class="c-skeleton__text c-skeleton__text--medium"></div>
+                    </div>
+
+                </div>
+                <hr>
+            </div><div class="contenedorBoton">
+                <div class="separador">
+                    <input type="button" value="Ver mas" id="mas">
+                </div>
+
+            </div>
         </div>
-    
+        <div  class="contenidoLista hidden">
+            <div id="contenedorRespuestas">
+            </div>
             <div class="contenedorBoton">
                 <div class="separador">
                     <input type="button" value="Ver mas" id="mas">

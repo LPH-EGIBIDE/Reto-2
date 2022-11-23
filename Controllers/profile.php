@@ -7,7 +7,7 @@ use Utils\AuthUtils;
 session_start();
 
 $importsCss = ["/assets/stylesheets/miPerfil.css"];
-$importsJs = [];
+$importsJs = ["/assets/js/userProfile.js"];
 
 if (!AuthUtils::checkAuth()) {
     header("Location: /login");

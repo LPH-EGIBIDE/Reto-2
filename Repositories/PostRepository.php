@@ -169,9 +169,8 @@ abstract class PostRepository
         $stmt->setFetchMode(PDO::FETCH_OBJ);
         $stmt->bindValue(":offset", $offset, PDO::PARAM_INT);
         $stmt->bindValue(":startFrom", $startFrom, PDO::PARAM_INT);
-        $stmt->execute([
-            ":author" => $userEntity->getId(),
-        ]);
+        $stmt->bindValue(":author", $userEntity->getId());
+        $stmt->execute();
         $result = $stmt->fetchAll();
         $posts = [];
         foreach ($result as $post) {

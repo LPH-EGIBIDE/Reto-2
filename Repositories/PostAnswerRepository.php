@@ -154,11 +154,8 @@ abstract class PostAnswerRepository
         $stmt->setFetchMode(PDO::FETCH_OBJ);
         $stmt->bindValue(":offset", $offset, PDO::PARAM_INT);
         $stmt->bindValue(":start_from", $startFrom, PDO::PARAM_INT);
-        $stmt->execute(
-            [
-                ":author_id" => $userEntity->getId()
-            ]
-        );
+        $stmt->bindValue(":author_id", $userEntity->getId(), PDO::PARAM_INT);
+        $stmt->execute();
         $result = $stmt->fetchAll();
         if ($result === false) {
             throw new DataNotFoundException("Respuesta no encontrada");
@@ -274,12 +271,7 @@ abstract class PostAnswerRepository
         $stmt = $db->prepare("DELETE FROM user_favourite_answers WHERE :user_id = user AND :answer_id = answer");
         $stmt->bindValue(":user_id", $userEntity->getId(), PDO::PARAM_INT);
         $stmt->bindValue(":answer_id", $postAnswerEntity->getId(), PDO::PARAM_INT);
-        $result = $stmt->execute(
-            [
-                ":user_id" => $userEntity->getId(),
-                ":answer_id" => $postAnswerEntity->getId()
-            ]
-        );
+        $result = $stmt->execute();
         if ($stmt->rowCount() === 0) {
             throw new DataNotFoundException("Esta respuesta no está marcada como favorita");
         }
