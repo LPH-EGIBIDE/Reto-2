@@ -2,8 +2,8 @@
     <div class="relleno">
         <div class="cajaPerfil">
             <div class="cajaPerfilUp">
-                <img src="fotoPerfilNone.jpg" alt="img Avatar" id="avatar">
-                <p class="nombreUsuario">Nombre Usuario</p>
+                <img src="/api/attachments/id/<?= $profileUser->getAvatar()->getId() ?>" alt="img Avatar" id="avatar">
+                <p class="nombreUsuario"><?=  $profileUser->getUsername(); ?></p>
                 <p class="fechaMiembro">Miembro desde: <span class="fechaMi"> FECHA</span></p>
                 <i class="fa-regular fa-trophy" id="rango"><span class="rank">RANKING</span></i>
             <div class="stats">

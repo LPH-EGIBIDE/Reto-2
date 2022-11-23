@@ -1,15 +1,8 @@
 <?php
-
-use Utils\AuthUtils;
-
-if (!AuthUtils::checkAuth()) {
-    header("Location: /login");
-    exit();
-}
 if (!isset($importsCss)){
     $importsCss = [];
 }
-$user = $_SESSION['user'];
+
 $title = empty($title) ? "WTFAQ" : $title;
 ?>
 <!DOCTYPE html>
