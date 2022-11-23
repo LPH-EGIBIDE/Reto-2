@@ -42,6 +42,10 @@ function createPost(data) {
 
 function createPostAnswer(data) {
     //TODO: Attachments && Clickable upvote and favorite
+    let attachmentList = "";
+    data.attachments.forEach((attachment) => {
+        attachmentList += `<li><i class="fa-solid fa-file"></i><a target="_blank" href="/api/attachments/id/${attachment.id}"> ${attachment.filename}</a></li>`;
+    });
 
     return `
         <div class="cajaRespuesta" answer-id="${data.id}">
@@ -52,7 +56,11 @@ function createPostAnswer(data) {
                 <p class="adjunto">Archivos adjuntos:</p>
             </div>
             <div class="conArchivosRe">
-                <p class="archivosRe">Falta de programar!!!!!</p>
+                <div class="listaAdjuntos">
+                  <ul class="listaFicheros">
+                    ${attachmentList}
+                  </ul>
+                </div>
             </div>
             <div class="contenedorAbajo">
                 <div class="conUsuario">
