@@ -4,17 +4,14 @@
 	margin: 0;
 	padding: 0;
 	box-sizing: border-box;
-	font-family: 'Roboto',-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Dorid Sans',
-	'Helvetica Neue', sans-serif;
+	font-family: 'Montserrat', sans-serif;
 }
 
 body {
 	font: 14px / 1.4 sans-serif;
-	font-family: 'Montserrat', sans-serif;
 	background-color: #D5D5D5;
-	height: 100vh;
 	background-image: url("/assets/img/login_bg.jpg");
-	background-position: center center;
+	background-position: center;
 	background-repeat: no-repeat;
 	background-attachment: fixed;
 	background-size: cover;
