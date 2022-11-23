@@ -16,9 +16,9 @@
             <p class="ultimaPregunta">Ultima pregunta: <span class="ultPregunta">PREGUNTA</span></p>
             <div class="navPerfil">
                 <ul class="navOpciones">
-                    <li><a href="#" id="linkPre">Preguntas</a></li>
-                    <li><a href="#" id="linkRes">Respuestas</a></li>
-                    <li><a href="#" id="linkFav">Favoritos</a></li>
+                    <li><a  id="linkPre">Preguntas</a></li>
+                    <li><a  id="linkRes">Respuestas</a></li>
+                    <li><a  id="linkFav">Favoritos</a></li>
                 </ul>
             </div>
             </div>
@@ -37,8 +37,7 @@
                     <ul class="listContent">
                         <li><p class="autor">Autor</p></li>
                         <li><p class="topics">Topico</p></li>
-                        <li><p class="fechaContent">Fecha</p></li>
-                        <li><i class="fa-regular fa-eye" id="visitas"><span class="numisitas">num</span></i></li>
+                        <li><i class="fa-regular fa-eye" id="visitas"><span class="numisitas">382</span></i></li>
                     </ul>
                 </div> 
                 
