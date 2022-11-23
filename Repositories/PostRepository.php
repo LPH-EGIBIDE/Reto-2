@@ -181,11 +181,30 @@ abstract class PostRepository
         return $posts;
     }
 
+    /**
+     * @return int
+     */
     public static function getPostsCount(): int {
         $db = Db::getInstance();
         $stmt = $db->prepare("SELECT COUNT(*) AS count FROM posts");
         $stmt->setFetchMode(PDO::FETCH_OBJ);
         $stmt->execute();
+        $result = $stmt->fetch();
+        return $result->count;
+    }
+
+    /**
+     * @param UserEntity $user
+     * @return int
+     */
+    public static function getPostCountByUser(UserEntity $user): int
+    {
+        $db = Db::getInstance();
+        $stmt = $db->prepare("SELECT COUNT(*) AS count FROM posts WHERE author = :author");
+        $stmt->setFetchMode(PDO::FETCH_OBJ);
+        $stmt->execute([
+            ":author" => $user->getId()
+        ]);
         $result = $stmt->fetch();
         return $result->count;
     }

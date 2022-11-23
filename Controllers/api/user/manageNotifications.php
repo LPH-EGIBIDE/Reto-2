@@ -7,7 +7,7 @@ use Utils\AuthUtils;
 
 require_once "../../../config.inc.php";
 session_start();
-
+header('Content-Type: application/json');
 
 if (!AuthUtils::checkAuth())
     die(json_encode(["status" => "error", "message" => "No hay sesión iniciada"]));
@@ -39,7 +39,7 @@ try {
     switch ($method) {
         case 'get':
             $all = $_POST['all'] ?? false;
-            echo json_encode(getNotifications($user, $all));
+            echo json_encode(["status" => "success", "notifications" => getNotifications($user, $all)]);
             break;
         case 'dismiss':
             $id = $_POST['id'] ?? null;

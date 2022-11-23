@@ -307,6 +307,24 @@ abstract class PostAnswerRepository
      * @param PostAnswerEntity $postAnswerEntity
      * @return bool
      */
+    public static function getUpvote(UserEntity $userEntity, PostAnswerEntity $postAnswerEntity): bool
+    {
+        $db = Db::getInstance();
+        $stmt = $db->prepare("SELECT COUNT(*) as count FROM post_upvotes WHERE user = :user_id AND post_answer = :post_answer_id");
+        $stmt->setFetchMode(PDO::FETCH_OBJ);
+        $stmt->execute([
+            ":user_id" => $userEntity->getId(),
+            ":post_answer_id" => $postAnswerEntity->getId()
+        ]);
+        $result = $stmt->fetch();
+        return $result->count > 0;
+    }
+
+    /**
+     * @param UserEntity $userEntity
+     * @param PostAnswerEntity $postAnswerEntity
+     * @return bool
+     */
     public static function downvotePostAnswer(UserEntity $userEntity, PostAnswerEntity $postAnswerEntity): bool
     {
         $db = Db::getInstance();
@@ -354,6 +372,39 @@ abstract class PostAnswerRepository
             $attachments[] = AttachmentRepository::getAttachmentById($attachment->attachments_id);
         }
         return $attachments;
+    }
+
+    /**
+     * @throws DataNotFoundException
+     */
+    public static function getPostAnswerCountByUser(UserEntity $user):int
+    {
+        $db = Db::getInstance();
+        $stmt = $db->prepare("SELECT COUNT(*) as count FROM post_answers WHERE author = :user_id");
+        $stmt->setFetchMode(PDO::FETCH_OBJ);
+        $stmt->execute([
+            ":user_id" => $user->getId()
+        ]);
+        $result = $stmt->fetch();
+        if ($result === false) {
+            throw new DataNotFoundException("Respuesta no encontrada");
+        }
+        return $result->count;
+    }
+
+    public static function getUpvoteCountByUser(UserEntity $user):int
+    {
+        $db = Db::getInstance();
+        $stmt = $db->prepare("SELECT COUNT(*) as count FROM post_upvotes WHERE user = :user_id");
+        $stmt->setFetchMode(PDO::FETCH_OBJ);
+        $stmt->execute([
+            ":user_id" => $user->getId()
+        ]);
+        $result = $stmt->fetch();
+        if ($result === false) {
+            throw new DataNotFoundException("Respuesta no encontrada");
+        }
+        return $result->count;
     }
 
 }
