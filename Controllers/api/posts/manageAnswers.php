@@ -42,8 +42,9 @@ try {
             $post->setViews($post->getViews() + 1);
             $data['views'] = $post->getViews();
             PostRepository::updatePost($post);
+
             // Return the data
-            echo json_encode($data);
+            echo json_encode(["status" => "success", "data" => $data]);
             break;
         case 'insert':
             $post = PostRepository::getPostById($id);
@@ -216,6 +217,7 @@ function getAnswers(PostEntity $post): array {
         foreach ($answerList as $answer) {
             $answer->setAttachments(PostAnswerRepository::getAttachments($answer));
             $answerSerialized = $answer->toArray();
+            $answerSerialized['favourites'] = PostAnswerRepository::getFavouriteCount($answer);
             $answerSerialized['attachments'] = [];
             foreach ($answer->getAttachments() as $attachment) {
                 $answerSerialized['attachments'][] = $attachment->toArray();

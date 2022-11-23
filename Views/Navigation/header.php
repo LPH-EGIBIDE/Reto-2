@@ -6,7 +6,9 @@ if (!AuthUtils::checkAuth()) {
     header("Location: /login");
     exit();
 }
-
+if (!isset($importsCss)){
+    $importsCss = [];
+}
 $user = $_SESSION['user'];
 $title = empty($title) ? "WTFAQ" : $title;
 ?>
@@ -15,6 +17,11 @@ $title = empty($title) ? "WTFAQ" : $title;
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="/assets/stylesheets/paginaPrin.css">
+    <?php
+    foreach ($importsCss as $import){
+        echo "<link rel='stylesheet' href='$import'>";
+    }
+    ?>
     <title><?= $title ?></title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>

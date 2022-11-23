@@ -295,7 +295,7 @@ body {
     align-items: center;
 }
 /*Caja pregunta*/
-#cajaPregunta{
+.cajaPregunta{
     margin-top: 7px;
     width: 100%;
 
@@ -305,7 +305,7 @@ body {
     grid-template-areas:
  "tags tituloPre"
  "textoPre textoPre"
- "adjuntos archivo";
+ "adjuntos adjuntos";
 
     background-color: white;
     border-radius: 10px;
@@ -316,7 +316,7 @@ body {
     align-items: center;
     padding: 0.5em;
 }
-.conTags p,.conAdjunto p, .conPreguntaTitu .preguntaTitu, .conAdjunto2 p{
+.conTags p, .conPreguntaTitu .preguntaTitu{
     font-size: 18px;
 }
 .conTags{
@@ -372,7 +372,10 @@ body {
     color: white;
 }
 /*Caja Respuesta*/
-#cajaRespuesta{
+#contenedorRespuestas{
+    width: 100%;
+}
+.cajaRespuesta{
     margin-top: 14px;
     width: 100%;
 
@@ -392,10 +395,15 @@ body {
 .conTextoRes{
     grid-area: conTextoRes;
 }
-.conTextoRes p{
+.textoRes{
     margin: 0 auto;
     padding: 2em;
     width: 80%;
+}
+
+.skeletonRes{
+    margin-left: 3%;
+    padding: 0.5em;
 }
 .conAdjunto2{
     grid-area: conAdjunto2;
@@ -421,9 +429,13 @@ body {
     align-items: center;
     margin: 2px;
 }
-#star,#up{
+.star,.up{
     margin: 2px;
     padding: 3px;
+}
+.centrado{
+    display: flex;
+    justify-content: center;
 }
 /*Footer*/
 footer{
@@ -490,4 +502,89 @@ footer .fotoI img{
     .pie .fotoI .version{
         display: none;
     }
+}
+
+
+.c-skeleton__text, .c-skeleton__figure {
+    -webkit-animation-duration: 1s;
+    animation-duration: 1s;
+    -webkit-animation-fill-mode: forwards;
+    animation-fill-mode: forwards;
+    -webkit-animation-iteration-count: infinite;
+    animation-iteration-count: infinite;
+    -webkit-animation-name: placeHolderShimmer;
+    animation-name: placeHolderShimmer;
+    -webkit-animation-timing-function: linear;
+    animation-timing-function: linear;
+    background-color: #e7e7e9;
+    background-image: linear-gradient(to right, #eee 8%, #e7e7e9 18%, #eee 33%);
+    background-size: 800px 104px;
+}
+
+@-webkit-keyframes placeHolderShimmer {
+    0% {
+        background-position: -468px 0;
+    }
+    100% {
+        background-position: 350px 0;
+    }
+}
+
+@keyframes placeHolderShimmer {
+    0% {
+        background-position: -468px 0;
+    }
+    100% {
+        background-position: 350px 0;
+    }
+}
+.c-skeleton__figure {
+    width: 100%;
+    height: 100%;
+}
+
+.c-skeleton__text {
+    height: 0.8em;
+    width: 65%;
+    margin-top: 0.3em;
+    margin-bottom: 0.3em;
+}
+
+.c-skeleton__text--small-height {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.c-skeleton__text--inline {
+    display: inline-block;
+}
+
+.c-skeleton__text--full {
+    width: 100%;
+    height: 100%;
+}
+
+.c-skeleton__text--title {
+    width: 50%;
+    height: 100%;
+}
+
+.c-skeleton__text--big {
+    width: 75%;
+}
+
+.c-skeleton__text--bigger {
+    width: 85%;
+}
+
+.c-skeleton__text--small {
+    width: 55%;
+}
+
+.c-skeleton__text--smaller {
+    width: 45%;
+}
+
+.c-skeleton__text--tiny {
+    width: 35%;
 }

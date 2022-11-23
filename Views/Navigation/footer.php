@@ -6,7 +6,9 @@ if (DEBUG_MODE){
     $version = "&#169 Los Pollos Hermanos";
 }
 
-
+if (!isset($importsJs)){
+    $importsJs = [];
+}
 
 
 ?>
@@ -27,6 +29,11 @@ if (DEBUG_MODE){
 </footer>
 
 </div>
+<?php
+foreach ($importsJs as $import){
+    echo "<script src='$import'></script>";
+}
+?>
 <script src="//cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
 <script src="/assets/js/main.js"></script>
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
