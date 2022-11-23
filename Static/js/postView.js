@@ -78,9 +78,7 @@ function createPostAnswer(data) {
 
 
 function loadPost() {
-    //get the id parameter from the url
-    const urlParams = new URLSearchParams(window.location.search);
-    const postId = urlParams.get('id');
+    const postId = window.location.pathname.split("/")[2];
     if (!postId || postId.length < 1) {
         window.location.href = '/';
     }
