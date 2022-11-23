@@ -45,29 +45,6 @@
                </div>
            </div>
        </div>
-   </div>
-    <!--
-        <div class="cajaRespuesta">
-            <div class="conTextoRes">
-                <p class="textoRes">Respuesta</p>
-            </div>
-            <div class="conAdjunto2">
-                <p class="adjunto">Archivos adjuntos:</p>
-            </div>
-            <div class="conArchivosRe">
-                <p class="archivosRe">Archivos</p>
-            </div>
-            <div class="contenedorAbajo">
-                <div class="conUsuario">
-                    <p>Por: <a class="textoUsuario">Usuario</a></p>
-                </div>
-                <div class="parteDrc">
-                    <i class="fa-solid fa-star" id="star"></i>
-                    <i class="fa-solid fa-up" id="up"></i>
-                </div>
-            </div>
-        </div>
-     -->
-
+      </div>
     </div>
 </div>
