@@ -43,7 +43,7 @@ $title = empty($title) ? "WTFAQ" : $title;
                 <span id="username"><?= $user->getUsername() ?></span>
             </div>
                 <ul class="opUsuario listas">
-                    <li><a class="navLink" href="/user/profile">Mi perfil</a></li>
+                    <li><a class="navLink" href="/user/">Mi perfil</a></li>
                     <li><a class="navLink" href="#">Pregunta favorita</a></li>
                     <li><a class="navLink" href="/logout">Cerrar sesion</a></li>
                 </ul>
