@@ -9,7 +9,7 @@ $title = empty($title) ? "WTFAQ" : $title;
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="/assets/stylesheets/paginaPrin.css">
+    <link rel="stylesheet" href="/assets/stylesheets/main.css">
     <?php
     foreach ($importsCss as $import){
         echo "<link rel='stylesheet' href='$import'>";

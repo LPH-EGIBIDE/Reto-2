@@ -18,7 +18,7 @@
             <input type="email" name="email" placeholder="Email" required>
             <input type="password" name="password" placeholder="Contraseña" required>
             <button type="submit" id="regBtn">Registrarse</button>
-            <button class="ghost" id="signIn2">Conectar</button>
+            <button class="ghost" id="signIn2">Iniciar sesión</button>
         </form>
 
     </div>
@@ -30,7 +30,7 @@
 
             <input type="text" name="username" placeholder="Nombre de usuario" required>
             <input type="password" name="password" placeholder="Contraseña" required>
-            <a href="#" onclick="resetPasswordEmailModal()" id="olvidar">Olvidaste la contraseña?</a>
+            <a href="#" onclick="resetPasswordEmailModal()" id="olvidar">¿Olvidaste la contraseña?</a>
             <button type="submit" id="loginBtn">Iniciar sesión</button>
             <button class="ghost" id="signUp2">Registrarse</button>
         </form>
@@ -40,13 +40,13 @@
     <div class="overlay-container">
         <div class="overlay">
             <div class="overlay-panel overlay-left">
-                <h1>Bienvenido de vuelta!</h1>
-                <p>Para poder conectarte, ponga sus datos.</p>
-                <button class="ghost" id="signIn">Conectar</button>
+                <h1>¿Ya tienes una cuenta?</h1>
+                <p>Inicia sesión aquí</p>
+                <button class="ghost" id="signIn">Iniciar sesión</button>
             </div>
             <div class="overlay-panel overlay-right">
-                <h1>Hola, amigo!</h1>
-                <p>Si eres nuevo, registrate introduciendo tus datos.</p>
+                <h1>¿Aún no tienes tu cuenta?</h1>
+                <p>Regístrate aquí</p>
                 <button class="ghost" id="signUp">Registrarse</button>
             </div>
         </div>

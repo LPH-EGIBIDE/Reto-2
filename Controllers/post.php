@@ -5,6 +5,7 @@ use Utils\AuthUtils;
 
 session_start();
 
+$importsCss = ['/assets/stylesheets/posts.css'];
 $importsJs = ["/assets/js/postView.js"];
 
 if (!AuthUtils::checkAuth()) {
