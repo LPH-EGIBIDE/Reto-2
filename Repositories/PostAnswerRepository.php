@@ -366,7 +366,10 @@ abstract class PostAnswerRepository
         return $attachments;
     }
 
+
     /**
+     * @param UserEntity $user
+     * @return int
      * @throws DataNotFoundException
      */
     public static function getPostAnswerCountByUser(UserEntity $user):int
@@ -384,6 +387,11 @@ abstract class PostAnswerRepository
         return $result->count;
     }
 
+    /**
+     * @param UserEntity $user
+     * @return int
+     * @throws DataNotFoundException
+     */
     public static function getUpvoteCountByUser(UserEntity $user):int
     {
         $db = Db::getInstance();
@@ -399,6 +407,11 @@ abstract class PostAnswerRepository
         return $result->count;
     }
 
+    /**
+     * @param UserEntity $user
+     * @return int
+     * @throws DataNotFoundException
+     */
     public static function getFavouriteCountByUser(UserEntity $user):int
     {
         $db = Db::getInstance();
@@ -433,5 +446,24 @@ abstract class PostAnswerRepository
         }
         return $result->count;
     }
+
+    /**
+     * @param UserEntity $userEntity
+     * @param PostAnswerEntity $postAnswerEntity
+     * @return bool
+     */
+    public static function getFavorite(UserEntity $userEntity, PostAnswerEntity $postAnswerEntity):bool
+    {
+        $db = Db::getInstance();
+        $stmt = $db->prepare("SELECT COUNT(*) as count FROM user_favourite_answers WHERE user = :user_id AND answer = :answer_id");
+        $stmt->setFetchMode(PDO::FETCH_OBJ);
+        $stmt->execute([
+            ":user_id" => $userEntity->getId(),
+            ":answer_id" => $postAnswerEntity->getId()
+        ]);
+        $result = $stmt->fetch();
+        return $result->count > 0;
+    }
+
 
 }

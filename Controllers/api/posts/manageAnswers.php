@@ -222,6 +222,8 @@ function getAnswers(PostEntity $post): array {
             foreach ($answer->getAttachments() as $attachment) {
                 $answerSerialized['attachments'][] = $attachment->toArray();
             }
+            $answerSerialized['upvoted'] = PostAnswerRepository::getUpvote($_SESSION['user'], $answer);
+            $answerSerialized['isFavorite'] = PostAnswerRepository::getFavorite($_SESSION['user'], $answer);
             $answers[] = $answerSerialized;
         }
        usort($answers, function ($a, $b) {
