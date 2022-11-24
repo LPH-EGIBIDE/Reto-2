@@ -172,7 +172,7 @@ window.addEventListener("load", () => {
     loadPost();
 });
 
-function switchHiddenAnswer( ) {
+function switchHiddenAnswer() {
     $answer = document.getElementById("agregarRespuesta");
     if ($answer.style.display === "none") {
         $answer.style.display = "block";

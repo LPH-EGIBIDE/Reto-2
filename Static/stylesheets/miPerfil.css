@@ -11,7 +11,6 @@
 }
 .cajaPerfilUp{
     background-color: #F0DED3;
-    
     display: grid;
     grid-template-columns: repeat(4, auto);
     grid-template-rows: repeat(2, auto);

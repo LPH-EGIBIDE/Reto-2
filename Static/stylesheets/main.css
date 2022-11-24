@@ -8,6 +8,10 @@
     font-family: 'Montserrat', sans-serif;
 }
 
+*::-webkit-scrollbar {
+    width: 0;
+}
+
 body {
     font: 14px / 1.4 sans-serif;
     background-color: #D5D5D5;

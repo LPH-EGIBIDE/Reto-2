@@ -1,0 +1,18 @@
+.main .relleno{
+    justify-content: unset;
+    margin: unset;
+}
+
+/*Perfil*/
+.cajaBuscador{
+    display: flex;
+    flex-direction: row;
+    background-color: #F0DED3;
+    padding: 2em;
+    width: 100%;
+}
+.listaTopics{
+    display: flex;
+    flex-direction: column;
+    width: auto;
+}
