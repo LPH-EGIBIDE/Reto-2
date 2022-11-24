@@ -28,6 +28,7 @@ function uploadFile($file):int{
     $fileSize = $file['size'];
     $fileError = $file['error'];
     $fileType = $file['type'];
+    $isTutorial = $file['isTutorial'] ?? false;
 
     $fileExt = explode('.', $fileName);
     $fileActualExt = strtolower(end($fileExt));
@@ -50,7 +51,7 @@ function uploadFile($file):int{
             $fileType = $imageTypes[$fileActualExt] ?? $defaultType;
             move_uploaded_file($fileTmpName, $fileDestination);
             // Add a new attachment to the database
-            $attachment = new AttachmentEntity($fileName, $fileNameNew, $fileType, new DateTime(), $_SESSION['user'], $_POST['public'] ?? false);
+            $attachment = new AttachmentEntity($fileName, $fileNameNew, $fileType, new DateTime(), $_SESSION['user'], $_POST['public'] ?? false, $isTutorial);
             return AttachmentRepository::insertAttachment($attachment);
         } else {
             throw new UploadException("El archivo es demasiado grande");
@@ -124,13 +125,17 @@ if (isset($_FILES['file'])) {
         {
             case 'upload':
                 $id = uploadFile($_FILES['file']);
-                if (!is_null($id)) {
-                    echo json_encode(["status" => "success", "message" => "Archivo subido correctamente", "id" => $id]);
-                }
+                echo json_encode(["status" => "success", "message" => "Archivo subido correctamente", "id" => $id]);
                 break;
-                case "setAvatar":
-                    setAvatar($_FILES['file'], $user);
-                    break;
+            case "setAvatar":
+                setAvatar($_FILES['file'], $user);
+                break;
+            case "uploadTutorial":
+                $file = $_FILES['file'];
+                $file['isTutorial'] = true;
+                $id = uploadFile($_FILES['file']);
+                echo json_encode(["status" => "success", "message" => "Tutorial subido correctamente", "id" => $id]);
+                break;
             default:
                 echo json_encode(["status" => "error", "message" => "Acción no válida"]);
         }

@@ -22,7 +22,7 @@ function handleInsertPost(formElement) {
     }).then(data => {
         if(data.status === 'success') {
             showToast(data.message, 'success', () => {
-                window.location.href = `/posts/${data.postId}`;
+                window.location.href = `/post/${data.postId}`;
             });
         } else {
             showToast(data.message,'error');
