@@ -21,7 +21,11 @@ if (isset($_POST['id'])) {
 
         if ($attachment->getUploadedBy()->getId() != $_SESSION['user']->getId())
             throw new DataNotFoundException("No se ha encontrado el archivo");
-        AttachmentRepository::deleteAttachment(AttachmentRepository::getAttachmentById($id));
+        // Remove the file from the server
+        $attachment = AttachmentRepository::getAttachmentById($id);
+        $path = getcwd() . '/uploads/' . $attachment->getFilepath();
+        AttachmentRepository::deleteAttachment($attachment);
+        unlink($path);
         echo json_encode(["status" => "success", "message" => "Archivo eliminado correctamente"]);
     } catch (DataNotFoundException $e) {
         if (DEBUG_MODE){

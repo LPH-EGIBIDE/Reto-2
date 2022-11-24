@@ -47,4 +47,7 @@
        </div>
       </div>
     </div>
+    <div>
+        <input type="button" value="Cargar más" id="anadir" onclick="loadMore()">
+    </div>
 </div>

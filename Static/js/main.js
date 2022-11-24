@@ -7,6 +7,7 @@ async function fetchNotifications() {
             saveNotifications(notifications);
             let notificationContainer = document.querySelector("#notificationContainer");
             notificationContainer.innerHTML = "";
+            document.getElementById("notifiQuant").innerHTML = `${notifications.length} `;
             notifications.forEach((notification) => {
                 notificationContainer.innerHTML += notificationTemplate(notification);
             });
@@ -35,6 +36,7 @@ function dismissNotification(notificationElement) {
         if (data.status === "success") {
             showToast(data.message, "success", {});
             notificationElement.parentElement.remove();
+            fetchNotifications();
         } else {
             showToast("Error eliminando notificacion", "error", {});
         }
@@ -79,6 +81,7 @@ function getOfflineNotifications() {
         objectStore.getAll().onsuccess = function(event) {
             let notifications = event.target.result;
             let notificationsHTML = "";
+            document.getElementById("notifiQuant").innerHTML = `${notifications.length} `;
             notifications.forEach((notification) => {
                 notificationsHTML += notificationTemplate(notification);
             });

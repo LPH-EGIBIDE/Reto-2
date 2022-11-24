@@ -1,3 +1,6 @@
+let currentPage = 1;
+let answerCount = 0;
+
 async function getPost(postId) {
    return  fetch(`/api/posts/managePost`, {
         method: 'POST',
@@ -10,14 +13,15 @@ async function getPost(postId) {
     });
 }
 
-async function getPostAnswers(postId) {
+async function getPostAnswers(postId, page) {
     return  fetch(`/api/posts/manageAnswers`, {
         method: 'POST',
         headers: {
             "Content-Type": "application/x-www-form-urlencoded"
         },
         body: new URLSearchParams({
-            id: postId
+            id: postId,
+            page: page
         })
     });
 }
@@ -112,7 +116,9 @@ function createPost(data) {
                     <p class="textoPre">${data.description}</p>
             </div>
             <div class="conAdjunto">
-                <p class="adjunto"><span style="font-weight: bold">Publicado por: </span><a href="/user/${data.author.id}">${data.author.username}</a></p>
+                <p class="publishedBy">
+                <span style="font-weight: bold">Publicado por: </span> <img src="${data.author.avatar}" id="userLogo" alt="User logo"><a href="/user/${data.author.id}">${data.author.username}</a>
+                </p>
             </div>
     `;
 }
@@ -123,6 +129,10 @@ function createPostAnswer(data) {
     data.attachments.forEach((attachment) => {
         attachmentList += `<li><i class="fa-solid fa-file"></i><a target="_blank" class="overflow-1" href="/api/attachments/id/${attachment.id}"> ${attachment.filename}</a></li>`;
     });
+    let userInfo = [
+        data.isFavorite ? 'yellow' : '',
+        data.Upvoted ? 'green' : '',
+    ]
 
     return `
         <div class="cajaRespuesta" answer-id="${data.id}">
@@ -142,11 +152,13 @@ function createPostAnswer(data) {
             </div>
             <div class="contenedorAbajo">
                 <div class="conUsuario">
-                    <p><span style="font-weight: bold">Publicado por: </span><a href="/user/${data.author.id}">${data.author.username}</a></p>
+                    <div class="publishedBy">
+                    <span style="font-weight: bold">Publicado por: </span><img src="${data.author.avatar}" id="userLogo" alt="User logo"> <a href="/user/${data.author.id}">${data.author.username}</a>
+                    </div>
                 </div>
                 <div class="parteDrc">
-                   <span class="star" onclick="favouriteAnswer(this)"><i class="fa-solid fa-star"></i> <span>${data.favourites}</span></span>
-                   <span class="up" onclick="upvotePost(this)"><i class="fa-solid fa-up"></i> <span>${data.upvotes}</span></span>
+                   <span class="star" onclick="favouriteAnswer(this)"><i class="fa-solid fa-star ${userInfo[0]}"></i> <span>${data.favourites}</span></span>
+                   <span class="up" onclick="upvotePost(this)"><i class="fa-solid fa-up ${userInfo[1]}"></i> <span>${data.upvotes}</span></span>
                 </div>
             </div>
         </div>
@@ -155,7 +167,7 @@ function createPostAnswer(data) {
 
 
 
-function loadPost(reload = false) {
+function loadPost(page = 1, reload = false) {
     const postId = window.location.pathname.split("/")[2];
     if (!postId || postId.length < 1) {
         window.location.href = '/';
@@ -172,9 +184,11 @@ function loadPost(reload = false) {
             post.innerHTML = createPost(data.data);
             //Replace the skeleton with the post
             if (!reload) {
-                let postSkeleton = document.getElementById("cajaPreguntaSkeleton");
-                let postParent = postSkeleton.parentElement;
-                postParent.replaceChild(post, postSkeleton);
+                let postSkeleton = document.querySelector('#cajaPreguntaSkeleton');
+                if (postSkeleton){
+                    let postParent = postSkeleton.parentElement;
+                    postParent.replaceChild(post, postSkeleton);
+                }
             }
 
         } else {
@@ -188,35 +202,45 @@ function loadPost(reload = false) {
             window.location.href = "/";
          });
     });
+    loadAnswers(postId, page, reload);
+    document.getElementById("fileUploader").addEventListener("change", (event) => {
+        if (event.target.files.length > 0) {
+            handleFileUpload(event);
+        }
+    });
+}
 
-    getPostAnswers(postId).then((response) => {
+async function loadAnswers(postId, page, reload = false) {
+    getPostAnswers(postId, page).then((response) => {
         return response.json();
     }).then((data) => {
         let answersContainer = document.getElementById("contenedorRespuestas");
         if (data.status === "success") {
             // Delete all but hiddenAnswer
-            answersContainer.innerHTML = hiddenPostAnswer();
+            if (!reload){
+                answersContainer.innerHTML = hiddenPostAnswer();
+            }
             // Add the answers
             if (data.data.answers.length > 0) {
-            data.data.answers.forEach((answer) => {
-                answersContainer.innerHTML += createPostAnswer(answer);
-            });
+                data.data.answers.forEach((answer) => {
+                    answersContainer.innerHTML += createPostAnswer(answer);
+                });
             } else {
-                answersContainer.innerHTML = hiddenPostAnswer();
-                answersContainer.innerHTML += `<h4 class="centrado">No hay respuestas aun en este post</h4>`;
+                if (!reload){
+                    answersContainer.innerHTML = hiddenPostAnswer();
+                }
+                if (page === 1) {
+                    answersContainer.innerHTML += `<h4 class="centrado">No hay respuestas aun en este post</h4>`;
+                } else {
+                    answersContainer.innerHTML += `<h4 class="centrado">No hay más respuestas en este post</h4>`;
+                }
             }
         }
-        document.getElementById("fileUploader").addEventListener("change", (event) => {
-            if (event.target.files.length > 0) {
-                handleFileUpload(event);
-            }
-        });
-
     }).catch((error) => { showToast("Error desconocido obteniendo las respuestas", "error", () => {}); });
 }
 
 function favouriteAnswer(element) {
-    //check if the element element has a color set
+    //check if the element `element` has a color set
     let childStar = element.children[0];
     let counter = element.children[1];
     let action;
@@ -256,7 +280,10 @@ function favouriteAnswer(element) {
         } else {
             showToast(data.message, "error", () => {});
         }
-    }).catch((error) => { showToast("Error desconocido", "error", () => {}); });
+    }).catch((error) => {
+        console.log(error);
+        showToast("Error desconocido", "error", () => {});
+    });
 
 }
 
@@ -292,7 +319,10 @@ function upvotePost(element) {
         } else {
             showToast(data.message, "error", () => {});
         }
-    }).catch((error) => { showToast("Error desconocido", "error", () => {}); });
+    }).catch((error) => {
+        console.log(error);
+        showToast("Error desconocido", "error", () => {});
+    });
 
 }
 
@@ -316,13 +346,21 @@ function handleAnswerInsert(element){
                 await addAttachmentAnswer(answerId, fileId);
             }
             showToast(data.message, "success", () => {
-                loadPost(true);
+                loadPost(1,false);
+                for(let i = 2; i < currentPage; i++){
+                    loadPost(i,true);
+                }
+
+
             });
         } else {
             showToast(data.message, "error", () => {
             });
         }
-    }).catch((error) => { showToast("Error desconocido", "error", () => {}); });
+    }).catch((error) => {
+        console.log(error);
+        showToast("Error desconocido", "error", () => {});
+    });
 }
 
 function deleteFile(element) {
@@ -375,9 +413,27 @@ function handleFileUpload(event) {
     });
 }
 
+function loadMore(){
+    // Get the answer list element and count
+    let answerList = document.getElementById("contenedorRespuestas");
+    if (answerList.children.length === answerCount) {
+        return;
+    }
+    answerCount = answerList.children.length +1;
+    // Get the post id from the url
+    const postId = window.location.pathname.split("/")[2];
+    currentPage++;
+    loadAnswers(postId, currentPage, true);
+
+
+
+}
+
 window.addEventListener("load", () => {
     loadPost();
 });
+
+
 
 
 

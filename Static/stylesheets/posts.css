@@ -160,6 +160,13 @@
     text-decoration: none;
 }
 
+.publishedBy {
+    display: flex;
+    justify-content: center;
+    gap: 0.5em;
+    align-items: center;
+}
+
 #agregarRespuesta{
     margin: 1em 0;
     width: 100%;

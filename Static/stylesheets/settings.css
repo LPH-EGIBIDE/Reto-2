@@ -84,7 +84,7 @@
     width: 100%;
 }
 /*estilo formularios*/
-input[type=password], select, textarea{
+.relleno input[type=password], .relleno select, .relleno textarea{
     width: 100%;
     padding: 12px 20px;
     margin: 8px 0;

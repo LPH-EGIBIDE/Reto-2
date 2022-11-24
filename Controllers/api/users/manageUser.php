@@ -34,9 +34,13 @@ function activateEmailMFA(UserEntity $user): void
     echo json_encode(["status" => "success", "message" => "MFA por correo activado correctamente"]);
 }
 
-function deactivateMFA(UserEntity $user): void
+function deactivateMFA(UserEntity $user, string $password): void
 {
-    $user->setMfaData(null);
+    if ($user->getMfaType() == 0)
+        die(json_encode(["status" => "error", "message" => "No tienes activado el MFA"]));
+    if (!password_verify($password, $user->getPassword()))
+        die(json_encode(["status" => "error", "message" => "La contraseña no es correcta"]));
+    $user->setMfaData("");
     $user->setMfaType(0);
     UserRepository::updateUser($user);
     $_SESSION["user"] = $user;
@@ -73,7 +77,8 @@ switch ($method) {
         activateEmailMFA($user);
         break;
     case "deactivateMFA":
-        deactivateMFA($user);
+        $userPassword = $_POST["password"] ?? "";
+        deactivateMFA($user, $userPassword);
         break;
     case "changePassword":
         $oldPassword = $_POST["oldPassword"] ?? "";

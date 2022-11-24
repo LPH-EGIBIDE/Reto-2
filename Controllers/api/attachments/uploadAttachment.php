@@ -102,10 +102,16 @@ function setAvatar(mixed $file, UserEntity $user): void
         echo json_encode(["status" => "error", "message" => "El archivo no es una imagen ". $fileExt]);
         return;
     }
+    $oldAvatar = $user->getAvatar();
     $file = uploadFile($file);
         try{
             $user->setAvatar(AttachmentRepository::getAttachmentById($file));
             UserRepository::updateUser($user);
+            $uploaderId = $oldAvatar->getUploadedBy()->getId() ?? -1;
+            if ($uploaderId === $user->getId()){
+                AttachmentRepository::deleteAttachment($oldAvatar);
+                unlink(getcwd().'/uploads/'.$oldAvatar->getFilepath());
+            }
             echo json_encode(["status" => "success", "message" => "Avatar actualizado correctamente", "attachment" => $user->getAvatar()->getId()]);
         } catch (DataNotFoundException $e){
             echo json_encode(["status" => "error", "message" => "No se pudo actualizar el avatar"]);

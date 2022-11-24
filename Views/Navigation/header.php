@@ -49,20 +49,12 @@ $title = empty($title) ? "WTFAQ" : $title;
                 </ul>
         </li>
         <li class="notificaciones">
-            <div id="notifications"><i class="fa-solid fa-bell"></i> <span id="notifiText">Notificaciones</span></div>
+            <div id="notifications"><i class="fa-solid fa-bell"></i> <span id="notifiQuant"></span><span id="notifiText">Notificaciones</span></div>
             <div class="listaNoti hoverElement">
                 <div class="contenidoNoti hoverElement">
                   <h3>Alertas</h3>
                   <hr>
                     <div class="hoverelement" id="notificationContainer">
-                        <div class="notificacion hoverElement">
-                            <i class="fa-regular fa-bell notifiIcon" ></i>
-                            <p class="mensaje">Mensaje</p>
-                            <div class="fecha">
-                                <p>Hace: <span class="fechaNotificacion">1 dia</span></p>
-                            </div>
-                            <i class="fa-solid fa-trash basura" ></i>
-                        </div>
                     </div>
                 </div>
             </div>
