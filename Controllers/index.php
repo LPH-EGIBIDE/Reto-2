@@ -10,5 +10,6 @@ if (!AuthUtils::checkAuth()) {
 }
 $user = $_SESSION['user'];
 
+
 require APP_ROOT.'Views/Navigation/header.php';
 require APP_ROOT.'Views/Navigation/footer.php';
