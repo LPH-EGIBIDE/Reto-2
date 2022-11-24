@@ -57,6 +57,7 @@ img.mainLogo{
     justify-content: center;
     align-items: center;
 }
+
 .centrado{
     display: flex;
     justify-content: center;
@@ -73,6 +74,7 @@ img.mainLogo{
     -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
 }
+
 .hidden{
     display: none;
 }
@@ -167,7 +169,7 @@ img.mainLogo{
 /* Media queries */
 @media screen and  (max-width: 900px) {
     .main, .main .relleno{
-     width: 100%;
+        width: 100%;
     }
  }
 

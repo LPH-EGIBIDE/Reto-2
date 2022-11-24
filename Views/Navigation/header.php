@@ -28,7 +28,7 @@ $title = empty($title) ? "WTFAQ" : $title;
 
 <nav class="navegador">
     <ul class="navI listas">
-        <li><a class="navLink" href="#">Preguntas</a></li>
+        <li><a class="navLink" href="/searchPosts">Preguntas</a></li>
         <li><a class="navLink" href="#">Tutoriales</a></li>
     </ul>
     <div class="logoMobile">

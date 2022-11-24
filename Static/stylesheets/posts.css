@@ -214,24 +214,3 @@
     font-size: 18px;
     margin-bottom: .2em;
 }
-
-.answerButton {
-    background: transparent;
-    border-radius: .2em;
-    padding: .3em .6em;
-    text-align: center;
-    display: inline-block;
-    font-size: .7em;
-    margin: 4px 2px;
-    transition-duration: 0.4s;
-    cursor: pointer;
-    text-decoration: none;
-    text-transform: uppercase;
-    color: black;
-    border: 2px solid #FE8F4B;
-}
-
-.answerButton:hover {
-    background-color: #FE8F4B;
-    color: white;
-}
