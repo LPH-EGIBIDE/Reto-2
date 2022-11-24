@@ -2,6 +2,7 @@
     <div class="relleno">
     <h3 id="cajaTitulo">Buscar posts</h3>
         <div class="cajaBuscador">
+            <form id="filterForm">
             <div id="textoTitulo" class="lista">
                 <input type="text" name="title" placeholder="Título">
             </div>
@@ -28,6 +29,7 @@
             </div>
         </div>
         <input type="button" value="Enviar" class="answerButton">
+        </form>
     </div>
     <div id="postsContainer" class="contenidoLista">
             <div id="contenedorRespuestas">
