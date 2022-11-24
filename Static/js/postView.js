@@ -22,18 +22,75 @@ async function getPostAnswers(postId) {
     });
 }
 
+async function insertAnswer(postId, message) {
+    return  fetch(`/api/posts/manageAnswers`, {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: new URLSearchParams({
+            id: postId,
+            content: message,
+            action: 'insert'
+        })
+    });
+}
+
+async function addAttachmentAnswer(answerId, fileId) {
+    return  fetch(`/api/posts/manageAnswers`, {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: new URLSearchParams({
+            id: answerId,
+            attachment: fileId,
+            action: 'addAttachment'
+        })
+    });
+}
+
+async function insertAttachment(file) {
+    let formData = new FormData();
+    formData.append('file', file);
+    formData.append('public', "1");
+    return  fetch(`/api/attachments/uploadAttachment`, {
+        method: 'POST',
+        body: formData
+    });
+}
+
+async function deleteAttachment(fileId) {
+    return  fetch(`/api/attachments/deleteAttachment`, {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: new URLSearchParams({
+            id: fileId
+        })
+    });
+}
+
+
 function hiddenPostAnswer() { 
     return `
-        <div class="cajaRespuesta" id="agregarRespuesta">
+        <div class="cajaRespuesta hidden" id="agregarRespuesta">
             <div class="answerForm">
                 <form>
                     <p class="respuestaTitu">Añadir respuesta</p>
                     <textarea name="text" placeholder="Escriba aquí" oninput='this.style.height = ""; this.style.height = this.scrollHeight + "px"'></textarea>
                     <p class="respuestaFile">Añadir archivos</p>
                 <div class="contenedorAbajo">
-                    <input type="file">
+                    <div>
+                        <input type="file" name="fileUpload" id="fileUploader">
+                        <ul id="fileList">
+                         
+                        </ul>
+    
+                    </div>
                 <div class="answerButtons">
-                    <input class=answerButton type="button" value="Enviar">
+                    <input class=answerButton type="button" onclick="handleAnswerInsert(this)" value="Enviar">
                     <input class=answerButton type="reset" placeholder="Borrar">
                 </div>
             </div>
@@ -64,11 +121,12 @@ function createPostAnswer(data) {
     //TODO: Attachments && Clickable upvote and favorite
     let attachmentList = "";
     data.attachments.forEach((attachment) => {
-        attachmentList += `<li><i class="fa-solid fa-file"></i><a target="_blank" href="/api/attachments/id/${attachment.id}"> ${attachment.filename}</a></li>`;
+        attachmentList += `<li><i class="fa-solid fa-file"></i><a target="_blank" class="overflow-1" href="/api/attachments/id/${attachment.id}"> ${attachment.filename}</a></li>`;
     });
 
     return `
         <div class="cajaRespuesta" answer-id="${data.id}">
+        
             <div class="conTextoRes">
                 <p class="textoRes">${data.message}</p>
             </div>
@@ -87,8 +145,8 @@ function createPostAnswer(data) {
                     <p><span style="font-weight: bold">Publicado por: </span><a href="/user/${data.author.id}">${data.author.username}</a></p>
                 </div>
                 <div class="parteDrc">
-                   <span class="star"><i class="fa-solid fa-star"></i> ${data.favourites}</span>
-                   <span class="up" onclick="upvotePost(this)"><i class="fa-solid fa-up"></i> ${data.upvotes}</span>
+                   <span class="star" onclick="favouriteAnswer(this)"><i class="fa-solid fa-star"></i> <span>${data.favourites}</span></span>
+                   <span class="up" onclick="upvotePost(this)"><i class="fa-solid fa-up"></i> <span>${data.upvotes}</span></span>
                 </div>
             </div>
         </div>
@@ -97,7 +155,7 @@ function createPostAnswer(data) {
 
 
 
-function loadPost() {
+function loadPost(reload = false) {
     const postId = window.location.pathname.split("/")[2];
     if (!postId || postId.length < 1) {
         window.location.href = '/';
@@ -107,20 +165,29 @@ function loadPost() {
     }).then((data) => {
         if (data.status === "success") {
             // Remove skeleton and add post to the parent of the skeleton
-            let postSkeleton = document.getElementById("cajaPreguntaSkeleton");
-            let postParent = postSkeleton.parentElement;
+
             //Generate a div with the class cajaPregunta
             let post = document.createElement("div");
             post.classList.add("cajaPregunta");
             post.innerHTML = createPost(data.data);
             //Replace the skeleton with the post
-            postParent.replaceChild(post, postSkeleton);
+            if (!reload) {
+                let postSkeleton = document.getElementById("cajaPreguntaSkeleton");
+                let postParent = postSkeleton.parentElement;
+                postParent.replaceChild(post, postSkeleton);
+            }
+
         } else {
             showToast(data.message, "error", () => {
                 window.location.href = "/";
             });
         }
-    }).catch((error) => { showToast("Error desconocido", "error", () => {window.location.href = "/"; }); });
+    }).catch((error) => {
+        console.error(error);
+        showToast("Error desconocido", "error", () => {
+            window.location.href = "/";
+         });
+    });
 
     getPostAnswers(postId).then((response) => {
         return response.json();
@@ -139,14 +206,68 @@ function loadPost() {
                 answersContainer.innerHTML += `<h4 class="centrado">No hay respuestas aun en este post</h4>`;
             }
         }
+        document.getElementById("fileUploader").addEventListener("change", (event) => {
+            if (event.target.files.length > 0) {
+                handleFileUpload(event);
+            }
+        });
 
     }).catch((error) => { showToast("Error desconocido obteniendo las respuestas", "error", () => {}); });
 }
 
-function upvotePost(event) {
-    //Get the id of the answer via the parent that has the attribute answer-id
-    console.log(event);
-    const answerId = event.parentElement.parentElement.parentElement.getAttribute("answer-id");
+function favouriteAnswer(element) {
+    //check if the element element has a color set
+    let childStar = element.children[0];
+    let counter = element.children[1];
+    let action;
+    if (childStar.classList.contains("yellow")) {
+        //if the color is set, remove it and set the action to remove
+        childStar.classList.remove("yellow");
+        action = "remove";
+    } else {
+        //if the color is not set, set it and set the action to add
+        childStar.classList.add("yellow");
+        action = "add";
+    }
+    const answerId = element.parentElement.parentElement.parentElement.getAttribute("answer-id");
+    fetch(`/api/user/manageFavAnswers`, {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: new URLSearchParams({
+            id: answerId,
+            method: action
+        })
+    }).then((response) => {
+        return response.json();
+    }).then((data) => {
+        if (data.status === "success") {
+            showToast(data.message, "success", () => {});
+            switch (action) {
+                case "add":
+                    counter.innerHTML = counter.innerHTML === "" ? 1 : " "+(parseInt(counter.innerHTML) + 1);
+                    break;
+                case "remove":
+
+                    counter.innerHTML = counter.innerHTML === "" ? 0 : " "+(parseInt(counter.innerHTML) - 1);
+                    break;
+            }
+        } else {
+            showToast(data.message, "error", () => {});
+        }
+    }).catch((error) => { showToast("Error desconocido", "error", () => {}); });
+
+}
+
+
+
+
+function upvotePost(element) {
+    const answerId = element.parentElement.parentElement.parentElement.getAttribute("answer-id");
+    let childArrow = element.children[0];
+
+    let counter = element.children[1];
     fetch(`/api/posts/manageAnswers`, {
         method: 'POST',
         headers: {
@@ -160,6 +281,13 @@ function upvotePost(event) {
         return response.json();
     }).then((data) => {
         if (data.status === "success") {
+            childArrow.classList.contains("green") ? childArrow.classList.remove("green") : childArrow.classList.add("green");
+            console.log(counter.innerHTML == "");
+            if (childArrow.classList.contains("green")) {
+                counter.innerHTML = counter.innerHTML === "" ? 1 : " "+(parseInt(counter.innerHTML) + 1);
+            } else {
+                counter.innerHTML = counter.innerHTML === "" ? 0 : " "+(parseInt(counter.innerHTML) - 1);
+            }
             showToast(data.message, "success", () => {});
         } else {
             showToast(data.message, "error", () => {});
@@ -168,18 +296,100 @@ function upvotePost(event) {
 
 }
 
+function handleAnswerInsert(element){
+    //Get the post id from the url
+    const postId = window.location.pathname.split("/")[2];
+    // Get the form using the element
+    let form = element.parentElement.parentElement.parentElement;
+    // Get the text area from the form with name text
+    let message = form.querySelector("textarea[name='text']").value;
+
+    // Get the file list
+    let files = document.getElementById("fileList").children;
+    insertAnswer(postId, message).then((response) => {
+        return response.json();
+    }).then(async (data) => {
+        if (data.status === "success") {
+            let answerId = data.answerId;
+            for (const file of Array.from(files)) {
+                let fileId = file.getAttribute("file-id");
+                await addAttachmentAnswer(answerId, fileId);
+            }
+            showToast(data.message, "success", () => {
+                loadPost(true);
+            });
+        } else {
+            showToast(data.message, "error", () => {
+            });
+        }
+    }).catch((error) => { showToast("Error desconocido", "error", () => {}); });
+}
+
+function deleteFile(element) {
+    let file = element.parentElement;
+    deleteAttachment(file.getAttribute("file-id")).then((response) => {
+        return response.json();
+    }).then((data) => {
+        if (data.status === "success") {
+            file.remove();
+        } else {
+            showToast(data.message, "error", () => {});
+        }
+    });
+}
+
+function handleFileUpload(event) {
+    // Get the file
+    let file = event.target.files[0];
+    // Get the file name
+    let fileName = file.name;
+    let fileList = event.target.parentElement.querySelector("ul");
+    //check if file list has 3 files
+    if (fileList.children.length >= 3) {
+        showToast("Solo se pueden subir 3 archivos", "error", () => {});
+        event.target.value = "";
+        return;
+    }
+    // insert the file to the server
+    insertAttachment(file).then((response) => {
+        return response.json();
+    }).then((data) => {
+        if (data.status === "success") {
+            // get the list inside the event target
+            let list = event.target.parentElement.querySelector("ul");
+            // create a list item
+            let listItem = document.createElement("li");
+            listItem.setAttribute("file-id", data.attachmentId);
+            listItem.innerHTML = `<i class="fa-solid fa-files"></i> ${fileName} <i class="fa-solid fa-circle-xmark red" onclick="deleteFile(this)"></i>`;
+            list.appendChild(listItem);
+            //Clear the file input
+            event.target.value = "";
+
+        } else {
+            showToast(data.message, "error", () => {});
+        }
+    }).catch((error) => {
+        showToast("Error desconocido", "error", () => {});
+        //Clear the file input
+        event.target.value = "";
+    });
+}
+
 window.addEventListener("load", () => {
     loadPost();
 });
 
+
+
 function switchHiddenAnswer( ) {
-    $answer = document.getElementById("agregarRespuesta");
-    if ($answer.style.display === "none") {
-        $answer.style.display = "block";
+    let answer = document.getElementById("agregarRespuesta");
+    // check if the
+    if (answer.classList.contains("hidden")) {
+        answer.classList.remove("hidden");
         document.getElementById("anadir").value = "Ocultar";
     }
     else {
-        $answer.style.display = "none";
+        answer.classList.add("hidden");
         document.getElementById("anadir").value = "Añadir";
     }
 }

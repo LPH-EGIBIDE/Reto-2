@@ -53,29 +53,17 @@ function changePassword(UserEntity $user, string $oldPassword, string $newPasswo
     echo json_encode(["status" => "success", "message" => "Contraseña cambiada correctamente"]);
 }
 
-function changeEmail(UserEntity $user, string $newEmail): void
+function changeDescription(UserEntity $user, string $description): void
 {
-    $user->setEmail($newEmail);
+    if (strlen($description) > 4096)
+        die(json_encode(["status" => "error", "message" => "La descripción no puede tener más de 4096 caracteres"]));
+    $user->setProfileDescription($description);
     UserRepository::updateUser($user);
     $_SESSION["user"] = $user;
-    echo json_encode(["status" => "success", "message" => "Correo cambiado correctamente"]);
+    echo json_encode(["status" => "success", "message" => "Descripción cambiada correctamente"]);
 }
 
-function changeUsername(UserEntity $user, string $newUsername): void
-{
-    $user->setUsername($newUsername);
-    UserRepository::updateUser($user);
-    $_SESSION["user"] = $user;
-    echo json_encode(["status" => "success", "message" => "Nombre de usuario cambiado correctamente"]);
-}
 
-function changeAvatar(UserEntity $user, string $newAvatar): void
-{
-    $user->setAvatar($newAvatar);
-    UserRepository::updateUser($user);
-    $_SESSION["user"] = $user;
-    echo json_encode(["status" => "success", "message" => "Foto de perfil cambiada correctamente"]);
-}
 $method = $_POST["method"] ?? "get";
 switch ($method) {
     case "activateMFA":
@@ -88,16 +76,13 @@ switch ($method) {
         deactivateMFA($user);
         break;
     case "changePassword":
-        changePassword($user, $_POST["oldPassword"], $_POST["newPassword"]);
+        $oldPassword = $_POST["oldPassword"] ?? "";
+        $newPassword = $_POST["newPassword"] ?? "";
+        changePassword($user, $oldPassword, $newPassword);
         break;
-    case "changeEmail":
-        changeEmail($user, $_POST["newEmail"]);
-        break;
-    case "changeUsername":
-        changeUsername($user, $_POST["newUsername"]);
-        break;
-    case "changeAvatar":
-        changeAvatar($user, $_POST["newAvatar"]);
+    case "changeDescription":
+        $description = $_POST["description"] ?? $user->getProfileDescription();
+        changeDescription($user, $description);
         break;
     case "get":
         $userArray = $user->toArray();

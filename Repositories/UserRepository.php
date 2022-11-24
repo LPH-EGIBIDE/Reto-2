@@ -88,7 +88,7 @@ abstract class UserRepository
     public static function updateUser(UserEntity $userEntity): bool
     {
         $db = Db::getInstance();
-        $stmt = $db->prepare("UPDATE users SET username = :username, email = :email, password = :password, type = :type, profile_description = :profile_description, active = :active, email_verified = :email_verified, points = :points, mfa_type = :mfa_type, mfa_data = :mfa_data WHERE id = :id");
+        $stmt = $db->prepare("UPDATE users SET username = :username, email = :email, password = :password, type = :type, profile_description = :profile_description, active = :active, email_verified = :email_verified, points = :points, profile_pic = :profile_pic, mfa_type = :mfa_type, mfa_data = :mfa_data WHERE id = :id");
         return $stmt->execute([
             ":id" => $userEntity->getId(),
             ":username" => $userEntity->getUsername(),
@@ -98,6 +98,7 @@ abstract class UserRepository
             ":profile_description" => $userEntity->getProfileDescription(),
             ":active" => intval($userEntity->isActive()),
             ":email_verified" => intval($userEntity->isEmailVerified()),
+            ":profile_pic" => $userEntity->getAvatar()->getId(),
             ":points" => $userEntity->getPoints(),
             ":mfa_type" => $userEntity->getMfaType(),
             ":mfa_data" => $userEntity->getMfaData()
