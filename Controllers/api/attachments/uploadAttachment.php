@@ -45,7 +45,7 @@ if (!AuthUtils::checkAuth())
                 $attachment = new AttachmentEntity($fileName, $fileNameNew, $fileType, new DateTime(), $_SESSION['user'], $_POST['public'] ?? false);
                 $id = AttachmentRepository::insertAttachment($attachment);
 
-                echo json_encode(["status" => "ok", "message" => "Archivo subido correctamente", "attachmentId" => $id]);
+                echo json_encode(["status" => "success", "message" => "Archivo subido correctamente", "attachmentId" => $id]);
             } else {
                 echo json_encode(["status" => "error", "message" => "El archivo es demasiado grande"]);
             }

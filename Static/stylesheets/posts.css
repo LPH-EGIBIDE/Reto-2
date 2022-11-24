@@ -163,11 +163,10 @@
 #agregarRespuesta{
     margin: 1em 0;
     width: 100%;
-    display: flex;
+    display: block;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    display: none;
 }
 
 .answerForm {

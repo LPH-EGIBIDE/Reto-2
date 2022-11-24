@@ -70,7 +70,25 @@ img.mainLogo{
     -webkit-box-orient: vertical;
 }
 .hidden{
-    display: none;
+    display: none !important;
+}
+
+#fileList li {
+    padding: 0.2em;
+    list-style: none;
+}
+
+/* Colores iconos */
+.green{
+    color: green;
+}
+
+.yellow{
+    color: yellow;
+}
+
+.red{
+    color:red;
 }
 
 /* Skeletons */
