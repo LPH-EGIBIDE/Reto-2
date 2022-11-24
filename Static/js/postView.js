@@ -22,13 +22,33 @@ async function getPostAnswers(postId) {
     });
 }
 
+function hiddenPostAnswer() { 
+    return `
+        <div class="cajaRespuesta" id="agregarRespuesta">
+            <div class="answerForm">
+                <form>
+                    <p class="respuestaTitu">Añadir respuesta</p>
+                    <textarea name="text" placeholder="Escriba aquí" oninput='this.style.height = ""; this.style.height = this.scrollHeight + "px"'></textarea>
+                    <p class="respuestaFile">Añadir archivos</p>
+                <div class="contenedorAbajo">
+                    <input type="file">
+                <div class="answerButtons">
+                    <input class=answerButton type="button" value="Enviar">
+                    <input class=answerButton type="reset" placeholder="Borrar">
+                </div>
+            </div>
+        </form>
+        </div>
+    `;
+}
+
 
 function createPost(data) {
     return `
-            <div class="conTags">
+            <div class="conTags overflow-1">
                 <p class="tags">${data.topic.name}</p>
             </div>
-            <div class="conPreguntaTitu">
+            <div class="conPreguntaTitu centrado">
                 <h3 class="preguntaTitu">${data.title}</h3>
             </div>
             <div class="conTextoPre">
@@ -107,15 +127,16 @@ function loadPost() {
     }).then((data) => {
         let answersContainer = document.getElementById("contenedorRespuestas");
         if (data.status === "success") {
-            // Empty the container
-            answersContainer.innerHTML = "";
+            // Delete all but hiddenAnswer
+            answersContainer.innerHTML = hiddenPostAnswer();
             // Add the answers
             if (data.data.answers.length > 0) {
             data.data.answers.forEach((answer) => {
                 answersContainer.innerHTML += createPostAnswer(answer);
             });
             } else {
-                answersContainer.innerHTML = `<h4 class="centrado">No hay respuestas aun en este post</h4>`;
+                answersContainer.innerHTML = hiddenPostAnswer();
+                answersContainer.innerHTML += `<h4 class="centrado">No hay respuestas aun en este post</h4>`;
             }
         }
 
@@ -147,7 +168,18 @@ function upvotePost(event) {
 
 }
 
-
 window.addEventListener("load", () => {
     loadPost();
 });
+
+function switchHiddenAnswer( ) {
+    $answer = document.getElementById("agregarRespuesta");
+    if ($answer.style.display === "none") {
+        $answer.style.display = "block";
+        document.getElementById("anadir").value = "Ocultar";
+    }
+    else {
+        $answer.style.display = "none";
+        document.getElementById("anadir").value = "Añadir";
+    }
+}

@@ -58,7 +58,6 @@
 }
 
 #anadir{
-
     background: transparent;
     border-radius: 6px;
     padding: 8px 16px;
@@ -87,15 +86,13 @@
 .cajaRespuesta{
     margin-top: 14px;
     width: 100%;
-
     display: grid;
-    grid-template-columns: 25% 75%;
+    grid-template-columns: auto;
     grid-template-rows: repeat(3, auto);
     grid-template-areas:
- "conTextoRes conTextoRes"
- "conAdjunto2 conArchivosRe"
- "contenedorAbajo contenedorAbajo";
-
+        "conTextoRes conTextoRes"
+        "conAdjunto2 conArchivosRe"
+        "contenedorAbajo contenedorAbajo";
     background-color: white;
     border-radius: 10px;
     box-shadow: 1px 1px 7px 1px #000;
@@ -151,8 +148,6 @@
     padding: 3px;
 }
 
-
-
 .listaFicheros{
     display: inline-flex;
     flex-direction: row;
@@ -163,4 +158,80 @@
 
 .listaFicheros a{
     text-decoration: none;
+}
+
+#agregarRespuesta{
+    margin: 1em 0;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    display: none;
+}
+
+.answerForm {
+    padding: 1em;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.answerForm textarea {
+    padding: 5px;
+    width: 100%;
+    resize: none;
+    border: 3px solid #ccc;
+    transition: .3s;
+    outline: none;
+    overflow-y: hidden;
+}
+
+.answerForm textarea:focus {
+    border: 3px solid #FE8F4B;
+}
+
+.answerForm textarea:focus::placeholder {
+    transition: .3s;
+    color: transparent;
+}
+
+.respuestaTitu, .respuestaFile {
+    font-size: 15px;
+}
+
+.answerButtons input:last-child {
+    margin-left: 1em;
+}
+
+.respuestaTitu, .respuestaFile {
+    color: #FE8F4B;
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.respuestaTitu {
+    font-size: 18px;
+    margin-bottom: .2em;
+}
+
+.answerButton {
+    background: transparent;
+    border-radius: .2em;
+    padding: .3em .6em;
+    text-align: center;
+    display: inline-block;
+    font-size: .7em;
+    margin: 4px 2px;
+    transition-duration: 0.4s;
+    cursor: pointer;
+    text-decoration: none;
+    text-transform: uppercase;
+    color: black;
+    border: 2px solid #FE8F4B;
+}
+
+.answerButton:hover {
+    background-color: #FE8F4B;
+    color: white;
 }

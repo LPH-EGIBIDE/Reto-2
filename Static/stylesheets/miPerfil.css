@@ -196,25 +196,7 @@ span.fechaMi {
 .tituPregunta{
     font-size: 22px;
 }
-.overflow-1{
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-line-clamp: 1;
-    -webkit-box-orient: vertical;
-}
+
 .decripPre{
     font-size: 12px;
-}
-
-
-.hidden{
-    display: none;
-}
-
-
-/*Opciones+*/
-@media screen and  (max-width: 900px) {
-   .main, .main .relleno{
-    width: 100%;
-   }
 }

@@ -21,10 +21,10 @@
         </div>
 
     <div id="medio">
-        <h3 id="tituRes">Respuestas:</h3><input type="button" value="Añadir" width="2em" height="2em" id="anadir">
+        <h3 id="tituRes">Respuestas:</h3><input type="button" value="Añadir" id="anadir" onclick="switchHiddenAnswer(this)">
     </div>
 
-   <div id="contenedorRespuestas">
+    <div id="contenedorRespuestas">
        <div class="cajaRespuesta">
            <div class="conTextoRes">
                <div class="c-skeleton__text skeletonRes"></div>

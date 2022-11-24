@@ -63,6 +63,16 @@ img.mainLogo{
     color: inherit;
 }
 
+.overflow-1{
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+}
+.hidden{
+    display: none;
+}
+
 /* Skeletons */
 .c-skeleton__text, .c-skeleton__figure {
     -webkit-animation-duration: 1s;
@@ -151,11 +161,18 @@ img.mainLogo{
 }
 
 /* Media queries */
+@media screen and  (max-width: 900px) {
+    .main, .main .relleno{
+     width: 100%;
+    }
+ }
+
 @media only screen and  (min-width: 640px) {
 
     .opUsuario{
         left: 0;
     }
+
 }
 @media only screen and (max-width: 640px) {
 
@@ -196,5 +213,9 @@ img.mainLogo{
 
     .pie .fotoI .version{
         display: none;
+    }
+
+    .conTags p, .conPreguntaTitu .preguntaTitu {
+        font-size: 0.8em !important;
     }
 }

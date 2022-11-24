@@ -204,6 +204,14 @@
     padding: 6px;
     overflow-y: scroll;
     scroll-behavior: smooth;
+    /* Disable scrollbar for IE, Edge and Firefox*/
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+/* Disable scrollbar for Chrome, Safari and Opera */
+.contenidoNoti::-webkit-scrollbar {
+    display: none;
 }
 
 .navegador h3,h5{
@@ -217,7 +225,7 @@
     border-radius: 4%;
 }
 
-.notificacion{
+.notificacion {
     width: 100%;
     margin-top: 6px;
     color: black;
