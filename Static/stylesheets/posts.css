@@ -87,7 +87,7 @@
     margin-top: 14px;
     width: 100%;
     display: grid;
-    grid-template-columns: auto;
+    grid-template-columns: 20% 80%;
     grid-template-rows: repeat(3, auto);
     grid-template-areas:
         "conTextoRes conTextoRes"
@@ -96,7 +96,6 @@
     background-color: white;
     border-radius: 10px;
     box-shadow: 1px 1px 7px 1px #000;
-
 }
 
 .conTextoRes{
