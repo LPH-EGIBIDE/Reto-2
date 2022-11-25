@@ -2,10 +2,10 @@ let currentPage = 1;
 let answerCount = 0;
 
 async function getPost(postId) {
-   return  fetch(`/api/posts/managePost`, {
+    return  fetch(`/api/posts/managePost`, {
         method: 'POST',
         headers: {
-           "Content-Type": "application/x-www-form-urlencoded"
+            "Content-Type": "application/x-www-form-urlencoded"
         },
         body: new URLSearchParams({
             postId: postId
@@ -77,7 +77,7 @@ async function deleteAttachment(fileId) {
 }
 
 
-function hiddenPostAnswer() { 
+function hiddenPostAnswer() {
     return `
         <div class="cajaRespuesta hidden" id="agregarRespuesta">
             <div class="answerForm">
@@ -200,7 +200,7 @@ function loadPost(page = 1, reload = false) {
         console.error(error);
         showToast("Error desconocido", "error", () => {
             window.location.href = "/";
-         });
+        });
     });
     loadAnswers(postId, page, reload);
     document.getElementById("fileUploader").addEventListener("change", (event) => {
