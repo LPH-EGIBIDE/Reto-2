@@ -19,7 +19,7 @@ body {
 }
 
 img.mainLogo{
-    width: 20%;
+    width: 400px;
 }
 
 .logoMobile{
@@ -76,7 +76,25 @@ img.mainLogo{
 }
 
 .hidden{
-    display: none;
+    display: none !important;
+}
+
+#fileList li {
+    padding: 0.2em;
+    list-style: none;
+}
+
+/* Colores iconos */
+.green{
+    color: green;
+}
+
+.yellow{
+    color: yellow;
+}
+
+.red{
+    color:red;
 }
 
 /* Skeletons */

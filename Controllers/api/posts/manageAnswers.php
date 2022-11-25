@@ -35,9 +35,10 @@ try {
 
     switch ($method) {
         case 'get':
+            $page = $_POST['page'] ?? 1;
             $post = PostRepository::getPostById($id);
             $data = $post->toArray();
-            $data['answers'] = getAnswers($post);
+            $data['answers'] = getAnswers($post, $page);
             // Add a view to the post
             $post->setViews($post->getViews() + 1);
             $data['views'] = $post->getViews();
@@ -208,11 +209,12 @@ function addAttachment(PostAnswerEntity $post, int $attachmentId): void
 
 /**
  * @param PostEntity $post
+ * @param int $page
  * @return array
  */
-function getAnswers(PostEntity $post): array {
+function getAnswers(PostEntity $post, int $page = 1): array {
     try {
-        $answerList = PostAnswerRepository::getPostAnswersByPost($post);
+        $answerList = PostAnswerRepository::getPostAnswersByPost($post, 15, ($page - 1 ) * 15);
         $answers = [];
         foreach ($answerList as $answer) {
             $answer->setAttachments(PostAnswerRepository::getAttachments($answer));

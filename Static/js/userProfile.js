@@ -9,6 +9,7 @@ async function getUsersPosts(userId) {
             "Content-Type": "application/x-www-form-urlencoded"
         },
         body: new URLSearchParams({
+            method: 'userPosts',
             userId: userId,
             page: String(currentPage)
         })
@@ -53,6 +54,7 @@ function postTemplate(post){
     //check if post has a post subobject
     let postObj = post.post !== undefined ? post.post : post;
     let author = postObj.author;
+    let description = post.message ?? postObj.description;
 
     return `
     <div class="respuesta">
@@ -62,7 +64,7 @@ function postTemplate(post){
                     </div>
                     <div class="contenidoIzq">
                         <p class="tituPregunta overflow-1"><a class="unstyledLink" href="/post/${htmlEncode(postObj.id)}">${htmlEncode(postObj.title)}</a></p>
-                        <p class="decripPre overflow-1">${htmlEncode(postObj.description)}</p>
+                        <p class="decripPre overflow-1">${htmlEncode(description)}</p>
                         <ul class="listContent">
                             <li><p class="autor">Publicado por: <a href="/user/${htmlEncode(author.id)}">${htmlEncode(author.username)}</p></a></li>
                             <li><p class="topics">${htmlEncode(postObj.topic.name)}</p></li>

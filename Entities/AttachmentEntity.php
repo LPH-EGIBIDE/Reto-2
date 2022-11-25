@@ -13,8 +13,9 @@ class AttachmentEntity
     private DateTime $uploadedAt;
     private ?UserEntity $uploadedBy;
     private bool $public;
+    private bool $isTutorial;
 
-    public function __construct(string $filename, string $filepath, string $contentType, DateTime $uploadedAt, ?UserEntity $uploadedBy, int $public)
+    public function __construct(string $filename, string $filepath, string $contentType, DateTime $uploadedAt, ?UserEntity $uploadedBy, int $public, int $isTutorial)
     {
         $this->filename = $filename;
         $this->filepath = $filepath;
@@ -22,6 +23,7 @@ class AttachmentEntity
         $this->uploadedAt = $uploadedAt;
         $this->uploadedBy = $uploadedBy;
         $this->public = $public;
+        $this->isTutorial = $isTutorial;
     }
 
     // Getters and setters
@@ -138,6 +140,23 @@ class AttachmentEntity
         $this->public = $public;
     }
 
+    /**
+     * @return int
+     */
+
+    public function isTutorial(): int
+    {
+        return $this->isTutorial;
+    }
+
+    /**
+     * @param int $isTutorial
+     */
+    public function setIsTutorial(int $isTutorial): void
+    {
+        $this->isTutorial = $isTutorial;
+    }
+
     public function toArray(): array
     {
         return [
@@ -145,7 +164,8 @@ class AttachmentEntity
             'filename' => $this->filename,
             'uploadedAt' => $this->uploadedAt->format('Y-m-d H:i:s'),
             'public' => $this->public,
-            'href' => '/api/attachments/id/' . $this->id
+            'href' => '/api/attachments/id/' . $this->id,
+            'isTutorial' => $this->isTutorial
         ];
     }
 }

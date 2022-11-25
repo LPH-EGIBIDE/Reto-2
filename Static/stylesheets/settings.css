@@ -13,10 +13,21 @@
 }
 .avtarContra{
     grid-area: fotoAva;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+.avtarContra img{
     height: 200px;
-    width: 200px;
     border-radius: 100%;
-    margin: auto;
+}
+
+
+.avtarContra p{
+    font-size: 0.8em;
+    font-weight: 600;
+    margin-top: 0.5em;
 }
 .conCambiaContra{
     grid-area: conCamContra;
@@ -72,7 +83,7 @@
     width: 100%;
 }
 /*estilo formularios*/
-input[type=text], select, textarea{
+.relleno input[type=password], .relleno select, .relleno textarea{
     width: 100%;
     padding: 12px 20px;
     margin: 8px 0;

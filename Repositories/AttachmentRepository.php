@@ -17,7 +17,7 @@ abstract class AttachmentRepository{
     public static function getAttachmentById(int $id = -1): AttachmentEntity
     {
         $db = Db::getInstance();
-        $stmt = $db->prepare("SELECT id, filename, filepath, content_type, UNIX_TIMESTAMP(uploaded_at) as uploaded_at, uploaded_by, public FROM attachments WHERE id = :id");
+        $stmt = $db->prepare("SELECT id, filename, filepath, content_type, UNIX_TIMESTAMP(uploaded_at) as uploaded_at, uploaded_by, public, is_tutorial FROM attachments WHERE id = :id");
         $stmt->bindParam(":id", $id);
         $stmt->execute();
         $result = $stmt->fetch();
@@ -25,7 +25,7 @@ abstract class AttachmentRepository{
             throw new DataNotFoundException("Archivo no encontrado");
         }
         try {
-            $attachment = new AttachmentEntity($result["filename"], $result["filepath"], $result["content_type"], new DateTime("@" . $result["uploaded_at"]), !empty($result["uploaded_by"]) ? UserRepository::getUserById($result["uploaded_by"]) : null, $result["public"]);
+            $attachment = new AttachmentEntity($result["filename"], $result["filepath"], $result["content_type"], new DateTime("@" . $result["uploaded_at"]), !empty($result["uploaded_by"]) ? UserRepository::getUserById($result["uploaded_by"]) : null, $result["public"], $result["is_tutorial"]);
         } catch (Exception $e) {
             if (DEBUG_MODE){
                 throw new DataNotFoundException("Error loading attachment: " . $e->getMessage());
@@ -43,7 +43,7 @@ abstract class AttachmentRepository{
     public static function insertAttachment(AttachmentEntity $attachmentEntity): int
     {
         $db = Db::getInstance();
-        $stmt = $db->prepare("INSERT INTO attachments (filename, filepath, content_type, uploaded_at, uploaded_by, public) VALUES (:filename, :filepath, :content_type, :uploaded_at, :uploaded_by, :public)");
+        $stmt = $db->prepare("INSERT INTO attachments (filename, filepath, content_type, uploaded_at, uploaded_by, public, is_tutorial) VALUES (:filename, :filepath, :content_type, :uploaded_at, :uploaded_by, :public, :is_tutorial)");
 
         $stmt->execute([
             ":filename" => $attachmentEntity->getFilename(),
@@ -51,7 +51,8 @@ abstract class AttachmentRepository{
             ":content_type" => $attachmentEntity->getContentType(),
             ":uploaded_at" => $attachmentEntity->getUploadedAt()->format("Y-m-d H:i:s"),
             ":uploaded_by" => $attachmentEntity->getUploadedBy()->getId(),
-            ":public" => $attachmentEntity->isPublic()
+            ":public" => $attachmentEntity->isPublic(),
+            ":is_tutorial" => $attachmentEntity->isTutorial()
         ]);
         return $db->lastInsertId();
     }
@@ -63,7 +64,7 @@ abstract class AttachmentRepository{
     public static function updateAttachment(AttachmentEntity $attachmentEntity): bool
     {
         $db = Db::getInstance();
-        $stmt = $db->prepare("UPDATE attachments SET filename = :filename, filepath = :filepath, content_type = :content_type, uploaded_at = :uploaded_at, uploaded_by = :uploaded_by, public = :public WHERE id = :id");
+        $stmt = $db->prepare("UPDATE attachments SET filename = :filename, filepath = :filepath, content_type = :content_type, uploaded_at = :uploaded_at, uploaded_by = :uploaded_by, public = :public, is_tutorial = :is_tutorial WHERE id = :id");
 
         return $stmt->execute([
             ":id" => $attachmentEntity->getId(),
@@ -72,7 +73,8 @@ abstract class AttachmentRepository{
             ":content_type" => $attachmentEntity->getContentType(),
             ":uploaded_at" => $attachmentEntity->getUploadedAt()->format("Y-m-d H:i:s"),
             ":uploaded_by" => $attachmentEntity->getUploadedBy()->getId(),
-            ":public" => $attachmentEntity->isPublic()
+            ":public" => $attachmentEntity->isPublic(),
+            ":is_tutorial" => $attachmentEntity->isTutorial()
         ]);
     }
 
@@ -105,7 +107,7 @@ abstract class AttachmentRepository{
             throw new DataNotFoundException("Archivo no encontrado");
         }
         try {
-            $attachment = new AttachmentEntity($result["filename"], $result["filepath"], $result["content_type"], new DateTime("@" . $result["uploaded_at"]), $avatarId != -1 ? $userEntity : null, $result["public"]);
+            $attachment = new AttachmentEntity($result["filename"], $result["filepath"], $result["content_type"], new DateTime("@" . $result["uploaded_at"]), $avatarId != -1 ? $userEntity : null, $result["public"], false);
         } catch (Exception $e) {
             if (DEBUG_MODE){
                 throw new DataNotFoundException("Error loading attachment: " . $e->getMessage());
@@ -128,7 +130,7 @@ abstract class AttachmentRepository{
         $result = $stmt->fetchAll();
         $attachments = [];
         foreach ($result as $row) {
-            $attachment = new AttachmentEntity($row["filename"], $row["filepath"], $row["content_type"], $row["uploaded_at"], $userEntity, $row["public"]);
+            $attachment = new AttachmentEntity($row["filename"], $row["filepath"], $row["content_type"], $row["uploaded_at"], $userEntity, $row["public"], $row["is_tutorial"]);
             $attachment->setId($row["id"]);
             $attachments[] = $attachment;
         }
@@ -151,7 +153,7 @@ abstract class AttachmentRepository{
         $attachments = [];
         foreach ($result as $row) {
             try {
-                $attachment = new AttachmentEntity($row["filename"], $row["filepath"], $row["content_type"], new DateTime( $row["uploaded_at"]), UserRepository::getUserById($row["uploaded_by"]), $row["public"]);
+                $attachment = new AttachmentEntity($row["filename"], $row["filepath"], $row["content_type"], new DateTime( $row["uploaded_at"]), UserRepository::getUserById($row["uploaded_by"]), $row["public"], $row["is_tutorial"]);
             } catch (Exception $e) {
                 if (DEBUG_MODE){
                     throw new DataNotFoundException("Error loading attachment: " . $e->getMessage());

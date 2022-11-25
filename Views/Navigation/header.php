@@ -28,8 +28,8 @@ $title = empty($title) ? "WTFAQ" : $title;
 
 <nav class="navegador">
     <ul class="navI listas">
-        <li><a class="navLink" href="/searchPosts">Preguntas</a></li>
-        <li><a class="navLink" href="#">Tutoriales</a></li>
+        <li><a class="navLink" href="/">Preguntas</a></li>
+        <li><a class="navLink" href="/tutorials">Tutoriales</a></li>
     </ul>
     <div class="logoMobile">
         <img src="/assets/img/lph-logo.png" class="altLogo"  alt="logo.png">
@@ -44,25 +44,17 @@ $title = empty($title) ? "WTFAQ" : $title;
             </div>
                 <ul class="opUsuario listas">
                     <li><a class="navLink" href="/user/me">Mi perfil</a></li>
-                    <li><a class="navLink" href="#">Ajustes</a></li>
+                    <li><a class="navLink" href="/settings">Ajustes</a></li>
                     <li><a class="navLink" href="/logout">Cerrar sesion</a></li>
                 </ul>
         </li>
         <li class="notificaciones">
-            <div id="notifications"><i class="fa-solid fa-bell"></i> <span id="notifiText">Notificaciones</span></div>
+            <div id="notifications"><i class="fa-solid fa-bell"></i> <span id="notifiQuant"></span><span id="notifiText">Notificaciones</span></div>
             <div class="listaNoti hoverElement">
                 <div class="contenidoNoti hoverElement">
                   <h3>Alertas</h3>
                   <hr>
                     <div class="hoverelement" id="notificationContainer">
-                        <div class="notificacion hoverElement">
-                            <i class="fa-regular fa-bell notifiIcon" ></i>
-                            <p class="mensaje">Mensaje</p>
-                            <div class="fecha">
-                                <p>Hace: <span class="fechaNotificacion">1 dia</span></p>
-                            </div>
-                            <i class="fa-solid fa-trash basura" ></i>
-                        </div>
                     </div>
                 </div>
             </div>

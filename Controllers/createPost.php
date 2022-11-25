@@ -1,15 +1,23 @@
 <?php
 require_once __DIR__.'/../config.inc.php';
+
+use Repositories\PostTopicRepository;
+use Utils\AuthUtils;
+
 session_start();
 
-use Utils\AuthUtils;
+$importsCss = ['/assets/stylesheets/createQuestion.css'];
+$importsJs = ["/assets/js/createQuestion.js"];
 
 if (!AuthUtils::checkAuth()) {
     header("Location: /login");
     exit();
 }
+
 $user = $_SESSION['user'];
 
+$topics = PostTopicRepository::getAllPostTopics();
 
 require APP_ROOT.'Views/Navigation/header.php';
+require APP_ROOT.'Views/createQuestion.php';
 require APP_ROOT.'Views/Navigation/footer.php';
