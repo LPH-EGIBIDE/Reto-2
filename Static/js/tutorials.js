@@ -116,7 +116,7 @@ function getTutorials(){
                             container.innerHTML += tutorialTemplate(tutorial);
                         });
                     } else {
-                        container.innerHTML = '<h3 class="centrado">No hay tutoriales disponibles</h3>';
+                        container.innerHTML = '<h3 class="centrado" style="padding: 2em">No hay tutoriales disponibles</h3>';
                     }
                 }
                 showPostView();
@@ -140,7 +140,7 @@ function getTutorials(){
                         </p>
                         <ul class="listContent">
                             <li>
-                                <p class="autor">Publicado por: <a href="/user/${tutorial.uploadedBy.id}">${tutorial.uploadedBy.username}</a></p>
+                                <p class="autor">Publicado por: <a class="userLink" href="/user/${tutorial.uploadedBy.id}">${tutorial.uploadedBy.username}</a></p>
                             </li>
                             ${deleteElement}
                         </ul>

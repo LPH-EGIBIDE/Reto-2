@@ -24,7 +24,7 @@ function postTemplate(post){
                         <p class="tituPregunta overflow-1"><a class="unstyledLink" href="/post/${htmlEncode(postObj.id)}">${htmlEncode(postObj.title)}</a></p>
                         <p class="decripPre overflow-1">${htmlEncode(description)}</p>
                         <ul class="listContent">
-                            <li><p class="autor">Publicado por: <a href="/user/${htmlEncode(author.id)}">${htmlEncode(author.username)}</p></a></li>
+                            <li><p class="autor">Publicado por: <a class="userLink" href="/user/${htmlEncode(author.id)}">${htmlEncode(author.username)}</p></a></li>
                             <li><p class="topics">${htmlEncode(postObj.topic.name)}</p></li>
                             <li><i class="fa-regular fa-eye" id="visitas"><span class="numisitas"> ${htmlEncode(postObj.views)}</span></i></li>
                         </ul>
