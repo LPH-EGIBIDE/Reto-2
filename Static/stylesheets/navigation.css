@@ -92,7 +92,7 @@
 }
 
 .navegador li:hover{
-    background-color:#FE8F4B;
+    background-color: #FE8F4B;
     font-weight: bold;
 }
 
@@ -100,7 +100,7 @@
 .opUsuario{
     display:none;
     position:absolute;
-    background-color: #ababab;
+    background-color: #FE8F4B;
     margin-top: 0;
     padding: 0;
     z-index: 2;
@@ -148,7 +148,7 @@
 .navD li ul li {
     background-color: #e6e6e6;
     padding: 0.5em;
-    border-radius: 4% 4% 4% 4%;
+    border-radius: 4%;
 }
 
 .navD li ul li:hover {
@@ -181,6 +181,10 @@
     background-color: #ababab;
 }
 
+.listaNoti {
+    background-color: #FE8F4B !important;
+}
+
 .navD .listaNoti span{
     height: 15px;
     width: 3px;
@@ -190,8 +194,8 @@
 }
 
 .navD li .hoverElement{
-    background-color: #ababab;
-    border-radius: 4% 4% 4% 4%;
+    background-color: #FE8F4B;
+    border-radius: 4%;
 }
 
 .contenidoNoti{

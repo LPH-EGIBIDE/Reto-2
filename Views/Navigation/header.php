@@ -54,7 +54,6 @@ $title = empty($title) ? "WTFAQ" : $title;
             <div class="listaNoti hoverElement">
                 <div class="contenidoNoti hoverElement">
                   <h3>Alertas</h3>
-                  <hr>
                     <div class="hoverelement" id="notificationContainer">
                     </div>
                 </div>
