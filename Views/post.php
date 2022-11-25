@@ -21,7 +21,7 @@
         </div>
 
     <div id="medio">
-        <h3 id="tituRes">Respuestas:</h3><input type="button" value="Añadir" id="anadir" onclick="switchHiddenAnswer(this)">
+        <h3 id="tituRes">Respuestas:</h3><input type="button" value="Añadir" id="anadir" onclick="switchHiddenAnswer()">
     </div>
 
     <div id="contenedorRespuestas">
