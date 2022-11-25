@@ -97,9 +97,9 @@ function notificationTemplate(notificationData) {
         2: "fa-solid fa-trophy-star",
     }
     return `
-    <div class="notificacion hoverElement" notification-id="${notificationData.id}">
-        <i class="${notificationTypeIcons[notificationData.type]} notifiIcon" ></i>
-        <p class="mensaje"><a href="${notificationData.href}">${notificationData.text}</a></p>
+    <div class="notificacion hoverElement" notification-id="${htmlEncode(notificationData.id)}">
+        <i class="${htmlEncode([notificationData.type])} notifiIcon" ></i>
+        <p class="mensaje"><a href="${htmlEncode(notificationData.href)}">${htmlEncode(notificationData.text)}</a></p>
         <div class="fecha">
             <p>Hace: 1 dia</p>
         </div>
@@ -122,6 +122,12 @@ function showToast(message, type, callback){
     }).then(callback)
 }
 
+
+function htmlEncode(str){
+    return String(str).replace(/[^\w. ]/gi, function(c){
+        return '&#'+c.charCodeAt(0)+';';
+    });
+}
 
 window.addEventListener("load", () => {
     fetchNotifications();

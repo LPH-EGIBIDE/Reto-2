@@ -24,6 +24,7 @@ try {
     $posts = PostRepository::filterPosts($offset, $startFrom, $title, $topic, $sort, $sortOrder);
     $data['posts'] = $posts;
     $data['postCount'] = count($posts);
+    $data['status'] = "success";
 
 } catch (DataNotFoundException $e) {
     die(json_encode(["status" => "error", "message" => $e->getMessage()]));

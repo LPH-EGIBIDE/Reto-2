@@ -44,11 +44,6 @@ async function getUsersAnswers(userId) {
     });
 }
 
-function htmlEncode(str){
-    return String(str).replace(/[^\w. ]/gi, function(c){
-        return '&#'+c.charCodeAt(0)+';';
-    });
-}
 
 function postTemplate(post){
     //check if post has a post subobject

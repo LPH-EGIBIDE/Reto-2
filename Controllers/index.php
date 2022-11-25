@@ -5,6 +5,7 @@ use Utils\AuthUtils;
 
 session_start();
 $importsCss = ["/assets/stylesheets/searchPosts.css"];
+$importsJs = ["/assets/js/searchPosts.js"];
 
 if (!AuthUtils::checkAuth()) {
     header("Location: /login");

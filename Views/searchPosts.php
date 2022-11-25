@@ -29,30 +29,90 @@
                 </div>
                 <input type="button" value="Enviar" class="answerButton">
             </form></div>
-
-
     </div>
-    <div id="postsContainer" class="contenidoLista">
-            <div id="contenedorRespuestas">
-            
-    <div class="respuesta">
-                <div class="contenedorLista">
-                    <div class="contenedorIden">
-                        <img src="//localhost/api/attachments/id/-1" alt="img Avatar" class="identificadoAva">
-                    </div>
-                    <div class="contenidoIzq">
-                        <p class="tituPregunta overflow-1"><a class="unstyledLink" href="/post/1">¿Cómo enciendo mi ordenador?</a></p>
-                        <p class="decripPre overflow-1">Necesito ayuda para encender mi ordenador, ya que es nuevo y no encuentro el botón para encenderlo. Muchas gracias de antemano.</p>
-                        <ul class="listContent">
-                            <li><p class="autor">Publicado por: <a href="/user/1">test</a></p></li>
-                            <li><p class="topics">Telecomunicaciones</p></li>
-                            <li><i class="fa-regular fa-eye" id="visitas"><span class="numisitas"> 152</span></i></li>
-                        </ul>
-                    </div> 
-                    
+    <div id="skeletonContainer" class="contenidoLista">
+        <div class="plantillaRespuestas">
+            <div class="contenedorLista">
+                <div class="contenedorIden">
+                    <div class="c-skeleton__figure c-skeleton__text--bigger identificadoAva"></div>
                 </div>
-               <hr>
-            </div></div>
+
+                <div class="contenidoIzq">
+                    <div class="c-skeleton__text c-skeleton__text--title c-skeleton__text--small-height tituPregunta"></div>
+                    <div class="c-skeleton__text c-skeleton__text--bigger "></div>
+                    <div class="c-skeleton__text c-skeleton__text--medium"></div>
+                </div>
+
+            </div>
+            <hr>
+        </div>
+
+        <div class="plantillaRespuestas">
+            <div class="contenedorLista">
+                <div class="contenedorIden">
+                    <div class="c-skeleton__figure c-skeleton__text--bigger identificadoAva"></div>
+                </div>
+
+                <div class="contenidoIzq">
+                    <div class="c-skeleton__text c-skeleton__text--title c-skeleton__text--small-height tituPregunta"></div>
+                    <div class="c-skeleton__text c-skeleton__text--bigger "></div>
+                    <div class="c-skeleton__text c-skeleton__text--medium"></div>
+                </div>
+
+            </div>
+            <hr>
+        </div><div class="plantillaRespuestas">
+            <div class="contenedorLista">
+                <div class="contenedorIden">
+                    <div class="c-skeleton__figure c-skeleton__text--bigger identificadoAva"></div>
+                </div>
+
+                <div class="contenidoIzq">
+                    <div class="c-skeleton__text c-skeleton__text--title c-skeleton__text--small-height tituPregunta"></div>
+                    <div class="c-skeleton__text c-skeleton__text--bigger "></div>
+                    <div class="c-skeleton__text c-skeleton__text--medium"></div>
+                </div>
+
+            </div>
+            <hr>
+        </div><div class="plantillaRespuestas">
+            <div class="contenedorLista">
+                <div class="contenedorIden">
+                    <div class="c-skeleton__figure c-skeleton__text--bigger identificadoAva"></div>
+                </div>
+
+                <div class="contenidoIzq">
+                    <div class="c-skeleton__text c-skeleton__text--title c-skeleton__text--small-height tituPregunta"></div>
+                    <div class="c-skeleton__text c-skeleton__text--bigger "></div>
+                    <div class="c-skeleton__text c-skeleton__text--medium"></div>
+                </div>
+
+            </div>
+            <hr>
+        </div><div class="plantillaRespuestas">
+            <div class="contenedorLista">
+                <div class="contenedorIden">
+                    <div class="c-skeleton__figure c-skeleton__text--bigger identificadoAva"></div>
+                </div>
+
+                <div class="contenidoIzq">
+                    <div class="c-skeleton__text c-skeleton__text--title c-skeleton__text--small-height tituPregunta"></div>
+                    <div class="c-skeleton__text c-skeleton__text--bigger "></div>
+                    <div class="c-skeleton__text c-skeleton__text--medium"></div>
+                </div>
+
+            </div>
+            <hr>
+        </div><div class="contenedorBoton">
+            <div class="separador">
+                <input type="button" value="Ver mas" id="mas">
+            </div>
+
+        </div>
+    </div>
+    <div id="postsContainer" class="contenidoLista hidden">
+            <div id="contenedorRespuestas">
+            </div>
             <div class="contenedorBoton">
                 <div class="separador">
                     <button id="mas" onclick="morePosts()">Ver mas</button>
