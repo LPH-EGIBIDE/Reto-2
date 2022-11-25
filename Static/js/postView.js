@@ -130,7 +130,7 @@ function createPost(data) {
             </div>
             <div class="conAdjunto">
                 <p class="publishedBy">
-                <span style="font-weight: bold">Publicado por: </span> <img src="${data.author.avatar}" id="userLogo" alt="User logo"><a href="/user/${data.author.id}">${data.author.username}</a>
+                <span style="font-weight: bold">Publicado por: </span> <img src="${data.author.avatar}" id="userLogo" alt="User logo"><a class="userLink" href="/user/${data.author.id}">${data.author.username}</a>
                 </p>
             </div>
     `;
@@ -166,7 +166,7 @@ function createPostAnswer(data) {
             <div class="contenedorAbajo">
                 <div class="conUsuario">
                     <div class="publishedBy">
-                    <span style="font-weight: bold">Publicado por: </span><img src="${data.author.avatar}" id="userLogo" alt="User logo"> <a href="/user/${data.author.id}">${data.author.username}</a>
+                    <span style="font-weight: bold">Publicado por: </span><img src="${data.author.avatar}" id="userLogo" alt="User logo"> <a class="userLink" href="/user/${data.author.id}">${data.author.username}</a>
                     </div>
                 </div>
                 <div class="parteDrc">
@@ -283,9 +283,9 @@ async function loadAnswers(postId, page, reload = false) {
                 }
                 if (page !== 1) {
                     if (document.querySelectorAll("#contenedorRespuestas .centrado").length === 0)
-                        answersContainer.innerHTML += `<h4 class="centrado">No hay respuestas aun en este post</h4>`;
+                        answersContainer.innerHTML += `<h4 class="centrado" id="noAnswers">No hay respuestas aun en este post</h4>`;
                 } else {
-                    answersContainer.innerHTML += `<h4 class="centrado">No hay respuestas aun en este post</h4>`;
+                    answersContainer.innerHTML += `<h4 class="centrado" id="noAnswers">No hay respuestas aun en este post</h4>`;
                 }
             }
             if (!reload) {

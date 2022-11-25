@@ -128,7 +128,7 @@
 }
 
 .navD  li:hover > ul{
-    display:block;
+    display: block;
     width: 150px;
     top: 3.1em;
 }
@@ -153,6 +153,7 @@
 
 .navD li ul li:hover {
     background-color: #FE8F4B;
+    border: 2px solid black;
 }
 
 /* Menú desplegable de notificaciones */
@@ -168,7 +169,7 @@
 
 .navD  li > .hoverElement p{
     margin: 0;
-    display:block;
+    display: block;
     color: black;
 }
 

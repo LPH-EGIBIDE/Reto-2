@@ -12,6 +12,16 @@
     width: 0;
 }
 
+.userLink:link, .userLink:visited {
+    text-decoration: none;
+    color: blue;
+    cursor: pointer;
+}
+
+#noAnswers {
+    margin-top: 3em;
+}
+
 body {
     font: 14px / 1.4 sans-serif;
     background-color: #D5D5D5;
@@ -26,7 +36,9 @@ img.mainLogo{
     display: none;
 }
 
-
+.fa-solid {
+    cursor: pointer;
+}
 .container{
     display: grid;
     grid-template-columns: repeat(3, auto);
