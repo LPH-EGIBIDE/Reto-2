@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="/assets/stylesheets/login.css">
-    <title>WTFAQ - Iniciar Sesión</title>
+    <title><?= WEB_APP_NAME ?> - Iniciar Sesión</title>
 </head>
 <!-- Inline style para evitar que SWAL lo sobreescriba -->
 <body style="height: 100vh!important;">

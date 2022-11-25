@@ -22,7 +22,7 @@ function activateMFA(UserEntity $user): void
     $user->setMfaType(1);
     UserRepository::updateUser($user);
     $_SESSION["user"] = $user;
-    echo json_encode(["status" => "success", "message" => "Escanea el código QR con tu aplicación de autenticación. Este código no se volverá a mostrar", "mfaUri" => "otpauth://totp/WTFAQ%20-%20(".$user->getUsername().")?secret=" . $user->getMfaData()]);
+    echo json_encode(["status" => "success", "message" => "Escanea el código QR con tu aplicación de autenticación. Este código no se volverá a mostrar", "mfaUri" => "otpauth://totp/".WEB_APP_NAME."%20-%20(".$user->getUsername().")?secret=" . $user->getMfaData()]);
 }
 
 function activateEmailMFA(UserEntity $user): void

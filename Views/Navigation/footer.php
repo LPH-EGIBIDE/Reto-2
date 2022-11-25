@@ -1,7 +1,7 @@
 <?php
 $user = $_SESSION["user"] ?? "";
 if (DEBUG_MODE){
-    $version = getBuildInfo()["buildName"] ." - ".$user->getUsername() ?? 'WTFAQ v0.0.0';
+    $version = getBuildInfo()["buildName"] ." - ".$user->getUsername() ?? WEB_APP_NAME.' v0.0.0';
 } else {
     $version = "&#169 Los Pollos Hermanos";
 }

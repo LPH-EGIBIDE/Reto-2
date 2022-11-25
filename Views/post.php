@@ -21,7 +21,7 @@
         </div>
 
     <div id="medio">
-        <h3 id="tituRes">Respuestas:</h3><input type="button" value="Añadir" class="anadir" onclick="switchHiddenAnswer()">
+        <h3 id="tituRes">Respuestas:</h3><input type="button" value="Añadir" class="anadir" id="anadir" onclick="switchHiddenAnswer()">
         <?php
         if (\Utils\AuthUtils::checkAdminAuth()) {
             echo '<input type="button" class="anadir" value="Cerrar post" onclick="closePost()">';

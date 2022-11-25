@@ -4,7 +4,9 @@ require_once 'Autoloader.php';
 
 use Db\Db;
 
-const WEB_APP_VERSION = "0.0.1-dev";
+const WEB_APP_VERSION = "1.0.0-rc1";
+const WEB_APP_NAME = "Aergibide";
+const WEB_APP_DOMAIN = "aergibide.lph.local";
 
 const DB_HOST = "db";
 const DB_USER = "docker";
@@ -34,7 +36,7 @@ function getBuildInfo(): array
         'branch' => $branch,
         'commit' => $commit,
         'commitDate' => $commitDate,
-        'buildName' => "WTFAQ v".WEB_APP_VERSION."-$branch-$commit ($commitDate)",
+        'buildName' => WEB_APP_NAME." v".WEB_APP_VERSION."-$branch-$commit ($commitDate)",
     ];
 }
 

@@ -3,7 +3,7 @@ if (!isset($importsCss)){
     $importsCss = [];
 }
 
-$title = empty($title) ? "WTFAQ" : $title;
+$title = empty($title) ? WEB_APP_NAME : $title;
 ?>
 <!DOCTYPE html>
 <html lang="es">

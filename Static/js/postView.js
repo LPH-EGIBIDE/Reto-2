@@ -260,11 +260,6 @@ function loadPost(page = 1, reload = false) {
         });
     });
     loadAnswers(postId, page, reload);
-    document.getElementById("fileUploader").addEventListener("change", (event) => {
-        if (event.target.files.length > 0) {
-            handleFileUpload(event);
-        }
-    });
 }
 
 async function loadAnswers(postId, page, reload = false) {
@@ -293,11 +288,19 @@ async function loadAnswers(postId, page, reload = false) {
                     answersContainer.innerHTML += `<h4 class="centrado">No hay respuestas aun en este post</h4>`;
                 }
             }
+            if (!reload) {
+                document.getElementById("fileUploader").addEventListener("change", (event) => {
+                    if (event.target.files.length > 0) {
+                        handleFileUpload(event);
+                    }
+                });
+            }
         }
     }).catch((error) => {
         showToast("Error desconocido obteniendo las respuestas", "error", () => {
         });
     });
+
 }
 
 function favouriteAnswer(element) {
@@ -465,7 +468,7 @@ function handleFileUpload(event) {
             let list = event.target.parentElement.querySelector("ul");
             // create a list item
             let listItem = document.createElement("li");
-            listItem.setAttribute("file-id", data.attachmentId);
+            listItem.setAttribute("file-id", data.id);
             listItem.innerHTML = `<i class="fa-solid fa-files"></i> ${fileName} <i class="fa-solid fa-circle-xmark red" onclick="deleteFile(this)"></i>`;
             list.appendChild(listItem);
             //Clear the file input
