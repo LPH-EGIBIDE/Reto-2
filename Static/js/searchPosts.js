@@ -1,11 +1,9 @@
 let currentPage = 1;
 let currentFormData = new FormData();
 async function filterPosts(formData) {
+    formData.set("page", currentPage);
     return fetch(`/api/posts/filterPosts`, {
         method: 'POST',
-        headers: {
-            "Content-Type": "application/x-www-form-urlencoded"
-        },
         body: formData
     });
 }
@@ -56,7 +54,7 @@ function getPosts(reload = false) {
     if (reload) {
         hidePostView();
     }
-    filterPosts(currentFormData).then(response => {
+    return filterPosts(currentFormData).then(response => {
         return response.json();
     }).then(data => {
         if (data.status === "success") {
@@ -67,13 +65,15 @@ function getPosts(reload = false) {
             }
             let posts = data.posts;
             posts.forEach(post => {
-                console.log(post);
                 postsContainer.innerHTML += postTemplate(post);
             });
             showPostView();
+            return true
         } else {
             console.log(data);
-            showToast("Error al cargar las preguntas", "error");
+            showToast(data.message, "error");
+            showPostView();
+            return false
         }
     }).catch(error => {
         console.log(error);
@@ -81,6 +81,20 @@ function getPosts(reload = false) {
     });
 }
 
+function searchPosts(formElement) {
+    currentPage = 1;
+    currentFormData = new FormData(formElement);
+    getPosts(true);
+}
+
+function morePosts() {
+    currentPage++;
+    getPosts(false).then(r => {
+        if (!r) {
+            currentPage--;
+        }
+    });
+}
 
 window.addEventListener("load", () => {
     getPosts(true);

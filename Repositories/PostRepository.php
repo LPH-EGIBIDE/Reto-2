@@ -139,7 +139,7 @@ abstract class PostRepository
         $sort = $sortBy[$sort] ?? "date";
         $sortOrder = $sortOrders[$sortOrder] ?? "DESC";
         $preparedTopic = is_numeric($topic) ? $topic : '%';
-        $stmt = $db->prepare("SELECT * FROM posts WHERE (TITLE LIKE CONCAT('%', :title, '%') OR DESCRIPTION LIKE CONCAT('%', :title, '%')) AND TOPIC LIKE '$preparedTopic'  ORDER BY $sort $sortOrder LIMIT :offset OFFSET :startFrom");
+        $stmt = $db->prepare("SELECT * FROM posts WHERE (TITLE LIKE CONCAT('%', :title, '%') OR DESCRIPTION LIKE CONCAT('%', :title, '%')) AND TOPIC LIKE '$preparedTopic' GROUP BY posts.id ORDER BY $sort $sortOrder LIMIT :offset OFFSET :startFrom");
         $stmt->setFetchMode(PDO::FETCH_OBJ);
         $stmt->bindValue(":offset", $offset, PDO::PARAM_INT);
         $stmt->bindValue(":startFrom", $startFrom, PDO::PARAM_INT);

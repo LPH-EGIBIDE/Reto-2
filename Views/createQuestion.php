@@ -7,7 +7,7 @@
                     <div class="contenedorArriba">
                     <div class="select">
                     <p class="tagsPre">
-                        <label for="tags">Tópico:</label><select name="tag" id="tags">
+                        <label for="tags">Tema:</label><select name="tag" id="tags">
                         <?php
                         foreach ($topics as $topic){
                             echo "<option value='".$topic->getId()."'>".$topic->getName()."</option>";

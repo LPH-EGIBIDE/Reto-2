@@ -12,16 +12,35 @@ header('Content-Type: application/json');
 if (!AuthUtils::checkAuth())
     die(json_encode(["status" => "error", "message" => "No hay sesión iniciada"]));
 
-$offset = intval($_GET['offset'] ?? $_POST['offset'] ?? 20);
-$startFrom = intval($_GET['startFrom'] ?? $_POST['startFrom'] ??  0);
+$page = $_GET["page"] ?? $_POST["page"] ??  1;
+$offset =  10;
+$startFrom = 10 * ($page - 1);
 $title = $_GET['title'] ?? $_POST['title'] ?? "";
-$topic = intval($_GET['topic'] ?? $_POST['topic'] ?? -1) == -1 ? null : intval($_GET['topic'] ?? $_POST['topic'] ?? -1);
-$sort = $_GET['sort'] ?? "DATE";
-$sortOrder = $_GET['sortOrder'] ?? "DESC";
+$topic = intval($_GET['topic'] ?? $_POST['topic'] ?? -1) <= -1 ? null : intval($_GET['topic'] ?? $_POST['topic'] ?? -1);
+$sort = $_GET['sort'] ?? $_POST['sort'] ?? "mostRecent";
 
 $data =[];
 try {
-    $posts = PostRepository::filterPosts($offset, $startFrom, $title, $topic, $sort, $sortOrder);
+    $sortTypes = [
+        "mostRecent" => [
+            "sort" => "DATE",
+            "sortOrder" => "DESC"
+        ],
+        "leastRecent" => [
+            "sort" => "DATE",
+            "sortOrder" => "ASC"
+        ],
+        "mostViews" => [
+            "sort" => "VIEWS",
+            "sortOrder" => "DESC"
+        ],
+        "leastViews" => [
+            "sort" => "VIEWS",
+            "sortOrder" => "ASC"
+        ]
+    ];
+    $sort = $sortTypes[$sort] ?? $sortTypes["mostRecent"];
+    $posts = PostRepository::filterPosts($offset, $startFrom, $title, $topic, $sort["sort"], $sort["sortOrder"]);
     $data['posts'] = $posts;
     $data['postCount'] = count($posts);
     $data['status'] = "success";
