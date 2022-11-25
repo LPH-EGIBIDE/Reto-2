@@ -21,7 +21,13 @@
         </div>
 
     <div id="medio">
-        <h3 id="tituRes">Respuestas:</h3><input type="button" value="Añadir" id="anadir" onclick="switchHiddenAnswer()">
+        <h3 id="tituRes">Respuestas:</h3><input type="button" value="Añadir" class="anadir" onclick="switchHiddenAnswer()">
+        <?php
+        if (\Utils\AuthUtils::checkAdminAuth()) {
+            echo '<input type="button" class="anadir" value="Cerrar post" onclick="closePost()">';
+        }
+        ?>
+
     </div>
 
     <div id="contenedorRespuestas">
@@ -48,6 +54,6 @@
       </div>
     </div>
     <div>
-        <input type="button" value="Cargar más" id="anadir" onclick="loadMore()">
+        <input type="button" value="Cargar más" class="anadir" onclick="loadMore()">
     </div>
 </div>

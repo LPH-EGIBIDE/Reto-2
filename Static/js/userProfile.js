@@ -16,6 +16,64 @@ async function getUsersPosts(userId) {
     });
 }
 
+async function toggleActive(formData) {
+    return fetch(`/api/users/manageUser`, {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: formData
+    });
+}
+
+
+function deactivateUser(){
+    let userId = document.getElementById("userId").value;
+    let formData = new URLSearchParams({
+        method: 'deactivateAccount',
+        userId: userId
+    });
+    toggleActive(formData).then((response) => {
+        if (response.ok) {
+            response.json().then((data) => {
+                if (data.status === "success") {
+                    showToast("Usuario desactivado correctamente", "success");
+                    location.reload();
+                }
+            }).catch((err) => {
+                console.error(err);
+                showToast(err.message, "error");
+            });
+        }
+    });
+}
+
+function reactivateUser(){
+    let userId = document.getElementById("userId").value;
+    let formData = new URLSearchParams({
+        method: 'reactivateAccount',
+        userId: userId
+    });
+    toggleActive(formData).then((response) => {
+        if (response.ok) {
+            response.json().then((data) => {
+                if (data.status === "success") {
+                    showToast("Usuario reactivado correctamente", "success");
+                    location.reload();
+                }
+            }).catch((err) => {
+                console.error(err);
+                showToast(err.message, "error");
+            });
+        }
+    });
+}
+
+
+
+
+
+
 async function getUsersFavuriteAnswers(userId) {
     return fetch(`/api/posts/getPosts`, {
         method: 'POST',

@@ -25,7 +25,7 @@ try {
 }
 
 //Check if the user is the owner of the file or the file is public
-if (!$file->isPublic() && $file->getUploadedBy()->getId() != $_SESSION["user"]->getId())
+if ((!$file->isPublic() && $file->getUploadedBy()->getId() != $_SESSION["user"]->getId()) && !AuthUtils::checkAdminAuth())
     if (DEBUG_MODE)
         die(json_encode(["status" => "error", "message" => "No tienes permisos para ver este archivo"]));
     else

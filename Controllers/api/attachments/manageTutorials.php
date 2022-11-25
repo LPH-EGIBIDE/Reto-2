@@ -15,6 +15,10 @@ if (!AuthUtils::checkAuth())
 $method = $_POST['method'] ?? 'get';
 
 
+/**
+ * @return array
+ * @throws DataNotFoundException
+ */
 function getTutorials(): array
 {
     $tutorialList = AttachmentRepository::getTutorials();
@@ -23,7 +27,7 @@ function getTutorials(): array
         $author = $tutorial->getUploadedBy();
         $tutorial = $tutorial->toArray();
         $tutorial['uploadedBy'] = $author->toArray();
-        $tutorial['isDeletable'] = $author->getId() == $_SESSION['user']->getId();
+        $tutorial['isDeletable'] = ($author->getId() == $_SESSION['user']->getId()) || AuthUtils::checkAdminAuth();
         $tutorials[] = $tutorial;
     }
     return $tutorials;
@@ -31,12 +35,12 @@ function getTutorials(): array
 
 /**
  * @param AttachmentEntity $tutorial
- * @return bool
+ * @return void
  * @throws DataNotFoundException
  */
 function deleteTutorial(AttachmentEntity $tutorial): void
 {
-    if ($tutorial->getUploadedBy()->getId() != $_SESSION['user']->getId())
+    if (($tutorial->getUploadedBy()->getId() != $_SESSION['user']->getId()) && !AuthUtils::checkAdminAuth())
         throw new DataNotFoundException("No tienes permisos para eliminar este tutorial");
     AttachmentRepository::deleteAttachment($tutorial);
     unlink(getcwd() . "/uploads/" . $tutorial->getFilepath());

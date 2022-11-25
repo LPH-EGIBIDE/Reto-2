@@ -18,8 +18,8 @@ if (isset($_POST['id'])) {
     $id = $_POST['id'];
     try {
         $attachment = AttachmentRepository::getAttachmentById($id);
-
-        if ($attachment->getUploadedBy()->getId() != $_SESSION['user']->getId())
+        // Check if the user is the owner of the attachment or is an admin
+        if (($attachment->getUploadedBy()->getId() != $_SESSION['user']->getId()) && !AuthUtils::checkAdminAuth())
             throw new DataNotFoundException("No se ha encontrado el archivo");
         // Remove the file from the server
         $attachment = AttachmentRepository::getAttachmentById($id);

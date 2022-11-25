@@ -55,8 +55,13 @@ switch ($action){
 
         }
         break;
-    case 'update':
-        //TODO: Update post
+    case 'close':
+        try {
+            closePost($postId);
+            echo json_encode(["status" => "success", "message" => "Post cerrado correctamente"]);
+        } catch (PostException $e) {
+            echo json_encode(["status" => "error", "message" => $e->getMessage()]);
+        }
         break;
     case 'delete':
         try {
@@ -131,7 +136,7 @@ function insertPost(string $title, string $description, int $topic, UserEntity $
 function deletePost(int $postId): void {
     try {
         $post = PostRepository::getPostById($postId);
-        if ($post->getAuthor()->getId() != $_SESSION["user"]->getId()){
+        if ($post->getAuthor()->getId() != $_SESSION["user"]->getId() && !AuthUtils::checkAdminAuth()){
             throw new PostException("No tienes permisos para eliminar este post");
         }
     } catch (DataNotFoundException $e) {
@@ -145,4 +150,25 @@ function deletePost(int $postId): void {
 }
 
 
+/**
+ * @param int $postId
+ * @return void
+ * @throws PostException
+ */
+function closePost(int $postId): void {
+    try {
+        $post = PostRepository::getPostById($postId);
+        if (!AuthUtils::checkAdminAuth()){
+            throw new PostException("No tienes permisos para cerrar este post");
+        }
+        $post->setActive(false);
+        PostRepository::updatePost($post);
+    } catch (DataNotFoundException $e) {
+        if (DEBUG_MODE){
+            throw new PostException($e->getMessage()." ".$e->getFile()." ".$e->getLine());
+        } else {
+            throw new PostException("El post no existe");
+        }
+    }
+}
 

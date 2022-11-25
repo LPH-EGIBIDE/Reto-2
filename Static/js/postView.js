@@ -2,7 +2,7 @@ let currentPage = 1;
 let answerCount = 0;
 
 async function getPost(postId) {
-    return  fetch(`/api/posts/managePost`, {
+    return fetch(`/api/posts/managePost`, {
         method: 'POST',
         headers: {
             "Content-Type": "application/x-www-form-urlencoded"
@@ -13,8 +13,21 @@ async function getPost(postId) {
     });
 }
 
+async function disablePost(postId) {
+    return fetch(`/api/posts/managePost`, {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: new URLSearchParams({
+            postId: postId,
+            action: 'close'
+        })
+    });
+}
+
 async function getPostAnswers(postId, page) {
-    return  fetch(`/api/posts/manageAnswers`, {
+    return fetch(`/api/posts/manageAnswers`, {
         method: 'POST',
         headers: {
             "Content-Type": "application/x-www-form-urlencoded"
@@ -27,7 +40,7 @@ async function getPostAnswers(postId, page) {
 }
 
 async function insertAnswer(postId, message) {
-    return  fetch(`/api/posts/manageAnswers`, {
+    return fetch(`/api/posts/manageAnswers`, {
         method: 'POST',
         headers: {
             "Content-Type": "application/x-www-form-urlencoded"
@@ -41,7 +54,7 @@ async function insertAnswer(postId, message) {
 }
 
 async function addAttachmentAnswer(answerId, fileId) {
-    return  fetch(`/api/posts/manageAnswers`, {
+    return fetch(`/api/posts/manageAnswers`, {
         method: 'POST',
         headers: {
             "Content-Type": "application/x-www-form-urlencoded"
@@ -58,14 +71,14 @@ async function insertAttachment(file) {
     let formData = new FormData();
     formData.append('file', file);
     formData.append('public', "1");
-    return  fetch(`/api/attachments/uploadAttachment`, {
+    return fetch(`/api/attachments/uploadAttachment`, {
         method: 'POST',
         body: formData
     });
 }
 
 async function deleteAttachment(fileId) {
-    return  fetch(`/api/attachments/deleteAttachment`, {
+    return fetch(`/api/attachments/deleteAttachment`, {
         method: 'POST',
         headers: {
             "Content-Type": "application/x-www-form-urlencoded"
@@ -94,8 +107,8 @@ function hiddenPostAnswer() {
     
                     </div>
                 <div class="answerButtons">
-                    <input class=answerButton type="button" onclick="handleAnswerInsert(this)" value="Enviar">
-                    <input class=answerButton type="reset" placeholder="Borrar">
+                    <input class="anadir" type="button" onclick="handleAnswerInsert(this)" value="Enviar">
+                    <input class="anadir" type="reset" placeholder="Borrar">
                 </div>
             </div>
         </form>
@@ -165,7 +178,50 @@ function createPostAnswer(data) {
     `;
 }
 
+function closePost() {
+    const postId = window.location.pathname.split("/")[2];
+    Swal.fire({
+        title: '¿Estás seguro?',
+        text: "¡No podrás revertir esto!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sí, cerrar pregunta!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            disablePost(postId).then((response) => {
+                return response.json();
+            }).then((data) => {
+                    if (data.status === "success") {
+                        Swal.fire(
+                            'Cerrada!',
+                            'La pregunta ha sido cerrada.',
+                            'success'
+                        ).then(() => {
+                            disableButtons();
+                        });
 
+                    }
+
+                }
+            )
+        } else {
+            Swal.fire(
+                'Cancelado',
+                'La pregunta no ha sido cerrada',
+                'error'
+            )
+        }
+    });
+}
+
+function disableButtons() {
+    const buttons = document.querySelectorAll("#medio input[type=button]");
+    buttons.forEach((button) => {
+        button.classList.add("hidden");
+    });
+}
 
 function loadPost(page = 1, reload = false) {
     const postId = window.location.pathname.split("/")[2];
@@ -176,16 +232,17 @@ function loadPost(page = 1, reload = false) {
         return response.json();
     }).then((data) => {
         if (data.status === "success") {
-            // Remove skeleton and add post to the parent of the skeleton
-
             //Generate a div with the class cajaPregunta
             let post = document.createElement("div");
             post.classList.add("cajaPregunta");
             post.innerHTML = createPost(data.data);
+            if (!data.data.active){
+                disableButtons();
+            }
             //Replace the skeleton with the post
             if (!reload) {
                 let postSkeleton = document.querySelector('#cajaPreguntaSkeleton');
-                if (postSkeleton){
+                if (postSkeleton) {
                     let postParent = postSkeleton.parentElement;
                     postParent.replaceChild(post, postSkeleton);
                 }
@@ -217,7 +274,7 @@ async function loadAnswers(postId, page, reload = false) {
         let answersContainer = document.getElementById("contenedorRespuestas");
         if (data.status === "success") {
             // Delete all but hiddenAnswer
-            if (!reload){
+            if (!reload) {
                 answersContainer.innerHTML = hiddenPostAnswer();
             }
             // Add the answers
@@ -226,17 +283,21 @@ async function loadAnswers(postId, page, reload = false) {
                     answersContainer.innerHTML += createPostAnswer(answer);
                 });
             } else {
-                if (!reload){
+                if (!reload) {
                     answersContainer.innerHTML = hiddenPostAnswer();
                 }
-                if (page === 1) {
-                    answersContainer.innerHTML += `<h4 class="centrado">No hay respuestas aun en este post</h4>`;
+                if (page !== 1) {
+                    if (document.querySelectorAll("#contenedorRespuestas .centrado").length === 0)
+                        answersContainer.innerHTML += `<h4 class="centrado">No hay respuestas aun en este post</h4>`;
                 } else {
-                    answersContainer.innerHTML += `<h4 class="centrado">No hay más respuestas en este post</h4>`;
+                    answersContainer.innerHTML += `<h4 class="centrado">No hay respuestas aun en este post</h4>`;
                 }
             }
         }
-    }).catch((error) => { showToast("Error desconocido obteniendo las respuestas", "error", () => {}); });
+    }).catch((error) => {
+        showToast("Error desconocido obteniendo las respuestas", "error", () => {
+        });
+    });
 }
 
 function favouriteAnswer(element) {
@@ -267,27 +328,28 @@ function favouriteAnswer(element) {
         return response.json();
     }).then((data) => {
         if (data.status === "success") {
-            showToast(data.message, "success", () => {});
+            showToast(data.message, "success", () => {
+            });
             switch (action) {
                 case "add":
-                    counter.innerHTML = counter.innerHTML === "" ? 1 : " "+(parseInt(counter.innerHTML) + 1);
+                    counter.innerHTML = counter.innerHTML === "" ? 1 : " " + (parseInt(counter.innerHTML) + 1);
                     break;
                 case "remove":
 
-                    counter.innerHTML = counter.innerHTML === "" ? 0 : " "+(parseInt(counter.innerHTML) - 1);
+                    counter.innerHTML = counter.innerHTML === "" ? 0 : " " + (parseInt(counter.innerHTML) - 1);
                     break;
             }
         } else {
-            showToast(data.message, "error", () => {});
+            showToast(data.message, "error", () => {
+            });
         }
     }).catch((error) => {
         console.log(error);
-        showToast("Error desconocido", "error", () => {});
+        showToast("Error desconocido", "error", () => {
+        });
     });
 
 }
-
-
 
 
 function upvotePost(element) {
@@ -311,22 +373,25 @@ function upvotePost(element) {
             childArrow.classList.contains("green") ? childArrow.classList.remove("green") : childArrow.classList.add("green");
             console.log(counter.innerHTML == "");
             if (childArrow.classList.contains("green")) {
-                counter.innerHTML = counter.innerHTML === "" ? 1 : " "+(parseInt(counter.innerHTML) + 1);
+                counter.innerHTML = counter.innerHTML === "" ? 1 : " " + (parseInt(counter.innerHTML) + 1);
             } else {
-                counter.innerHTML = counter.innerHTML === "" ? 0 : " "+(parseInt(counter.innerHTML) - 1);
+                counter.innerHTML = counter.innerHTML === "" ? 0 : " " + (parseInt(counter.innerHTML) - 1);
             }
-            showToast(data.message, "success", () => {});
+            showToast(data.message, "success", () => {
+            });
         } else {
-            showToast(data.message, "error", () => {});
+            showToast(data.message, "error", () => {
+            });
         }
     }).catch((error) => {
         console.log(error);
-        showToast("Error desconocido", "error", () => {});
+        showToast("Error desconocido", "error", () => {
+        });
     });
 
 }
 
-function handleAnswerInsert(element){
+function handleAnswerInsert(element) {
     //Get the post id from the url
     const postId = window.location.pathname.split("/")[2];
     // Get the form using the element
@@ -346,9 +411,9 @@ function handleAnswerInsert(element){
                 await addAttachmentAnswer(answerId, fileId);
             }
             showToast(data.message, "success", () => {
-                loadPost(1,false);
-                for(let i = 2; i < currentPage; i++){
-                    loadPost(i,true);
+                loadPost(1, false);
+                for (let i = 2; i < currentPage; i++) {
+                    loadPost(i, true);
                 }
 
 
@@ -359,7 +424,8 @@ function handleAnswerInsert(element){
         }
     }).catch((error) => {
         console.log(error);
-        showToast("Error desconocido", "error", () => {});
+        showToast("Error desconocido", "error", () => {
+        });
     });
 }
 
@@ -371,7 +437,8 @@ function deleteFile(element) {
         if (data.status === "success") {
             file.remove();
         } else {
-            showToast(data.message, "error", () => {});
+            showToast(data.message, "error", () => {
+            });
         }
     });
 }
@@ -384,7 +451,8 @@ function handleFileUpload(event) {
     let fileList = event.target.parentElement.querySelector("ul");
     //check if file list has 3 files
     if (fileList.children.length >= 3) {
-        showToast("Solo se pueden subir 3 archivos", "error", () => {});
+        showToast("Solo se pueden subir 3 archivos", "error", () => {
+        });
         event.target.value = "";
         return;
     }
@@ -404,27 +472,28 @@ function handleFileUpload(event) {
             event.target.value = "";
 
         } else {
-            showToast(data.message, "error", () => {});
+            showToast(data.message, "error", () => {
+            });
         }
     }).catch((error) => {
-        showToast("Error desconocido", "error", () => {});
+        showToast("Error desconocido", "error", () => {
+        });
         //Clear the file input
         event.target.value = "";
     });
 }
 
-function loadMore(){
+function loadMore() {
     // Get the answer list element and count
     let answerList = document.getElementById("contenedorRespuestas");
     if (answerList.children.length === answerCount) {
         return;
     }
-    answerCount = answerList.children.length +1;
+    answerCount = answerList.children.length + 1;
     // Get the post id from the url
     const postId = window.location.pathname.split("/")[2];
     currentPage++;
     loadAnswers(postId, currentPage, true);
-
 
 
 }
@@ -434,17 +503,13 @@ window.addEventListener("load", () => {
 });
 
 
-
-
-
-function switchHiddenAnswer( ) {
+function switchHiddenAnswer() {
     let answer = document.getElementById("agregarRespuesta");
     // check if the
     if (answer.classList.contains("hidden")) {
         answer.classList.remove("hidden");
         document.getElementById("anadir").value = "Ocultar";
-    }
-    else {
+    } else {
         answer.classList.add("hidden");
         document.getElementById("anadir").value = "Añadir";
     }

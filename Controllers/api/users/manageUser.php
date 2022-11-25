@@ -1,6 +1,7 @@
 <?php
 
 use Entities\UserEntity;
+use Exceptions\DataNotFoundException;
 use Repositories\UserRepository;
 use Utils\AuthUtils;
 use Utils\TOTP;
@@ -67,35 +68,63 @@ function changeDescription(UserEntity $user, string $description): void
     echo json_encode(["status" => "success", "message" => "Descripción cambiada correctamente"]);
 }
 
+function reactivateAccount(UserEntity $user): void
+{
+    if (!AuthUtils::checkAdminAuth())
+        die(json_encode(["status" => "error", "message" => "No tienes permisos para realizar esta acción"]));
+    $user->setActive(true);
+    UserRepository::updateUser($user);
+    echo json_encode(["status" => "success", "message" => "Cuenta reactivada correctamente"]);
+}
 
-$method = $_POST["method"] ?? "get";
-switch ($method) {
-    case "activateMFA":
-        activateMFA($user);
-        break;
-    case "activateEmailMFA":
-        activateEmailMFA($user);
-        break;
-    case "deactivateMFA":
-        $userPassword = $_POST["password"] ?? "";
-        deactivateMFA($user, $userPassword);
-        break;
-    case "changePassword":
-        $oldPassword = $_POST["oldPassword"] ?? "";
-        $newPassword = $_POST["newPassword"] ?? "";
-        changePassword($user, $oldPassword, $newPassword);
-        break;
-    case "changeDescription":
-        $description = $_POST["description"] ?? $user->getProfileDescription();
-        changeDescription($user, $description);
-        break;
-    case "get":
-        $userArray = $user->toArray();
-        $userArray["email"] = $user->getEmail();
-        $userArray["mfaType"] = $user->getMfaType();
-        echo json_encode(["status" => "success", "data" => $userArray]);
-        break;
-    default:
-        echo json_encode(["status" => "error", "message" => "Método no soportado"]);
-        break;
+function deactivateAccount(UserEntity $user): void
+{
+    if (!AuthUtils::checkAdminAuth())
+        die(json_encode(["status" => "error", "message" => "No tienes permisos para realizar esta acción"]));
+    $user->setActive(false);
+    UserRepository::updateUser($user);
+    echo json_encode(["status" => "success", "message" => "Cuenta desactivada correctamente"]);
+}
+try {
+    $method = $_POST["method"] ?? "get";
+    switch ($method) {
+        case "activateMFA":
+            activateMFA($user);
+            break;
+        case "activateEmailMFA":
+            activateEmailMFA($user);
+            break;
+        case "deactivateMFA":
+            $userPassword = $_POST["password"] ?? "";
+            deactivateMFA($user, $userPassword);
+            break;
+        case "changePassword":
+            $oldPassword = $_POST["oldPassword"] ?? "";
+            $newPassword = $_POST["newPassword"] ?? "";
+            changePassword($user, $oldPassword, $newPassword);
+            break;
+        case "changeDescription":
+            $description = $_POST["description"] ?? $user->getProfileDescription();
+            changeDescription($user, $description);
+            break;
+        case "deactivateAccount":
+            $userId = $_POST["userId"] ?? "";
+            deactivateAccount(UserRepository::getUserById($userId));
+            break;
+        case "reactivateAccount":
+            $userId = $_POST["userId"] ?? "";
+            reactivateAccount(UserRepository::getUserById($userId));
+            break;
+        case "get":
+            $userArray = $user->toArray();
+            $userArray["email"] = $user->getEmail();
+            $userArray["mfaType"] = $user->getMfaType();
+            echo json_encode(["status" => "success", "data" => $userArray]);
+            break;
+        default:
+            echo json_encode(["status" => "error", "message" => "Método no soportado"]);
+            break;
+    }
+} catch (DataNotFoundException $e) {
+    echo json_encode(["status" => "error", "message" => $e->getMessage()]);
 }

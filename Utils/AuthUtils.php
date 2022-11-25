@@ -14,6 +14,10 @@ abstract class AuthUtils
             //Check if the user is still on the database and reload the user object, if not, log out the user
             try {
                 $user = UserRepository::getUserById($user->getId());
+                if($user->isActive() == 0){
+                    unset($_SESSION["user"]);
+                    return false;
+                }
                 $_SESSION["user"] = $user;
                 return true;
             } catch (DataNotFoundException) {
@@ -22,6 +26,12 @@ abstract class AuthUtils
             }
         }
         return false;
+    }
+
+    public static function checkAdminAuth(): bool
+    {
+        $user = $_SESSION["user"];
+        return $user->getType() == 1;
     }
 
 }

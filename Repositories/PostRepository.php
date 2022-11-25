@@ -46,7 +46,7 @@ abstract class PostRepository
             ":views" => $postEntity->getViews(),
             ":topic" => $postEntity->getTopic()->getId(),
             ":author" => $postEntity->getAuthor()->getId(),
-            ":active" => $postEntity->isActive(),
+            ":active" => intval($postEntity->isActive()),
             ":id" => $postEntity->getId()
         ]);
         //Get the current date and time

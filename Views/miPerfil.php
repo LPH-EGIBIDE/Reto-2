@@ -20,6 +20,14 @@
                     <li><a  id="linkPre" class="active" data-tab="posts">Preguntas</a></li>
                     <li><a  id="linkRes" data-tab="answers">Respuestas</a></li>
                     <li><a  id="linkFav" data-tab="favourites">Favoritos</a></li>
+                    <?php if (\Utils\AuthUtils::checkAdminAuth()) {
+                        if ($profileUser->isActive()) {
+                            echo '<li><a onclick="deactivateUser()">Desactivar usuario</a></li>';
+                        } else {
+                            echo '<li><a onclick="reactivateUser()">Reaactivar usuario</a></li>';
+                        }
+
+                    } ?>
                 </ul>
             </div>
             </div>
