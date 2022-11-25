@@ -17,6 +17,7 @@ if (!AuthUtils::checkAuth()) {
 $user = $_SESSION['user'];
 
 $topics = PostTopicRepository::getAllPostTopics();
+$lastTopic = $_COOKIE['lastUsedTopicId'] ?? '';
 
 require APP_ROOT.'Views/Navigation/header.php';
 require APP_ROOT.'Views/createQuestion.php';

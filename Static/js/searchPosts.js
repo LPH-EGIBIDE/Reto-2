@@ -84,7 +84,37 @@ function getPosts(reload = false) {
 function searchPosts(formElement) {
     currentPage = 1;
     currentFormData = new FormData(formElement);
+    saveSearchParameters();
     getPosts(true);
+}
+
+
+function restoreSearchParameters() {
+    // Get the search parameters from local storage
+    let searchParameters = localStorage.getItem("searchParameters");
+    let formElement = document.getElementById("filterForm");
+    if (searchParameters !== null) {
+        searchParameters = JSON.parse(searchParameters);
+        // Restore the search parameters using form element
+        for (let key in searchParameters) {
+                if (formElement.elements[key] !== undefined) {
+                formElement.elements[key].value = searchParameters[key];
+            }
+        }
+    }
+    // Search posts
+    searchPosts(formElement);
+}
+
+function saveSearchParameters() {
+    let formElement = document.getElementById("filterForm");
+    let searchParameters = {};
+    for (let key in formElement.elements) {
+        if (formElement.elements[key].value !== "") {
+            searchParameters[key] = formElement.elements[key].value;
+        }
+    }
+    localStorage.setItem("searchParameters", JSON.stringify(searchParameters));
 }
 
 function morePosts() {
@@ -97,5 +127,5 @@ function morePosts() {
 }
 
 window.addEventListener("load", () => {
-    getPosts(true);
+    restoreSearchParameters();
 });

@@ -2,7 +2,7 @@
     <div class="relleno">
         <h3 id="cajaTitulo">Buscar posts</h3>
         <div>
-            <form id="filterForm" class="cajaBuscador">
+            <form id="filterForm" class="cajaBuscador" onsubmit="return;">
                 <div id="textoTitulo" class="lista">
                     <label>
                         <input type="text" name="title" placeholder="Título">

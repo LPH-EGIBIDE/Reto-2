@@ -22,6 +22,8 @@ function handleInsertPost(formElement) {
     }).then(data => {
         if(data.status === 'success') {
             showToast(data.message, 'success', () => {
+                //Set a cookie that contains last used the topic id
+                document.cookie = `lastUsedTopicId=${topicId}`;
                 window.location.href = `/post/${data.postId}`;
             });
         } else {
