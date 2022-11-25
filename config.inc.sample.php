@@ -1,14 +1,30 @@
 <?php
-require_once __DIR__ . '/Autoloader.php';
-const WEB_APP_VERSION = "0.0.1-dev";
 
+require_once 'Autoloader.php';
 
-const DB_HOST = "localhost";
+use Db\Db;
+
+const WEB_APP_VERSION = "1.0.0-rc1";
+const WEB_APP_NAME = "Aergibide";
+const WEB_APP_DOMAIN = "aergibide.lph.local";
+
+const DB_HOST = "db";
 const DB_USER = "docker";
-const DB_PASSWORD = "8b0un0unmind0n";
 const DB_DATABASE = "lph_app2";
+const DB_PASSWORD = "";
+const EMAIL_API_KEY = "";
 
 const APP_ROOT = __DIR__ . '/';
+// !!!!!!!!!!!!!!! PONER EN FALSE EN PRODUCCION !!!!!!!!!!!!!!!!!!!!!
+const DEBUG_MODE = true;
+
+if (DEBUG_MODE) {
+    ini_set('display_errors', 1);
+    ini_set('display_startup_errors', 1);
+    error_reporting(E_ALL);
+}
+
+Db::setInstance(DB_HOST, DB_USER, DB_PASSWORD, DB_DATABASE);
 
 function getBuildInfo(): array
 {
@@ -20,7 +36,7 @@ function getBuildInfo(): array
         'branch' => $branch,
         'commit' => $commit,
         'commitDate' => $commitDate,
-        'buildName' => "WTFAQ v".WEB_APP_VERSION."-$branch-$commit ($commitDate)",
+        'buildName' => WEB_APP_NAME." v".WEB_APP_VERSION."-$branch-$commit ($commitDate)",
     ];
 }
 
@@ -39,7 +55,7 @@ function getCurrentBranchDatetime($branch='master' ): string
     if($time != 0 ){
         return date("Y-m-d H:i:s", $time);
     }else{
-        return  "time=0";
+        return  date("Y-m-d H:i:s", time());
     }
 }
 
