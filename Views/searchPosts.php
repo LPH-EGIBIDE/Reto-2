@@ -19,6 +19,7 @@
                     <option value="leastUpvotes">Menos upvotes</option>
                     <option value="leastViews">Menos visitas</option>
                 </select>
+                <input type="button" value="Crear Post" class="answerButton" id="crearPost" onclick="location.href='/createPost';">
                 <input type="button" value="Enviar" class="answerButton">
             </form></div>
     </div>
