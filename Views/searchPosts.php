@@ -6,27 +6,20 @@
                 <div id="textoTitulo" class="lista">
                     <input type="text" name="title" placeholder="Título">
                 </div>
-                <div id="listaTopics" class="lista">
-                    <input list="topics" name="topics" placeholder="Género">
-                    <datalist id="topics">
-                        <option value="Prueba">
-                        </option><option value="La prueba">
-                        </option></datalist>
-                </div>
-                <div id="textoAutor" class="lista">
-                    <input type="text" name="author" placeholder="Autor">
-                </div>
-                <div id="listaOrden" class="lista">
-                    <input list="orderBy" name="orderBy" placeholder="Ordenar por">
-                    <datalist id="orderBy">
-                        <option value="Más recientes" selected="">
-                        </option><option value="Más upvotes">
-                        </option><option value="Más visitas">
-                        </option><option value="Menos recientes">
-                        </option><option value="Menos upvotes">
-                        </option><option value="Menos visitas">
-                        </option></datalist>
-                </div>
+                <label for="listaTopics">Tema:  </label>
+                <select name="listaTopics" id="listaTopics">
+                    // Rellenar topics con html/css
+                </select>
+                <label for="orderBy">Ordenar por: </label>
+                <select name="orderBy" id="orderBy">
+                    <option value="mostRecent" selected>Más recientes</option>
+                    <option value="mostUpvotes">Más upvotes</option>
+                    <option value="mostViews">Más visitas</option>
+                    <option value="leastRecent">Menos recientes</option>
+                    <option value="leastUpvotes">Menos upvotes</option>
+                    <option value="leastViews">Menos visitas</option>
+                </select>
+                <input type="button" value="Crear Post" class="answerButton" id="crearPost" onclick="location.href='/createPost';">
                 <input type="button" value="Enviar" class="answerButton">
             </form></div>
     </div>
