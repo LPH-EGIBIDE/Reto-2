@@ -5,8 +5,18 @@ async function pushFile(formData) {
     });
 }
 
-async function getFileList(formData) {
-    return fetch(`/api/attachments/getTutorials`, {
+async function deleteFile(fileId) {
+    return fetch(`/api/attachments/manageTutorials`, {
+        method: 'POST',
+        body: new URLSearchParams({
+            method: 'delete',
+            tutorialId: fileId
+        })
+    });
+}
+
+async function getFileList() {
+    return fetch(`/api/attachments/manageTutorials`, {
         method: 'GET'
     });
 }
@@ -38,6 +48,43 @@ function uploadTutorial(){
         });
     };
     input.click();
+}
+
+function deleteTutorial(id){
+    Swal.fire({
+        title: '¿Estás seguro?',
+        text: "Estas a punto de eliminar un tutorial, esta acción no se puede deshacer",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            deleteFile(id).then(response => {
+                if (response.ok)
+                    response.json().then(data => {
+                        if (data.status === 'success') {
+                            showToast(data.message, 'success', () => {
+                                getTutorials();
+                            });
+                        } else
+                            showToast(data.message, 'error');
+                    }).catch(err => {
+                        console.error(err);
+                        showToast(err.message, 'error');
+                    });
+            });
+        } else {
+            Swal.fire(
+                'Cancelado',
+                'El tutorial no se ha eliminado',
+                'error'
+            )
+        }
+
+    });
 }
 
 function showPostView() {
@@ -81,6 +128,7 @@ function getTutorials(){
 }
 
     function tutorialTemplate(tutorial) {
+        const deleteElement = tutorial.isDeletable ? `<li><i class="fa-solid fa-trash-xmark red" onclick="deleteTutorial(${tutorial.id})"></i></li>`: '';
         return `<div class="respuesta">
                 <div class="contenedorLista">
                     <div class="contenedorIden">
@@ -92,9 +140,9 @@ function getTutorials(){
                         </p>
                         <ul class="listContent">
                             <li>
-                                <p class="autor">Publicado por: <a href="/user/${tutorial.uploadedBy.id}">${tutorial.uploadedBy.username}</a>
-                                </p>
+                                <p class="autor">Publicado por: <a href="/user/${tutorial.uploadedBy.id}">${tutorial.uploadedBy.username}</a></p>
                             </li>
+                            ${deleteElement}
                         </ul>
                     </div>
                 </div>
