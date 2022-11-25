@@ -29,6 +29,9 @@ if (isset($_SESSION["user"])) {
             throw new Exception("Los campos no pueden estar vacios". $username . $password);
         }
         $user = UserRepository::getUserByUsername($username);
+        if (!$user->isActive()){
+            throw new Exception("El usuario esta deshabilitado, contacte con el administrador");
+        }
         if($user->checkPassword($password)){
             switch ($user->getMfaType()){
                 case 0:

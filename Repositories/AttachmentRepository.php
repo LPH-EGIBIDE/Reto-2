@@ -166,4 +166,24 @@ abstract class AttachmentRepository{
         return $attachments;
     }
 
+    /**
+     * @throws DataNotFoundException
+     */
+    public static function getTutorials():array {
+        $db = Db::getInstance();
+        $stmt = $db->prepare("SELECT * FROM attachments WHERE is_tutorial = 1 ORDER BY uploaded_at DESC");
+        $stmt->execute();
+        $result = $stmt->fetchAll();
+        $attachments = [];
+
+        foreach ($result as $row) {
+            try {
+            $attachment = new AttachmentEntity($row["filename"], $row["filepath"], $row["content_type"], new DateTime($row["uploaded_at"]), UserRepository::getUserById($row["uploaded_by"]), $row["public"], $row["is_tutorial"]);
+            $attachment->setId($row["id"]);
+            $attachments[] = $attachment;
+            } catch (Exception) {}
+        }
+        return $attachments;
+    }
+
 }

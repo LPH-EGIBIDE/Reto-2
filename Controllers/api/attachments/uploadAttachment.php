@@ -21,14 +21,13 @@ $user = $_SESSION['user'];
 /**
  * @throws UploadException
  */
-function uploadFile($file):int{
+function uploadFile($file, $isTutorial = false):int{
     $file = $_FILES['file'];
     $fileName = $file['name'];
     $fileTmpName = $file['tmp_name'];
     $fileSize = $file['size'];
     $fileError = $file['error'];
     $fileType = $file['type'];
-    $isTutorial = $file['isTutorial'] ?? false;
 
     $fileExt = explode('.', $fileName);
     $fileActualExt = strtolower(end($fileExt));
@@ -45,7 +44,8 @@ function uploadFile($file):int{
 
 
     if ($fileError === 0) {
-        if ($fileSize < 1000000) {
+        //Check if filesize is less than 100MB
+        if ($fileSize < 100000000) {
             $fileNameNew = uniqid('', true) . ".bin";
             $fileDestination = getcwd().'/uploads/' . $fileNameNew;
             $fileType = $imageTypes[$fileActualExt] ?? $defaultType;
@@ -132,8 +132,8 @@ if (isset($_FILES['file'])) {
                 break;
             case "uploadTutorial":
                 $file = $_FILES['file'];
-                $file['isTutorial'] = true;
-                $id = uploadFile($_FILES['file']);
+                $_POST['public'] = true;
+                $id = uploadFile($file, true);
                 echo json_encode(["status" => "success", "message" => "Tutorial subido correctamente", "id" => $id]);
                 break;
             default:

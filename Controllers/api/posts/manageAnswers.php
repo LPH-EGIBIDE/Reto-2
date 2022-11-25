@@ -49,6 +49,8 @@ try {
             break;
         case 'insert':
             $post = PostRepository::getPostById($id);
+            if (!$post->isActive())
+                die(json_encode(["status" => "error", "message" => "El post está cerrado"]));
             $content = $_POST['content'] ?? '';
             try {
                 $answer = insertAnswer($content, $post, $user);
