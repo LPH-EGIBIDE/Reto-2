@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__.'/../config.inc.php';
 
+use Repositories\PostTopicRepository;
 use Utils\AuthUtils;
 
 session_start();
@@ -11,6 +12,8 @@ if (!AuthUtils::checkAuth()) {
     header("Location: /login");
     exit();
 }
+
+$topics = PostTopicRepository::getAllPostTopics();
 
 $user = $_SESSION['user'];
 

@@ -8,7 +8,12 @@
                 </div>
                 <label for="listaTopics">Tema:  </label>
                 <select name="listaTopics" id="listaTopics">
-                    // Rellenar topics con html/css
+                    <option value="">Todos</option>
+                    <?php
+                    foreach ($topics as $topic) {
+                        echo '<option value="' . $topic->getId() . '">' . $topic->getName() . '</option>';
+                    }
+                    ?>
                 </select>
                 <label for="orderBy">Ordenar por: </label>
                 <select name="orderBy" id="orderBy">
@@ -20,7 +25,7 @@
                     <option value="leastViews">Menos visitas</option>
                 </select>
                 <input type="button" value="Crear Post" class="answerButton" id="crearPost" onclick="location.href='/createPost';">
-                <input type="button" value="Enviar" class="answerButton">
+                <input type="button" value="Buscar" class="answerButton">
             </form></div>
     </div>
     <div id="skeletonContainer" class="contenidoLista">
